@@ -1,0 +1,28 @@
+### Pruebas de Reporte de Producción
+@baseUrl = https://vivasoft.link/app/prod/api
+@idEmpresaMD5 = c0c7c76d30bd3dcaefc96f40275bdc0a
+
+### 1. CARGA INICIAL DE DATOS (Se ejecutan en paralelo)
+### Listado de Rubros
+GET {{baseUrl}}/listar_rubro/{{idEmpresaMD5}}
+
+### Listado de Empleados
+GET {{baseUrl}}/getempleado/{{idEmpresaMD5}}
+
+### Listado de Productos Comerciales
+GET {{baseUrl}}/listar_productos_comercial/{{idEmpresaMD5}}
+
+### Listado de Unidades de Medida
+GET {{baseUrl}}/listar_unidad_producto/{{idEmpresaMD5}}
+
+### Listado de Materiales
+GET {{baseUrl}}/listar_material/{{idEmpresaMD5}}
+
+### Listado de Etapas de Producción
+GET {{baseUrl}}/listar_etapas_produccion/{{idEmpresaMD5}}
+
+### Reporte de Producción (Datos principales de lotes)
+GET {{baseUrl}}/reporte_produccion/{{idEmpresaMD5}}
+
+### Listado de Uso de Máquina
+GET {{baseUrl}}/listar_uso_maquina/{{idEmpresaMD5}}

@@ -1,0 +1,427 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// app.scss — Estilos globales sincronizados con quasar.variables.scss
+// Paleta: $primary #008374, modo oscuro slate $dark #1f2937
+// ─────────────────────────────────────────────────────────────────────────────
+
+:root {
+  --me-emerald: #008374;
+  --me-emerald-dark: #006b5e;
+  --me-emerald-light: #26a69a;
+  --me-emerald-soft: #e6f7f5;
+
+  --me-gray-50: #f9fafb;
+  --me-gray-100: #f3f4f6;
+  --me-gray-200: #e5e7eb;
+  --me-gray-300: #d1d5db;
+  --me-gray-400: #9ca3af;
+  --me-gray-500: #6b7280;
+  --me-gray-800: #1f2937;
+  --me-gray-900: #111827;
+
+  --me-border-light: #e5e7eb;
+  --me-border-dark: #374151;
+
+  --me-radius-input: 6px;
+  --me-radius-surface: 8px;
+  --me-radius-dialog: 12px;
+
+  --me-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --me-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+// ─── Scrollbar ──────────────────────────────────────────────────────────────
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.4) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 10px;
+}
+
+// ─── Modo Claro ──────────────────────────────────────────────────────────────
+body.body--light {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+// ─── Modo Oscuro (Slate) ─────────────────────────────────────────────────────
+body.body--dark {
+  background: #0b1220;
+  color: #f3f4f6;
+}
+
+// ─── Fondo diálogos ──────────────────────────────────────────────────────────
+.page-bg-soft {
+  background: #e6f7f5;
+}
+
+body.body--dark .page-bg-soft {
+  background: inherit;
+}
+
+// ─── Drawer ──────────────────────────────────────────────────────────────────
+.q-drawer {
+  background: #ffffff !important;
+  border-right: 1px solid #e5e7eb;
+
+  body.body--dark & {
+    background: #1f2937 !important;
+    border-right-color: #374151;
+  }
+}
+
+// ─── Texto adaptativo ────────────────────────────────────────────────────────
+.text-adaptive-main {
+  color: #111827;
+}
+
+body.body--dark .text-adaptive-main {
+  color: #f3f4f6;
+}
+
+.text-adaptive-secondary {
+  color: #6b7280;
+}
+
+body.body--dark .text-adaptive-secondary {
+  color: #9ca3af;
+}
+
+// ─── Cards ───────────────────────────────────────────────────────────────────
+.q-card {
+  border-radius: 8px;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+body.body--dark .q-card {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+// ─── Tablas ──────────────────────────────────────────────────────────────────
+.q-table__container {
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  box-shadow: none;
+  background: #ffffff;
+}
+
+body.body--dark .q-table__container {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+.q-table__top,
+thead tr:first-child th {
+  background-color: #008374;
+  color: #ffffff;
+}
+
+thead tr th {
+  position: sticky;
+  z-index: 1;
+}
+
+thead tr:first-child th {
+  top: 0;
+}
+
+.q-table--loading thead tr:last-child th {
+  top: 48px;
+}
+
+tbody {
+  scroll-margin-top: 48px;
+}
+
+.q-table tbody td {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+body.body--dark .q-table tbody td {
+  border-bottom-color: #374151;
+}
+
+.q-table thead tr {
+  background: #f3f4f6;
+}
+
+body.body--dark .q-table thead tr {
+  background: #0b1220;
+}
+
+.q-table thead th {
+  font-weight: 600;
+  /* Normalizar a minúsculas y luego capitalizar la primera letra mediante ::first-letter */
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+}
+
+// ─── Header ──────────────────────────────────────────────────────────────────
+.q-header {
+  background: #008374 !important;
+  color: #ffffff !important;
+  z-index: 2000 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: fixed !important;
+
+  .q-btn,
+  .q-icon,
+  .text-adaptive-main,
+  .text-adaptive-secondary,
+  .q-breadcrumbs,
+  .q-breadcrumbs__el,
+  .q-btn__content {
+    color: #ffffff !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .q-header {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .q-header {
+    margin: 12px 16px !important;
+    border-radius: 12px !important;
+    right: 0 !important;
+    width: auto !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+  }
+}
+
+// ─── Page Container ──────────────────────────────────────────────────────────
+.q-page-container {
+  padding-top: 64px !important;
+  background-color: #f3f4f6;
+}
+
+body.body--dark .q-page-container {
+  background-color: #0b1220;
+}
+
+// Mobile: header fijo de 56px → compensar con padding-top
+@media (max-width: 599px) {
+  .q-page-container {
+    padding-top: 56px !important;
+    // padding-top: 0 !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .q-page-container {
+    padding-top: 84px !important;
+  }
+}
+
+.submenu-tabs-container {
+  margin: 8px 0;
+  z-index: 1000;
+}
+
+@media (min-width: 1024px) {
+  .submenu-tabs-container {
+    margin: 8px 16px 16px 16px;
+    border-radius: 12px;
+  }
+}
+
+.q-page {
+  padding: 16px;
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .q-page {
+    padding: 24px;
+  }
+}
+
+// ─── Inputs ──────────────────────────────────────────────────────────────────
+.q-field--filled .q-field__control,
+.q-field--outlined .q-field__control,
+.q-field--standard .q-field__control {
+  background-color: #ffffff;
+  font-family: Arial, Helvetica, sans-serif;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #26a69a;
+  }
+
+  &:focus-within {
+    border-color: #008374 !important;
+    box-shadow: 0 0 0 2px rgba(0, 131, 116, 0.2) !important;
+  }
+}
+
+body.body--dark {
+
+  .q-field--filled .q-field__control,
+  .q-field--outlined .q-field__control,
+  .q-field--standard .q-field__control {
+    background-color: #1f2937;
+    border: 1px solid #374151 !important;
+  }
+
+  .q-field__native,
+  .q-field__input,
+  .q-field__label,
+  .q-placeholder {
+    color: #f3f4f6;
+  }
+
+  .q-field__native::placeholder,
+  .q-field__input::placeholder {
+    color: #9ca3af !important;
+  }
+}
+
+::placeholder {
+  color: #9ca3af !important;
+  opacity: 1;
+}
+
+.q-field__native {
+  padding-left: 5px;
+}
+
+.q-input .q-field__control,
+.q-select .q-field__control {
+  text-align: center;
+}
+
+.q-field__native[type='number'],
+.q-field__input[type='number'] {
+  text-align: right;
+}
+
+/* Ocultar flechas del input number (Global) */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+// ─── Botones ─────────────────────────────────────────────────────────────────
+.q-btn {
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  font-weight: 500;
+  text-transform: none;
+  height: 30px;
+  margin-left: 3px;
+}
+
+// ─── Labels ──────────────────────────────────────────────────────────────────
+label {
+  color: #008374;
+}
+
+body.body--dark label {
+  color: #26a69a;
+}
+
+.q-icon {
+  margin-bottom: 1px;
+}
+
+.texto-normal {
+  text-transform: none;
+}
+
+// ─── Skeletons ───────────────────────────────────────────────────────────────
+.skeleton-overlay {
+  background: #ffffff !important;
+}
+
+body.body--dark .skeleton-overlay {
+  background: #1f2937 !important;
+}
+
+// ─── Utilities adaptativos ────────────────────────────────────────────────
+.u-surface {
+  background-color: #ffffff !important;
+
+  body.body--dark & {
+    background-color: #1f2937 !important;
+  }
+}
+
+.u-surface--soft {
+  background-color: #f9fafb !important;
+
+  body.body--dark & {
+    background-color: #111827 !important;
+  }
+}
+
+.u-border {
+  border-color: #e5e7eb !important;
+
+  body.body--dark & {
+    border-color: #374151 !important;
+  }
+}
+
+.q-field--readonly .q-field__control {
+  background-color: #f3f4f6 !important;
+
+  body.body--dark & {
+    background-color: #111827 !important;
+  }
+}
+
+// ─── Mobile Tab Bar ───────────────────────────────────────────────────────────
+// Padding inferior para que el contenido no quede tapado por el tab bar mobile
+.q-pb-tabbar {
+  padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+// El drawer de Quasar NO debe mostrarse en mobile (ya lo maneja show-if-above)
+// pero reforzamos que el contenido de la page no haga overflow en mobile
+@media (max-width: 599px) {
+  .q-page {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+
+  // El header en mobile ocupa todo el ancho sin bordes redondeados
+  .q-header {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+  }
+}
