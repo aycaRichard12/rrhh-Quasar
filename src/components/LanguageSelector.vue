@@ -51,7 +51,7 @@ interface Props {
   btnClass?: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   type: 'menu',
   btnClass: ''
 });
@@ -60,7 +60,8 @@ const { locale } = useI18n();
 
 const languages = [
   { label: 'Español', value: 'es-ES', icon: 'img:https://cdn.quasar.dev/img/flags/spain.png' },
-  { label: 'English', value: 'en-US', icon: 'img:https://cdn.quasar.dev/img/flags/usa.png' }
+  { label: 'English', value: 'en-US', icon: 'img:https://cdn.quasar.dev/img/flags/usa.png' },
+  { label: 'Português', value: 'pt-BR', icon: 'img:https://cdn.quasar.dev/img/flags/brazil.png' }
 ];
 
 const currentLanguageLabel = computed(() => {
