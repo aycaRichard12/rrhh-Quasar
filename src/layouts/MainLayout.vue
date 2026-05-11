@@ -1,15 +1,16 @@
 <template>
   <q-layout view="Lhh Lpr lFf">
+
     <AppHeader @toggle-left-drawer="toggleLeftDrawer" />
 
-    <AppDrawer 
-      v-model="leftDrawerOpen" 
+    <AppDrawer
+      v-model="leftDrawerOpen"
       :sub-menu-seleccionado="subMenuSeleccionado"
       @select-submenu="selectSubmenu"
     />
 
     <q-page-container>
-      <AppSubmenuTabs 
+      <AppSubmenuTabs
         :tabs-visible="tabsVisible"
         v-model:current-tab="currentTab"
         :active-tabs="activeTabs"
@@ -19,9 +20,6 @@
       <router-view />
     </q-page-container>
 
-    <!-- TAB BAR MOBILE -->
-    <!-- <AppMobileTabBar /> -->
-
   </q-layout>
 </template>
 
@@ -30,12 +28,11 @@ import { ref, onMounted } from 'vue';
 import { usePaginas } from 'src/stores/permitidos';
 import { useAppNavigation } from './composables/useAppNavigation';
 
-import AppHeader from './components/AppHeader.vue';
-import AppDrawer from './components/AppDrawer.vue';
-import AppSubmenuTabs from './components/AppSubmenuTabs.vue';
-// import AppMobileTabBar from './components/AppMobileTabBar.vue';
+import AppHeader       from './components/AppHeader.vue';
+import AppDrawer       from './components/AppDrawer.vue';
+import AppSubmenuTabs  from './components/AppSubmenuTabs.vue';
 
-const paginasStore = usePaginas();
+const paginasStore   = usePaginas();
 const leftDrawerOpen = ref(false);
 
 const {
@@ -46,7 +43,7 @@ const {
   activeTabsReportes,
   selectSubmenu,
   navigateToTab,
-  restaurarSubmenu
+  restaurarSubmenu,
 } = useAppNavigation();
 
 const toggleLeftDrawer = () => {

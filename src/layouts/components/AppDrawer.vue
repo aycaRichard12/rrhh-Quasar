@@ -3,68 +3,84 @@
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
     show-if-above
-    :width="260"
+    :width="264"
     :bordered="false"
     class="main-drawer"
   >
-    <div class="full-height column text-white">
+    <div class="full-height column drawer-inner">
 
-      <!-- LOGO AREA -->
-      <div class="q-pa-lg row items-center q-gutter-md logo-container">
-        <q-avatar size="44px" class="bg-white shadow-3 logo-avatar">
-          <q-img src="favicon.ico" />
-        </q-avatar>
-        <div class="column">
-          <div class="text-weight-bolder text-h6 line-height-1 letter-spacing-tight text-white">
-            MisterSofts
+      <!-- ── LOGO AREA ──────────────────────────────────────────────────── -->
+      <div class="logo-area q-px-lg q-pt-lg q-pb-md">
+        <div class="row items-center q-gutter-sm">
+          <div class="logo-badge">
+            <q-img src="favicon.ico" width="26px" height="26px" />
           </div>
-          <div class="text-caption text-uppercase text-weight-bold opacity-60" style="font-size: 9px; letter-spacing: 0.1em;">
+          <div class="column">
+            <div class="logo-name">MisterSofts</div>
+            <div class="logo-sub">GESTIÓN RRHH</div>
           </div>
         </div>
       </div>
 
-      <q-separator dark class="q-mx-lg q-mb-sm opacity-10" />
+      <div class="drawer-separator" />
 
-      <!-- NAVEGACIÓN -->
-      <q-scroll-area class="col q-px-sm no-scrollbar drawer-scroll">
-        <q-list class="q-pt-sm q-pb-md">
+      <!-- ── NAVEGACIÓN ──────────────────────────────────────────────────── -->
+      <q-scroll-area class="col no-scrollbar">
+        <q-list class="q-pt-md q-pb-lg q-px-sm">
 
-          <q-item v-if="hasDashboard" clickable v-ripple to="/dashboard" class="q-mb-xs drawer-item">
-            <q-item-section avatar>
-              <q-icon name="grid_view" size="20px" />
+          <!-- Dashboard -->
+          <q-item
+            v-if="hasDashboard"
+            clickable v-ripple
+            to="/dashboard"
+            class="drawer-item q-mb-xs"
+            active-class="drawer-item--active"
+          >
+            <q-item-section avatar class="drawer-icon-section">
+              <q-icon name="grid_view" size="19px" />
             </q-item-section>
-            <q-item-section class="text-weight-medium">{{ $t('navigation.dashboard') }}</q-item-section>
+            <q-item-section class="drawer-item-label">
+              {{ $t('navigation.dashboard') }}
+            </q-item-section>
           </q-item>
 
-          <div class="text-overline q-px-md q-mt-md q-mb-xs section-header opacity-50">
+          <!-- Section label -->
+          <div class="section-label q-px-sm q-mt-lg q-mb-xs">
             {{ $t('common.labels.mainMenu') }}
           </div>
 
+          <!-- Menús expandibles -->
           <q-expansion-item
             v-for="menu in filteredMenu"
             :key="menu.codigo"
             :label="translateTitle(menu.codigo, menu.titulo)"
             :icon="getIconoMenu(menu.codigo)"
             group="menu-group"
-            class="drawer-expansion-group"
-            header-class="drawer-item"
+            class="drawer-expansion"
+            header-class="drawer-item drawer-expansion-header"
+            expand-icon-class="text-white opacity-40"
           >
-            <q-list class="q-pb-xs submenu-list">
+            <q-list class="submenu-list q-py-xs">
               <q-item
                 v-for="submenu in menu.submenu"
                 :key="submenu.codigo"
-                clickable
-                v-ripple
+                clickable v-ripple
                 @click="$emit('select-submenu', submenu)"
                 :active="subMenuSeleccionado === submenu.codigo.split('-')[0]"
-                active-class="active-submenu"
-                class="drawer-item submenu-item"
+                active-class="drawer-subitem--active"
+                class="drawer-subitem"
               >
-                <div v-if="subMenuSeleccionado === submenu.codigo.split('-')[0]" class="active-indicator" />
-                <q-item-section avatar style="min-width: 32px">
-                  <q-icon :name="getIconoMenu(submenu.codigo)" size="18px" />
+                <!-- Indicador lateral dorado -->
+                <div
+                  v-if="subMenuSeleccionado === submenu.codigo.split('-')[0]"
+                  class="active-bar"
+                />
+                <q-item-section avatar class="drawer-subicon-section">
+                  <q-icon :name="getIconoMenu(submenu.codigo)" size="17px" />
                 </q-item-section>
-                <q-item-section class="text-body2">{{ translateTitle(submenu.codigo, submenu.titulo) }}</q-item-section>
+                <q-item-section class="drawer-item-label text-body2">
+                  {{ translateTitle(submenu.codigo, submenu.titulo) }}
+                </q-item-section>
               </q-item>
             </q-list>
           </q-expansion-item>
@@ -72,13 +88,21 @@
         </q-list>
       </q-scroll-area>
 
+      <!-- ── FOOTER ──────────────────────────────────────────────────────── -->
+      <div class="drawer-footer q-px-lg q-py-md">
+        <div class="drawer-separator q-mb-md" />
+        <div class="footer-badge">
+          <q-icon name="verified_user" size="13px" class="q-mr-xs" />
+          <span>Sistema Seguro</span>
+        </div>
+      </div>
+
     </div>
   </q-drawer>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
-// import { useQuasar } from 'quasar';
 import { useAuthStore } from 'src/stores/auth-store';
 import { getIconoMenu } from 'src/stores/paginas';
 import type { MenuItem } from 'src/layouts/types/navigation';
@@ -91,101 +115,205 @@ defineProps<{
 
 defineEmits(['update:modelValue', 'select-submenu']);
 
-// const $q = useQuasar();
 const authStore = useAuthStore();
 const { hasValidTabsForSubmenu, translateTitle } = useAppNavigation();
 
-const hasDashboard = computed(() => {
-  return (authStore.user?.menu || []).some(m =>
+const hasDashboard = computed(() =>
+  (authStore.user?.menu || []).some(m =>
     m.codigo === 'dashboard' ||
-    (m.submenu && m.submenu.some(s => s.codigo && s.codigo.includes('dashboard')))
-  );
-});
+    (m.submenu && m.submenu.some(s => s.codigo?.includes('dashboard')))
+  )
+);
 
 const filteredMenu = computed((): MenuItem[] => {
   const rawMenu = (authStore.user?.menu || []) as MenuItem[];
   return rawMenu
     .filter(m => m.codigo !== 'opcionesocultas')
-    .map(menu => {
-      // Filtrar submenús: nos quedamos solo con los que tienen al menos un tab permitido
-      const validSubmenus = (menu.submenu || []).filter(submenu => hasValidTabsForSubmenu(submenu));
-      return { ...menu, submenu: validSubmenus };
-    })
-    .filter(menu => menu.submenu.length > 0); // Omitir el menú principal si no le quedó ningún submenú válido
+    .map(menu => ({
+      ...menu,
+      submenu: (menu.submenu || []).filter(s => hasValidTabsForSubmenu(s)),
+    }))
+    .filter(menu => menu.submenu.length > 0);
 });
 </script>
 
 <style scoped>
-/* Selector ultra-específico para ganar a las clases por defecto de Quasar */
+/* ── BASE DEL DRAWER ─────────────────────────────────────────────────────── */
 :deep(.q-drawer),
 .main-drawer {
-  background-color: #0f172a !important; /* Slate-900 */
-  color: white !important;
+  background: transparent !important;
 }
 
 :deep(.q-drawer--left) {
-  border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-right: none !important;
 }
 
-.logo-container {
-  background: linear-gradient(to bottom, rgba(13, 148, 136, 0.15), transparent);
+.drawer-inner {
+  background: linear-gradient(180deg, #004d40 0%, #002e25 55%, #001a12 100%);
+  height: 100%;
+  position: relative;
 }
 
-.logo-avatar {
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  transition: transform 0.3s ease;
+/* Partícula de luz dorada en esquina superior */
+.drawer-inner::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(242, 192, 55, 0.1) 0%, transparent 70%);
+  pointer-events: none;
 }
 
+/* ── LOGO ────────────────────────────────────────────────────────────────── */
+.logo-area {
+  flex-shrink: 0;
+}
+
+.logo-badge {
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+  border: 1.5px solid rgba(242, 192, 55, 0.3);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 16px rgba(242, 192, 55, 0.1);
+}
+
+.logo-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.logo-sub {
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #f2c037;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+/* ── SEPARADOR ───────────────────────────────────────────────────────────── */
+.drawer-separator {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  margin: 0 24px;
+}
+
+/* ── SECTION LABEL ───────────────────────────────────────────────────────── */
+.section-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #f2c037;
+  opacity: 0.55;
+}
+
+/* ── ÍTEMS GENERALES ─────────────────────────────────────────────────────── */
 .drawer-item {
-  margin: 2px 12px !important;
-  border-radius: 8px !important;
-  color: rgba(255, 255, 255, 0.7);
-  min-height: 44px;
-  transition: all 0.2s ease;
+  border-radius: 10px !important;
+  color: rgba(255,255,255,0.65) !important;
+  min-height: 42px !important;
+  margin: 1px 4px !important;
+  transition: background 0.18s ease, color 0.18s ease !important;
 }
 
 .drawer-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
+  background: rgba(255,255,255,0.06) !important;
+  color: rgba(255,255,255,0.9) !important;
 }
 
-.active-submenu {
-  background: rgba(13, 148, 136, 0.2) !important;
-  color: #2dd4bf !important;
-  font-weight: 600;
+/* Ítem activo (dashboard con router-link) */
+.drawer-item--active,
+:deep(.q-item.q-router-link--active) {
+  background: rgba(242, 192, 55, 0.14) !important;
+  color: #f2c037 !important;
+  font-weight: 600 !important;
 }
 
-.section-header {
-  color: white;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+.drawer-icon-section {
+  min-width: 36px !important;
 }
 
-.active-indicator {
+.drawer-item-label {
+  font-size: 13.5px;
+}
+
+/* ── EXPANSION ───────────────────────────────────────────────────────────── */
+.drawer-expansion :deep(.q-expansion-item__content) {
+  background: rgba(0,0,0,0.18);
+  border-radius: 10px;
+  margin: 2px 4px;
+}
+
+.drawer-expansion-header {
+  font-size: 13.5px;
+}
+
+/* ── SUB-ÍTEMS ───────────────────────────────────────────────────────────── */
+.submenu-list {
+  padding-left: 8px;
+}
+
+.drawer-subitem {
+  border-radius: 8px !important;
+  color: rgba(255,255,255,0.55) !important;
+  min-height: 38px !important;
+  margin: 1px 4px !important;
+  position: relative;
+  transition: background 0.18s ease, color 0.18s ease !important;
+}
+
+.drawer-subitem:hover {
+  background: rgba(255,255,255,0.05) !important;
+  color: rgba(255,255,255,0.85) !important;
+}
+
+/* Sub-ítem activo */
+.drawer-subitem--active {
+  background: rgba(242, 192, 55, 0.12) !important;
+  color: #f2c037 !important;
+  font-weight: 600 !important;
+}
+
+.drawer-subicon-section {
+  min-width: 30px !important;
+}
+
+/* Barra lateral dorada */
+.active-bar {
   position: absolute;
-  left: 0;
-  top: 20%;
-  height: 60%;
-  width: 4px;
-  background: #2dd4bf;
-  border-radius: 0 4px 4px 0;
+  left: 0; top: 18%; bottom: 18%;
+  width: 3px;
+  background: #f2c037;
+  border-radius: 0 3px 3px 0;
 }
 
-.drawer-expansion-group :deep(.q-expansion-item__content) {
-  background: rgba(0, 0, 0, 0.2);
-  margin: 4px 0;
-  border-radius: 8px;
+/* ── FOOTER ──────────────────────────────────────────────────────────────── */
+.drawer-footer {
+  flex-shrink: 0;
 }
 
-.submenu-item {
-  margin-left: 16px !important;
-  margin-right: 8px !important;
+.footer-badge {
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.25);
+  text-transform: uppercase;
 }
 
-.line-height-1 { line-height: 1.2; }
-.letter-spacing-tight { letter-spacing: -0.025em; }
-
+/* Scroll sin scrollbar */
 .no-scrollbar :deep(.q-scrollarea__container) {
   scrollbar-width: none;
+}
+.no-scrollbar :deep(.q-scrollarea__container::-webkit-scrollbar) {
+  display: none;
 }
 </style>
