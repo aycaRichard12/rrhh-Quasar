@@ -43,9 +43,7 @@ body.body--dark .q-card {
 
 // ─── Header con toque Oro ──────────────────────────────────────────────────
 .q-header {
-  background: #004d40 !important;
-  border-bottom: 2px solid #f2c037; // Línea de acento oro
-  color: #ffffff !important;
+  // El fondo y color se manejan en AppHeader.vue
 }
 
 // ─── Botones con Estilo Corporativo ─────────────────────────────────────────
@@ -98,27 +96,16 @@ body.body--dark .q-table thead tr {
   /* Normalizar a minúsculas y luego capitalizar la primera letra mediante ::first-letter */
   font-size: 0.7rem;
   letter-spacing: 0.05em;
-  color: #ffffff;
+  color: #374151;
+}
+
+body.body--dark .q-table thead th {
+  color: #f3f4f6;
 }
 
 // ─── Header ──────────────────────────────────────────────────────────────────
-.q-header {
-  background: #004d40 !important;
-  color: #ffffff !important;
-  z-index: 2000 !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: fixed !important;
-
-  .q-btn,
-  .q-icon,
-  .text-adaptive-main,
-  .text-adaptive-secondary,
-  .q-breadcrumbs,
-  .q-breadcrumbs__el,
-  .q-btn__content {
-    color: #ffffff !important;
-  }
-}
+// Los estilos base se manejan en AppHeader.vue o por Quasar
+// ─────────────────────────────────────────────────────────────────────────────
 
 @media (max-width: 1023px) {
   .q-header {

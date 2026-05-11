@@ -216,11 +216,13 @@ const handleLogout = async () => {
 
 .app-header--light {
   background-color: #ffffff !important;
+  color: #374151 !important;
   box-shadow: 0 1px 0 rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04) !important;
 }
 
 .app-header--dark {
   background-color: #1a202c !important;
+  color: #f3f4f6 !important;
   box-shadow: 0 1px 0 rgba(255,255,255,0.05) !important;
 }
 
