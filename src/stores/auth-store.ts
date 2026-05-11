@@ -43,8 +43,9 @@ export const useAuthStore = defineStore('auth', () => {
       console.log(payload)
 
       // 1. Petición al servicio de autenticación
-      const { data } = await api_auth.post<UserResponse[]>('', payload);
-      console.log(data)
+      const response = await api_auth.post<UserResponse[]>('', payload);
+      console.log(response)
+      const data = response.data
       const userData = data?.[0];
 
       if (userData && userData.ok === 'success') {
