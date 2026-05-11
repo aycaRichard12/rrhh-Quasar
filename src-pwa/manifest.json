@@ -1,7 +1,7 @@
 {
-  "name": "Producción - MisterSofts",
-  "short_name": "Producción",
-  "description": "Aplicacion de gestion de produccion",
+  "name": "Gestión RRHH - MisterSofts",
+  "short_name": "RRHH",
+  "description": "Aplicación de gestión estratégica de recursos humanos",
   "start_url": "/app/prod/",
   "orientation": "portrait",
   "background_color": "#111827",

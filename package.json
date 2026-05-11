@@ -1,8 +1,8 @@
 {
-  "name": "Producción - MisterSofts",
+  "name": "Gestión RRHH - MisterSofts",
   "version": "0.0.1",
-  "description": "A Quasar Project",
-  "productName": "Producción - MisterSofts",
+  "description": "Gestión estratégica de recursos humanos",
+  "productName": "Gestión RRHH - MisterSofts",
   "author": "Dex <toladavi369@gmail.com>",
   "type": "module",
   "private": true,

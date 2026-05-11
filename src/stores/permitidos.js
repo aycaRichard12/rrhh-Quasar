@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const usePaginas = defineStore('menu', {
+export const usePaginas = defineStore('permitidos', {
   state: () => ({
     permitidos: [],
     usuario: null,
@@ -14,7 +14,7 @@ export const usePaginas = defineStore('menu', {
   actions: {
     initStore() {
       try {
-        const storedData = localStorage.getItem('mistersofts-produccion')
+        const storedData = localStorage.getItem('mistersofts-rrhh')
         if (!storedData) {
           this.resetStore()
           return

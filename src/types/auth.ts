@@ -67,5 +67,5 @@ export interface LoginPayload {
   action: "login";
   usuario: string;
   password:  string;
-  modulo: "prod";
-}
+  modulo: "rrhh";
+}

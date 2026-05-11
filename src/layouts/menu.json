@@ -1,0 +1,209 @@
+[
+    {
+        "titulo": "Configuraciónes",
+        "codigo": "configuraciones",
+        "usuario": "7f39f8317fbdb1988ef4c628eba02591",
+        "submenu": [
+            {
+                "titulo": "Areas",
+                "codigo": "areas-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Cargos",
+                "codigo": "cargos-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Prerrequisitos de cargo",
+                "codigo": "prerrequisitosdecargo-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Tipos de Contratos",
+                "codigo": "tiposdecontratos-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Entes Reguladores",
+                "codigo": "entesreguladores-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Funciones y Obligaciones",
+                "codigo": "funcionesyobligaciones-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Métodos de Evaluación",
+                "codigo": "metodosdeevaluacion-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Actividades de Evaluación",
+                "codigo": "actividadesdeevaluacion-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Beneficios",
+                "codigo": "beneficios-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Tipos de Sanciones",
+                "codigo": "tiposdesanciones-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Niveles",
+                "codigo": "niveles-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Motivos de baja",
+                "codigo": "motivosdebaja-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Métodos de Pago",
+                "codigo": "metodosdepago-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Bonos Empresa",
+                "codigo": "bonosempresa-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Salario Minimo",
+                "codigo": "salariominimo-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            }
+        ]
+    },
+    {
+        "titulo": "Reclutamiento",
+        "codigo": "reclutamiento",
+        "usuario": "7f39f8317fbdb1988ef4c628eba02591",
+        "submenu": [
+            {
+                "titulo": "Convocatorias",
+                "codigo": "convocatorias-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Postulantes",
+                "codigo": "postulantes-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            }
+        ]
+    },
+    {
+        "titulo": "Personal",
+        "codigo": "personal",
+        "usuario": "7f39f8317fbdb1988ef4c628eba02591",
+        "submenu": [
+            {
+                "titulo": "Trabajadores",
+                "codigo": "trabajadores-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Contrataciónes",
+                "codigo": "contrataciones-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Permisos",
+                "codigo": "permisos-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Anticipos",
+                "codigo": "anticipos-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Vacaciónes",
+                "codigo": "vacaciones-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Sanciones",
+                "codigo": "sanciones-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Memorandums",
+                "codigo": "memorandums-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Bajas",
+                "codigo": "bajas-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            }
+        ]
+    },
+    {
+        "titulo": "Entrenamiento & Capacitación",
+        "codigo": "actividades",
+        "usuario": "7f39f8317fbdb1988ef4c628eba02591",
+        "submenu": [
+            {
+                "titulo": "Planificación",
+                "codigo": "actividades-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            }
+        ]
+    },
+    {
+        "titulo": "Planillas",
+        "codigo": "planillas",
+        "usuario": "7f39f8317fbdb1988ef4c628eba02591",
+        "submenu": [
+            {
+                "titulo": "Sueldos y Salarios",
+                "codigo": "sueldosysalarios-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Aportes",
+                "codigo": "aportes-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Aguinaldos",
+                "codigo": "aguinaldos-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Reintegros",
+                "codigo": "reintegros-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            }
+        ]
+    },
+    {
+        "titulo": "Boletas de Pago",
+        "codigo": "boletasdepago",
+        "usuario": "7f39f8317fbdb1988ef4c628eba02591",
+        "submenu": [
+            {
+                "titulo": "Salarios",
+                "codigo": "salarios-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Aguinaldos",
+                "codigo": "aguinaldosbp-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            },
+            {
+                "titulo": "Retroactivos",
+                "codigo": "retroactivos-7f39f8317fbdb1988ef4c628eba02591",
+                "permiso": "1111"
+            }
+        ]
+    }
+]

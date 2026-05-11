@@ -17,7 +17,7 @@ export function idusuario_md5() {
 
   if (!id) {
     try {
-      const stored = localStorage.getItem('mistersofts-produccion')
+      const stored = localStorage.getItem('mistersofts-rrhh')
       if (stored) {
         const parsed = JSON.parse(stored)
         id = parsed.idusuario || null
@@ -42,7 +42,7 @@ export function idempresa_md5() {
 
   if (!id) {
     try {
-      const stored = localStorage.getItem('mistersofts-produccion')
+      const stored = localStorage.getItem('mistersofts-rrhh')
       if (stored) {
         const parsed = JSON.parse(stored)
         id = parsed?.empresa?.idempresa || null
@@ -55,7 +55,7 @@ export function idempresa_md5() {
 }
 export function idSucursal_md5(){
   try {
-    const stored = localStorage.getItem('mistersofts-produccion')
+    const stored = localStorage.getItem('mistersofts-rrhh')
     if (!stored) return null
     const datos = JSON.parse(stored)
     return datos?.empresa?.idsucursal || null
@@ -234,7 +234,7 @@ export function generarCabeceraHTML(datos) {
 }
 
 export function validarUsuario() {
-  const contenidousuario = JSON.parse(localStorage.getItem('mistersofts-produccion'))
+  const contenidousuario = JSON.parse(localStorage.getItem('mistersofts-rrhh'))
   if (contenidousuario) {
     return contenidousuario
   } else {

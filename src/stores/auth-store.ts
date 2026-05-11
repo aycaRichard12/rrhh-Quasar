@@ -8,7 +8,7 @@ export const useAuthStore = defineStore('auth', () => {
   // --- STATE ---
   // Inicializamos recuperando de localStorage para persistencia tras F5
   const user = ref<UserResponse | null>(
-    JSON.parse(localStorage.getItem('mistersofts-produccion') || 'null')
+    JSON.parse(localStorage.getItem('mistersofts-rrhh') || 'null')
   );
 
   const token = ref<string | null>(localStorage.getItem('auth_token'));
@@ -38,7 +38,7 @@ export const useAuthStore = defineStore('auth', () => {
       const payload: LoginPayload = {
         ...credentials,
         action: 'login',
-        modulo: 'prod'
+        modulo: 'rrhh'
       };
       console.log(payload)
 
@@ -95,7 +95,7 @@ export const useAuthStore = defineStore('auth', () => {
     id_usuario_md5.value = null;
     id_empresa_md5.value = null;
 
-    localStorage.removeItem('mistersofts-produccion');
+    localStorage.removeItem('mistersofts-rrhh');
     localStorage.removeItem('auth_token');
     localStorage.removeItem('id_empresa_md5');
     localStorage.removeItem('id_usuario_md5');

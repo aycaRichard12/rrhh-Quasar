@@ -6,6 +6,7 @@ import {
   createWebHistory,
 } from 'vue-router';
 import routes from './routes';
+import type { Menu, Submenu, UserResponse } from 'src/types/auth';
 
 export default defineRouter(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
@@ -26,7 +27,7 @@ export default defineRouter(function (/* { store, ssrContext } */) {
   // después de cerrar sesión, ya que el token ya no existe en localStorage.
   Router.beforeEach((to) => {
     const isPublic = to.path.startsWith('/auth');
-    const authDataString = localStorage.getItem('mistersofts-produccion');
+    const authDataString = localStorage.getItem('mistersofts-rrhh');
     const hasSession = !!authDataString;
 
     if (!isPublic && !hasSession) {
@@ -34,12 +35,16 @@ export default defineRouter(function (/* { store, ssrContext } */) {
       return { name: 'login' };
     }
 
-    if (authDataString) {
+      if (authDataString) {
       let hasDashboard = false;
       try {
-        const authData = JSON.parse(authDataString);
+        const authData = JSON.parse(authDataString) as UserResponse;
         if (authData && authData.menu) {
-          hasDashboard = authData.menu.some((m: { codigo: string }) => m.codigo === 'dashboard');
+          // Busca "dashboard" tanto en el código de nivel superior como en cualquier submenú
+          hasDashboard = authData.menu.some((m: Menu) => 
+            m.codigo === 'dashboard' || 
+            (m.submenu && m.submenu.some((s: Submenu) => s.codigo && s.codigo.includes('dashboard')))
+          );
         }
       } catch (e) {
         console.error('Error parsing auth data', e);

@@ -57,7 +57,7 @@ export default defineConfig((/* ctx */) => {
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
       // Public path where the app will be served in production
-      publicPath: '/app/prod/',
+      publicPath: '/app/rrhh/',
       // Quasar gestionará SERVICE_WORKER_FILE automáticamente basado en publicPath
       env: {},
         // Use root publicPath for deployments served from root (e.g. tunnel URLs)
@@ -183,12 +183,12 @@ export default defineConfig((/* ctx */) => {
       // swFilename: 'sw.js',
       // manifestFilename: 'manifest.json',
       extendManifestJson (json) {
-        json.name = 'Producción-MisterSofts';
-        json.short_name = 'Producción';
-        json.description = 'Sistema de Control de Producción MisterSofts';
+        json.name = 'RecursosHumanos-MisterSofts';
+        json.short_name = 'RecursosHumanod';
+        json.description = 'Estrategia de Recursos Humanos MisterSofts';
         json.display = 'standalone';
         json.orientation = 'portrait';
-        json.start_url = '/app/prod/';
+        json.start_url = '/app/rrhh/';
       },
       // useCredentialsForManifestTag: true,
       // Inject standard PWA meta tags (manifest, theme-color, mobile-web-app-capable, etc.)
@@ -239,7 +239,7 @@ export default defineConfig((/* ctx */) => {
       builder: {
         // https://www.electron.build/configuration
 
-        appId: 'Producción-MisterSofts',
+        appId: 'RecursosHumanos-MisterSofts',
       },
     },
 

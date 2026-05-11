@@ -88,7 +88,7 @@
 
           <!-- ─── FOOTER ─── -->
           <div class="text-caption opacity-40 q-mt-xl">
-              Sistema de Producción Quasar © {{ currentYear }}
+              Sistema de Recursos Humanos Quasar © {{ currentYear }}
           </div>
 
         </div>

@@ -1,14 +1,14 @@
 <template>
-  <q-drawer 
-    :model-value="modelValue" 
-    @update:model-value="$emit('update:modelValue', $event)" 
-    show-if-above 
-    :width="260" 
+  <q-drawer
+    :model-value="modelValue"
+    @update:model-value="$emit('update:modelValue', $event)"
+    show-if-above
+    :width="260"
     :bordered="false"
     class="main-drawer"
   >
     <div class="full-height column text-white">
-      
+
       <!-- LOGO AREA -->
       <div class="q-pa-lg row items-center q-gutter-md logo-container">
         <q-avatar size="44px" class="bg-white shadow-3 logo-avatar">
@@ -19,7 +19,6 @@
             MisterSofts
           </div>
           <div class="text-caption text-uppercase text-weight-bold opacity-60" style="font-size: 9px; letter-spacing: 0.1em;">
-            Producción v 2.0.0
           </div>
         </div>
       </div>
@@ -97,7 +96,10 @@ const authStore = useAuthStore();
 const { hasValidTabsForSubmenu, translateTitle } = useAppNavigation();
 
 const hasDashboard = computed(() => {
-  return (authStore.user?.menu || []).some(m => m.codigo === 'dashboard');
+  return (authStore.user?.menu || []).some(m =>
+    m.codigo === 'dashboard' ||
+    (m.submenu && m.submenu.some(s => s.codigo && s.codigo.includes('dashboard')))
+  );
 });
 
 const filteredMenu = computed((): MenuItem[] => {

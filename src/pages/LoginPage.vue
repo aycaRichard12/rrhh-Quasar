@@ -7,52 +7,47 @@
         <div class="column items-center text-center q-gutter-md login-content">
 
           <q-icon
-            name="precision_manufacturing"
-            :size="$q.screen.lt.sm ? '56px' : '72px'"
-            class="login-icon-main"
+            name="account_balance"
+            size="80px"
+            color="accent"
+            class="login-icon-main q-mb-md"
           />
 
-          <div :class="$q.screen.lt.sm ? 'text-h4' : 'text-h3'" class="text-weight-bold">
-            PRODUCCIÓN
+          <div :class="$q.screen.lt.sm ? 'text-h4' : 'text-h3'" class="text-weight-bolder" style="letter-spacing: -0.05em">
+            GESTIÓN RRHH
           </div>
 
-          <div class="text-caption text-uppercase text-weight-medium tracking-wide"
-               style="letter-spacing: 0.15em; opacity: 0.75">
-            Sistema de Control Empresarial
+          <div class="text-caption text-uppercase text-weight-bolder tracking-widest q-mb-lg"
+               style="letter-spacing: 0.3em; color: #f2c037">
+            ESTRATEGIA ORGANIZACIONAL
           </div>
 
-          <div :class="$q.screen.lt.sm ? 'text-body2' : 'text-subtitle1'" class="text-grey-3" style="line-height: 1.6">
-            <template v-if="$q.screen.gt.xs">
-              Gestión operativa de planta, control de inventarios
-              críticos y trazabilidad industrial en tiempo real.
-            </template>
-            <template v-else>
-              Gestión operativa, control de inventarios y trazabilidad industrial.
-            </template>
+          <div :class="$q.screen.lt.sm ? 'text-body2' : 'text-subtitle1'" class="text-white opacity-80" style="line-height: 1.8; max-width: 420px;">
+            Optimización del capital humano, gestión de talento y desarrollo organizacional de alto impacto.
           </div>
 
-          <q-separator dark spaced style="width: 60%" />
+          <q-separator dark spaced="xl" style="width: 40%; background: rgba(255,255,255,0.2)" />
 
-          <!-- Módulos del sistema -->
-          <div class="row justify-center q-gutter-md q-col-gutter-md">
+          <!-- Módulos del sistema con diseño elegante -->
+          <div class="row justify-center q-gutter-lg">
             <div class="col-auto">
               <div class="column items-center login-module-chip">
-                <q-icon name="shopping_cart" :size="$q.screen.lt.sm ? '24px' : '28px'" />
-                <div class="text-caption text-weight-medium q-mt-xs">Compras</div>
+                <q-icon name="groups" color="accent" size="32px" />
+                <div class="text-caption text-weight-bold q-mt-xs text-white">Talento</div>
               </div>
             </div>
 
             <div class="col-auto">
               <div class="column items-center login-module-chip">
-                <q-icon name="factory" :size="$q.screen.lt.sm ? '24px' : '28px'" />
-                <div class="text-caption text-weight-medium q-mt-xs">Producción</div>
+                <q-icon name="verified_user" color="accent" size="32px" />
+                <div class="text-caption text-weight-bold q-mt-xs text-white">Legajos</div>
               </div>
             </div>
 
             <div class="col-auto">
               <div class="column items-center login-module-chip">
-                <q-icon name="insights" :size="$q.screen.lt.sm ? '24px' : '28px'" />
-                <div class="text-caption text-weight-medium q-mt-xs">Análisis</div>
+                <q-icon name="trending_up" color="accent" size="32px" />
+                <div class="text-caption text-weight-bold q-mt-xs text-white">KPIs</div>
               </div>
             </div>
           </div>
@@ -61,128 +56,117 @@
       </div>
 
       <!-- ─── RIGHT: Formulario ──────────────────────────────────────── -->
-      <div class="col-12 col-md-6 flex flex-center q-pa-sm q-pa-md-md login-right">
-        <q-card
-          flat
-          bordered
-          :class="$q.screen.lt.sm ? 'q-pa-md' : 'q-pa-lg'"
-          class="login-card"
-        >
+      <div class="col-12 col-md-6 flex flex-center q-pa-md login-right">
+        <div class="login-card-container">
+          <!-- Línea decorativa oro -->
+          <div class="accent-line"></div>
 
-          <q-card-section class="text-center q-pb-sm">
-            <q-avatar
-              :size="$q.screen.lt.sm ? '50px' : '60px'"
-              color="primary"
-              text-color="white"
-              icon="business"
-              class="q-mb-md"
-            />
-
-            <div :class="$q.screen.lt.sm ? 'text-h6' : 'text-h5'" class="text-weight-bold">
-              Bienvenido
-            </div>
-
-            <div class="text-caption text-grey-7 q-mt-xs">
-              Ingresa a tu cuenta
-            </div>
-          </q-card-section>
-
-          <q-card-section>
-            <q-form @submit.prevent="handleLogin" class="q-gutter-md">
-
-              <q-input
-                v-model="form.usuario"
-                outlined
-                :dense="$q.screen.lt.md"
-                label="Usuario"
-                :rules="[val => !!val || 'Requerido']"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="person" />
-                </template>
-              </q-input>
-
-              <q-input
-                v-model="form.password"
-                outlined
-                :dense="$q.screen.lt.md"
-                :type="showPassword ? 'text' : 'password'"
-                label="Contraseña"
-                :rules="[val => !!val || 'Requerido']"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="lock" />
-                </template>
-
-                <template v-slot:append>
-                  <q-icon
-                    :name="showPassword ? 'visibility_off' : 'visibility'"
-                    class="cursor-pointer"
-                    @click="showPassword = !showPassword"
-                  />
-                </template>
-              </q-input>
-
-              <q-btn
-                label="Ingresar al sistema"
-                type="submit"
-                color="primary"
-                class="full-width"
-                :size="$q.screen.lt.sm ? 'md' : 'lg'"
-                unelevated
-                :loading="isLoading"
-              />
-
-              <!-- Botón de Instalación PWA (Solo aparece si es realmente instalable) -->
-              <transition
-                appear
-                enter-active-class="animated fadeIn"
-                leave-active-class="animated fadeOut"
-              >
-                <div v-if="pwaStore.isInstallable && !pwaStore.isStandalone" class="text-center q-mt-md">
-                  <q-btn
-                    label="Instalar Aplicación"
-                    icon="get_app"
-                    color="primary"
-                    outline
-                    no-caps
-                    rounded
-                    class="pwa-install-btn q-px-lg"
-                    @click="pwaStore.install"
-                  >
-                    <q-tooltip class="bg-primary">Disfruta de una mejor experiencia instalando la App</q-tooltip>
-                  </q-btn>
-                </div>
-              </transition>
-
-            </q-form>
-          </q-card-section>
-
-          <!-- ─── Acceso Empresa/Admin ─────────────────────────── -->
-          <q-card-section class="q-pt-none">
-            <q-separator spaced />
-
-            <div class="text-center">
-              <div class="text-caption text-grey-6 q-mb-sm">
-                ¿Eres administrador?
+          <q-card flat class="login-card">
+            <q-card-section class="text-center q-pt-xl q-pb-lg">
+              <div class="avatar-container q-mb-lg">
+                <q-avatar
+                  size="80px"
+                  color="primary"
+                  text-color="white"
+                  icon="account_circle"
+                  class="shadow-10"
+                />
               </div>
 
+              <div class="text-h5 text-weight-bolder text-primary" style="letter-spacing: -0.02em">
+                Portal de Gestión Humana
+              </div>
+
+              <div class="text-body2 text-grey-6 q-mt-sm">
+                Ingresa tus credenciales de acceso
+              </div>
+            </q-card-section>
+
+            <q-card-section class="q-px-xl">
+              <q-form @submit.prevent="handleLogin" class="q-gutter-y-lg">
+
+                <q-input
+                  v-model="form.usuario"
+                  outlined
+                  label="Correo electrónico o usuario"
+                  bg-color="white"
+                  color="primary"
+                  :rules="[val => !!val || 'El usuario es obligatorio']"
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="mail" color="primary" />
+                  </template>
+                </q-input>
+
+                <q-input
+                  v-model="form.password"
+                  outlined
+                  :type="showPassword ? 'text' : 'password'"
+                  label="Contraseña"
+                  bg-color="white"
+                  color="primary"
+                  :rules="[val => !!val || 'La contraseña es obligatoria']"
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="lock" color="primary" />
+                  </template>
+
+                  <template v-slot:append>
+                    <q-icon
+                      :name="showPassword ? 'visibility_off' : 'visibility'"
+                      class="cursor-pointer"
+                      color="grey-6"
+                      @click="showPassword = !showPassword"
+                    />
+                  </template>
+                </q-input>
+
+                <div class="q-pt-md">
+                  <q-btn
+                    label="Iniciar Sesión"
+                    type="submit"
+                    color="primary"
+                    class="full-width btn-login"
+                    size="lg"
+                    unelevated
+                    :loading="isLoading"
+                  />
+                </div>
+
+                <!-- PWA Installation -->
+                <transition appear enter-active-class="animated zoomIn">
+                  <div v-if="pwaStore.isInstallable && !pwaStore.isStandalone" class="text-center q-mt-md">
+                    <q-btn
+                      flat
+                      no-caps
+                      dense
+                      color="accent"
+                      icon="cloud_download"
+                      label="Instalar como App de Escritorio"
+                      class="text-weight-bold"
+                      @click="pwaStore.install"
+                    />
+                  </div>
+                </transition>
+
+              </q-form>
+            </q-card-section>
+
+            <!-- Acceso Admin -->
+            <q-card-section class="text-center q-pb-xl">
+              <q-separator inset class="q-mb-lg" />
+              <div class="text-caption text-grey-6 q-mb-sm">¿Necesitas soporte técnico?</div>
               <q-btn
                 flat
-                dense
                 no-caps
+                label="Contactar Administración"
                 color="primary"
-                icon="admin_panel_settings"
-                label="Acceso Empresa / Admin"
-                class="full-width admin-access-btn"
-                :size="$q.screen.lt.sm ? 'sm' : 'md'"
+                class="text-weight-bold"
                 @click="goToAdmin"
               />
-            </div>
-          </q-card-section>
-
-        </q-card>
-
+            </q-card-section>
+          </q-card>
+        </div>
       </div>
 
     </div>
@@ -211,25 +195,23 @@ const form = reactive({
 })
 
 const handleLogin = async () => {
-  console.log('Login result:', form)
   const result = await authStore.login({
     usuario: form.usuario,
     password: form.password
   })
-  console.log('Login result:', result) // Debug: Ver resultado del login
 
   if (result.success) {
     $q.notify({
       type: 'positive',
-      message: `Bienvenido, ${authStore.user?.nombre}`,
-
+      message: `Bienvenido al sistema, ${authStore.user?.nombre}`,
+      position: 'top-right'
     })
     await router.replace('/dashboard')
   } else {
     $q.notify({
       type: 'negative',
-      message: 'Fallo de acceso',
-      caption: result.message ?? 'Credenciales inválidas',
+      message: 'Acceso Denegado',
+      caption: result.message ?? 'Verifique sus credenciales',
       position: 'top'
     })
   }
@@ -241,195 +223,133 @@ const goToAdmin = () => {
 </script>
 
 <style scoped>
-
-
-/* Left panel - Branding */
 .login-left {
   min-height: 100vh;
-  background: linear-gradient(135deg, #004d40 0%, #00251a 100%);
+  background-color: #004d40;
   position: relative;
   overflow: hidden;
 }
 
-/* Efecto de fondo decorativo mejorado */
+/* Efectos de fondo profesionales */
 .login-left::before {
   content: '';
   position: absolute;
-  top: -20%;
-  right: -20%;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
-  filter: blur(80px);
-  pointer-events: none;
+  top: -15%;
+  right: -15%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(242, 192, 55, 0.15) 0%, transparent 70%);
+  filter: blur(60px);
+  animation: morph 20s linear infinite alternate;
+}
+
+.login-left::after {
+  content: '';
+  position: absolute;
+  bottom: -10%;
+  left: -10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+  filter: blur(40px);
+  animation: morph 15s linear infinite alternate-reverse;
+}
+
+@keyframes morph {
+  0% { border-radius: 40% 60% 60% 40% / 40% 40% 60% 60%; }
+  100% { border-radius: 60% 40% 40% 60% / 60% 60% 40% 40%; }
 }
 
 .login-content {
-  max-width: 460px;
-  width: 90%;
-  z-index: 1;
+  max-width: 500px;
+  z-index: 10;
   padding: 2rem;
-  animation: slideUp 0.8s ease-out;
 }
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Right panel - Formulario */
-.login-right {
-  min-height: 100vh;
-  padding: 1.5rem;
-  background-color: #f8fafc;
-  transition: background-color 0.3s ease;
-}
-
-.body--dark .login-right {
-  background-color: #0f172a;
-}
-
-.login-card {
-  width: 100%;
-  max-width: 440px;
-  margin: 0 auto;
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-}
-
-.body--dark .login-card {
-  background: rgba(30, 41, 59, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-}
-
-.login-card:hover {
-  transform: translateY(-5px);
-}
-
-/* Módulos del panel izquierdo - Glassmorphism */
 .login-module-chip {
-  padding: 12px 20px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(4px);
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: default;
-  min-width: 90px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  min-width: 100px;
 }
 
 .login-module-chip:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-8px);
+  border-color: #f2c037;
 }
 
-/* PWA Button Polish */
-.pwa-install-btn {
-  transition: all 0.3s ease;
-  border-width: 2px;
+/* Formulario Estilo Corporativo */
+.login-right {
+  background-color: #f8fafc;
 }
 
-.pwa-install-btn:hover {
-  background: rgba(0, 77, 64, 0.05);
-  transform: scale(1.02);
+.body--dark .login-right {
+  background-color: #1a202c;
 }
 
-.body--dark .pwa-install-btn:hover {
-  background: rgba(255, 255, 255, 0.05);
+.login-card-container {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
 }
 
-/* Botón Admin */
-.admin-access-btn {
-  border: 1px dashed #cbd5e1;
-  border-radius: 12px;
-  color: #64748b !important;
-  transition: all 0.2s ease;
+.accent-line {
+  height: 6px;
+  background: #f2c037;
+  width: 80px;
+  margin: 0 auto;
+  border-radius: 10px 10px 0 0;
+  position: relative;
+  top: 1px;
+  z-index: 10;
 }
 
-.body--dark .admin-access-btn {
-  border-color: #334155;
-  color: #94a3b8 !important;
+.login-card {
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid rgba(0,0,0,0.05);
 }
 
-.admin-access-btn:hover {
-  background: #f1f5f9 !important;
-  color: var(--q-primary) !important;
-  border-color: var(--q-primary);
+.body--dark .login-card {
+  background-color: #2d3748;
+  border-color: rgba(255,255,255,0.05);
 }
 
-.body--dark .admin-access-btn:hover {
-  background: rgba(255, 255, 255, 0.05) !important;
-  color: #5eead4 !important;
-  border-color: #5eead4;
+.avatar-container {
+  position: relative;
+  display: inline-block;
 }
 
-/* Responsive adjustments */
-@media (max-width: 767px) {
-  .login-left {
-    min-height: auto;
-    padding: 2rem 1rem !important;
-  }
+.avatar-container::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border: 2px dashed #f2c037;
+  border-radius: 50%;
+  opacity: 0.3;
+}
 
-  .login-left::before {
-    display: none;
-  }
+.btn-login {
+  height: 56px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 14px;
+  box-shadow: 0 10px 15px -3px rgba(0, 77, 64, 0.3);
+}
 
-  .login-right {
-    min-height: auto;
-  }
-
+@media (max-width: 599px) {
   .login-card {
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    border-radius: 0;
+    box-shadow: none !important;
   }
-
-  .login-module-chip {
-    padding: 6px 10px;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-  .login-content {
-    max-width: 360px;
-  }
-
-  .login-card {
-    max-width: 360px;
-  }
-}
-
-/* Para pantallas muy pequeñas */
-@media (max-width: 380px) {
-  .login-module-chip {
-    min-width: 56px;
-    padding: 6px 8px;
-  }
-
-  .login-module-chip .q-icon {
-    font-size: 20px !important;
-  }
-}
-
-/* Ajustes para landscape en móviles */
-@media (max-width: 767px) and (orientation: landscape) {
-  .login-left {
-    padding: 1rem !important;
-  }
-
-  .login-content {
+  .login-card-container {
     max-width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .login-content .column {
-    width: 100%;
   }
 }
 </style>

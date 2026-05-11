@@ -21,10 +21,12 @@ declare module 'vue-i18n' {
 }
 /* eslint-enable @typescript-eslint/no-empty-object-type */
 
+const savedLanguage = localStorage.getItem('user-language') || 'es-ES';
+
 const i18n = createI18n({
   legacy: false, // ¡IMPORTANTE para Vue 3 Composition API!
   globalInjection: true, // Para poder usar $t() en los templates
-  locale: 'es-ES',
+  locale: savedLanguage,
   fallbackLocale: 'es-ES',
   messages,
 });

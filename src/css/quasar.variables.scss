@@ -3,14 +3,14 @@
 // Solo variables Sass. Los estilos globales van en app.scss
 // ─────────────────────────────────────────────
 
-$primary : #008374;
-$secondary : #26a69a;
-$accent : #9c27b0;
+$primary   : #004d40;
+$secondary : #2d3748; // Gris azulado profundo para contraste profesional
+$accent    : #f2c037; // Oro ámbar para acentos y llamadas a la acción
 
-$dark : #1f2937;
-$dark-page : #0b1220;
+$dark      : #2d3748;
+$dark-page : #1a202c;
 
-$positive : #21ba45;
-$negative : #c10015;
-$info : #31ccec;
-$warning : #f2c037;
+$positive  : #2e7d32;
+$negative  : #c62828;
+$info      : #0277bd;
+$warning   : #f2c037; // El oro ámbar también funciona como warning elegante

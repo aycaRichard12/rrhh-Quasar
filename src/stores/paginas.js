@@ -1,241 +1,87 @@
 export const PAGINAS = Object.freeze({
-  general: Object.freeze([
-    'controldivisa',
-    'controlunidadmedida',
-    'controlunidadtiempo'
-  ]),
-  'produccion&producto': Object.freeze([
-    'controlrubro',
-    'controlcategoriaproducto',
-    'controlcaracteristicasproducto'
-  ]),
-  'equipamiento': Object.freeze([
-    'controlseccion',
-    'controltipomaquina',
-
-  ]),
-  'insumos&material': Object.freeze([
-    'controltipomaterial',
-    'controlempaques',
-    'controlcaracteristicascualificables',
-    'controlestadoproductoterminado',
-
-  ]),
-  'contingencias': Object.freeze([
-    'controlcontingencias',
-    'controlrecusoscontingencias',
-  ]),
-  'stockmateriaprima': Object.freeze([
-    'stockmateriaprima',
-    'pormaterial',
-    'porcompra',
-    'InsumosInventario',
-    'InsumosMerma',
-
-  ]),
-
-  'generarlistacompra': Object.freeze([
-    'generarlistacompra',
-  ]),
-  'registrarcompra': Object.freeze([
-    'registrarcompra',
-  ]),
-  'maquina': Object.freeze([
-    'maquina',
-  ]),
-
-  'controlcalidadcompra': Object.freeze([
-    'controlcalidadcompra',
-  ]),
-  'despacharmateriales': Object.freeze([
-    'despacharmateriales',
-  ]),
-
-
-  'devoluciones': Object.freeze([
-    'controldevolucioncompras',
-    'controldevolucionproduccion',
-  ]),
-  'etapasproduccion': Object.freeze([
-    'controletapasdeproduccion',
-    'controlgrupoparaetapas',
-    'controlgrupoproductos',
-    'controluniretapasengrupos',
-    'controletapasmaquina',
-    'controletapatrabajador',
-  ]),
-  'producto': Object.freeze([
-    'controlregistrarProducto',
-    'controlconservarproducto',
-
-  ]),
-
-
-  'listaordenproduccion': Object.freeze([
-    'listaordenproduccion',
-  ]),
-  'solicitudesproductos': Object.freeze([
-    'solicitudesproductos',
-  ]),
-
-  'controlproduccion': Object.freeze([
-    'controlproduccion',
-  ]),
-
-  'gastosgenerales': Object.freeze([
-    'gastosgenerales',
-  ]),
-  'produccionlote': Object.freeze([
-    'produccionlote',
-  ]),
-  'proveedores': Object.freeze([
-    'proveedores',
-    'controlproveedormaterial',
-    'controlmaterialproveedor',
-  ]),
-  'material': Object.freeze([
-    'material',
-  ]),
-
-
-
+  areas: ['areas'],
+  cargos: ['cargos'],
+  prerrequisitosdecargo: ['prerrequisitosdecargo'],
+  tiposdecontratos: ['tiposdecontratos'],
+  entesreguladores: ['entesreguladores'],
+  funcionesyobligaciones: ['funcionesyobligaciones'],
+  metodosdeevaluacion: ['metodosdeevaluacion'],
+  actividadesdeevaluacion: ['actividadesdeevaluacion'],
+  beneficios: ['beneficios'],
+  tiposdesanciones: ['tiposdesanciones'],
+  niveles: ['niveles'],
+  motivosdebaja: ['motivosdebaja'],
+  metodosdepago: ['metodosdepago'],
+  bonosempresa: ['bonosempresa'],
+  salariominimo: ['salariominimo'],
+  convocatorias: ['convocatorias'],
+  postulantes: ['postulantes'],
+  trabajadores: ['trabajadores'],
+  contrataciones: ['contrataciones'],
+  permisos: ['permisos'],
+  anticipos: ['anticipos'],
+  vacaciones: ['vacaciones'],
+  sanciones: ['sanciones'],
+  memorandums: ['memorandums'],
+  bajas: ['bajas'],
+  actividades: ['actividades'],
+  sueldosysalarios: ['sueldosysalarios'],
+  aportes: ['aportes'],
+  aguinaldos: ['aguinaldos'],
+  reintegros: ['reintegros'],
+  salarios: ['salarios'],
+  aguinaldosbp: ['aguinaldosbp'],
+  retroactivos: ['retroactivos'],
 })
 
 export const PAGINAS_ICONS = Object.freeze({
-  // Íconos para los submenús de Configuración General
-  controldevolucioncompras: 'assignment_return',
-  controldevolucionproduccion: 'undo',
-  controldivisa: 'payments',
-  controlunidadmedida: 'straighten',
-  controlunidadtiempo: 'timer',
-
-  controltipomaterial: 'category',        // tipo de material
-  controlempaques: 'inventory_2',         // empaques / packaging
-  controlcaracteristicascualificables: 'tune',  // características configurables
-  controlestadoproductoterminado: 'task_alt',    // estado del producto terminado
-
-  //contingencias
-  controlcontingencias: 'warning',
-  controlrecusoscontingencias: 'inventory_2',
+  configuraciones: "settings",
+  reclutamiento: "person_add",
+  personal: "manage_accounts",
+  actividades: "school",
+  planillas: "table_view",
+  boletasdepago: "request_quote",
 
 
-  // Íconos para los submenús de Configuración de Producto
-  controlrubro: 'category',
-  controlcategoriaproducto: 'fact_check',
-  controlcaracteristicasproducto: 'straighten',
-  controlseccion: 'apartment',
-  controltipomaquina: 'build',
-
-  stockmateriaprima: 'inventory',
-  pormaterial: 'bar_chart',
-  porcompra: 'shopping_cart',
-  InsumosInventario: 'category',
-  InsumosMerma: 'category',
-  generarlistacompra: 'shopping_cart_checkout',
-  registrarcompra: 'add_shopping_cart',
-  controlcalidadcompra: 'fact_check',
-  despacharmateriales: 'local_shipping',
-  listaordenproduccion: 'assignment',
-  solicitudesproductos: 'task_alt',
-  maquina: 'build',
-
-  controletapasdeproduccion: 'precision_manufacturing',
-  controlgrupoparaetapas: 'account_tree',
-  controlgrupoproductos: 'inventory_2',
-  controluniretapasengrupos: 'merge_type',
-  controletapasmaquina: 'settings',
-  controletapatrabajador: 'groups',
-  controlproduccion: 'monitor_heart',
-  gastosgenerales: 'payments',
-  produccionlote: 'analytics',
-  controlregistrarProducto: 'card_giftcard',
-  controlconservarproducto: 'ac_unit',
-  proveedores: 'group',
-  controlproveedormaterial: 'inventory_2',
-  controlmaterialproveedor: 'badge',
-  material: 'layers',
-
-
-
+  // Módulos
+  areas: "layers",
+  cargos: "badge",
+  prerrequisitosdecargo: "fact_check",
+  tiposdecontratos: "description",
+  entesreguladores: "gavel",
+  funcionesyobligaciones: "assignment",
+  metodosdeevaluacion: "straighten",
+  actividadesdeevaluacion: "event_available",
+  beneficios: "redeem",
+  tiposdesanciones: "report_problem",
+  niveles: "bar_chart",
+  motivosdebaja: "person_remove_alt_1",
+  metodosdepago: "payments",
+  bonosempresa: "moped", // Representando incentivos/movilidad o 'stars'
+  salariominimo: "monetization_on",
+  convocatorias: "campaign",
+  postulantes: "person_search",
+  trabajadores: "groups",
+  contrataciones: "handshake",
+  permisos: "event_busy",
+  anticipos: "price_check",
+  vacaciones: "beach_access",
+  sanciones: "warning",
+  memorandums: "mail",
+  bajas: "logout",
+  sueldosysalarios: "account_balance_wallet",
+  aportes: "savings",
+  aguinaldos: "card_giftcard",
+  reintegros: "keyboard_return",
+  salarios: "attach_money",
+  aguinaldosbp: "receipt_long",
+  retroactivos: "history",
 })
 export const PAGINAS_SELECT = Object.freeze({
-  registrarventa: Object.freeze([
-    'reportedeventas',
-    'reportedecotizacionesocultas',
-    'reporteproductosvendidosindividual',
-    'kardex',
-  ]),
-  cuentasporcobrar: Object.freeze([
-    'reportecuentasporcobrarocultas',
-    'reportecuentasxpagarxperiodo',
-  ]),
-  contingencias: Object.freeze(['reportedeextravios', 'reportedemermas']),
-  gestioncompra: Object.freeze([
-    'reporteproductoscomprados',
-    'reportedecompras',
-    'reportestockdeproductosindividual',
-    'reporteproveedorcompras',
-    'reporteproductoproveedorcompras',
-  ]),
-  inventarioexterno: Object.freeze([
-    'reportedecaducidaddeproductos',
-    'reporteinventarioexterior',
-    'indicesrotacion',
-  ]),
-  campanas: Object.freeze([
-    'reportedecampanas',
-    'reportedeventasporcampanas',
-    'reporteVentasCampana',
-  ]),
-  gestioncampanas: Object.freeze([
-    'reportedecampanas',
-    'reportedeventasporcampanas',
-    'reporteVentasCampana',
-  ]),
-})
+  // Reportes por submenú
+  })
 
-
-export const ICONOS_MENU = Object.freeze({
-  configuracion: 'settings',
-  administracion: 'admin_panel_settings',
-  almaceninsumos: 'inventory',
-  planeacionproduccion: 'factory',
-  almacenproductos: 'warehouse',
-  calendario: 'calendar_month',
-  inicio: 'dashboard',
-
-
-  general: 'tune',
-  'produccion&producto': 'category',
-  equipamiento: 'precision_manufacturing',
-  'insumos&material': 'inventory_2',
-  contingencias: 'warning',
-  maquina: 'build',
-  devoluciones: 'assignment_return',
-  etapasproduccion: 'timeline',
-  producto: 'inventory_2',
-  proveedores: 'group',
-  material: 'layers',
-  trabajador: 'badge',
-  contingenciasejecucion: 'report_problem',
-  stockmateriaprima: 'list_alt',
-  generarlistacompra: 'shopping_cart_checkout',
-  registrarcompra: 'add_shopping_cart',
-  controlcalidadcompra: 'fact_check',
-  despacharmateriales: 'local_shipping',
-  listaordenproduccion: 'assignment',
-  solicitudesproductos: 'task_alt',
-  controlproduccion: 'monitor_heart',
-  gastosgenerales: 'payments',
-  produccionlote: 'analytics',
-  stockproductos: 'inventory',
-  controlcalidadproduccion: 'verified',
-  despacharproductos: 'outbox',
-  mantenimiento: 'construction',
-  limpieza: 'cleaning_services',
-  notificaciones: 'notifications',
-  dashboard: 'dashboard',
-});
+export const ICONOS_MENU = PAGINAS_ICONS;
 
 export function getIconoMenu(codigo) {
   const codigoBase = codigo.split('-')[0];
@@ -246,7 +92,6 @@ export const tieneAtributo = (grupo, atributo) => {
   return PAGINAS[grupo]?.includes(atributo) ?? false
 }
 
-
 export const obtenerGrupos = () => {
   return Object.keys(PAGINAS)
 }
@@ -254,7 +99,6 @@ export const obtenerGrupos = () => {
 export const obtenerAtributos = (grupo) => {
   return PAGINAS[grupo] || []
 }
-
 
 export const obtenerIcono = (codigo) => {
   const prefix = codigo?.split('-')[0] || ''

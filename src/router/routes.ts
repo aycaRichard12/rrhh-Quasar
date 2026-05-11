@@ -7,7 +7,6 @@ const routes: RouteRecordRaw[] = [
     redirect: '/auth/login',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      //Configuracion
       { path: 'dashboard', component: () => import('pages/IndexPage.vue') },
       { path: 'welcome', component: () => import('pages/WelcomePage.vue') },
 
