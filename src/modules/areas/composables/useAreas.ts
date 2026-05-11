@@ -1,86 +1,95 @@
 import { ref, onMounted } from 'vue';
-import { areasService } from '../services/areas.service';
-import type { Area, Sucursal } from '../types/areas.types';
+import { useI18n } from 'vue-i18n';
+import { areasService } from 'src/modules/areas/services/areas.service';
+import type { Area, Sucursal } from 'src/modules/areas/types/areas.types';
+import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 
 export function useAreas() {
-  const ID_EMPRESA = 'd09bf41544a3365a46c9077ebb5e35c3';
-  // Variables reactivas
-  const areasList = ref<Area[]>([]);
-  const sucursalesList = ref<Sucursal[]>([]);
-  const showDialog = ref(false);
-  const isEditing = ref(false);
+  // 1. Configuraciones Globales del Composable
+  const idEmpresa = String(idempresa_md5());
+  const { t } = useI18n();
+
+  // 2. Variables Reactivas (Nombres en español y semánticos)
+  const areasLista = ref<Area[]>([]);
+  const sucursalesLista = ref<Sucursal[]>([]);
+  const mostrarDialogo = ref(false);
+  const esEdicion = ref(false);
   const formData = ref<Area>({ id: 0, nombre: '', descripcion: '', sucursal: null });
 
-  // Funciones de obtención
+  // 3. Funciones de Obtención
   const cargarDatos = async () => {
     try {
-      sucursalesList.value = await areasService.obtenerSucursales();
+      sucursalesLista.value = await areasService.obtenerSucursales();
       const dataAreas = await areasService.obtenerAreas();
-      if (dataAreas.estado !== 'error') areasList.value = dataAreas;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // Funciones para abrir el Popup
-  const abrirNuevo = () => {
-    formData.value = { id: 0, nombre: '', descripcion: '', sucursal: null };
-    isEditing.value = false;
-    showDialog.value = true;
-  };
-
-  const abrirEditar = async (row: Area) => {
-    try {
-      const data = await areasService.verificarArea(row.id);
-      if (data.estado === "exito") {
-        formData.value = {
-          id: data.datos.id,
-          nombre: data.datos.nombre,
-          descripcion: data.datos.descripcion,
-          sucursal: data.datos.idsucursal
-        };
-        isEditing.value = true;
-        showDialog.value = true;
+      if (dataAreas.estado !== 'error') {
+        areasLista.value = dataAreas;
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  // Función Guardar
-  const guardar = async (datosFormulario: Area) => {
-  const payload = new FormData();
-  
-  // Usa "datosFormulario" en vez de "formData.value" en estas líneas
-  payload.append('nombre', datosFormulario.nombre);
-  payload.append('descripcion', datosFormulario.descripcion);
+  // 4. Funciones de Interfaz (Apertura de Modales)
+  const nuevaArea = () => {
+    formData.value = { id: 0, nombre: '', descripcion: '', sucursal: null };
+    esEdicion.value = false;
+    mostrarDialogo.value = true;
+  };
 
-  if (datosFormulario.sucursal !== null) {
-    const idParaEnviar = typeof datosFormulario.sucursal === 'object' 
-      ? datosFormulario.sucursal.idsucursal || datosFormulario.sucursal.id || '' 
-      : datosFormulario.sucursal;
-    payload.append('sucursal', String(idParaEnviar));
-  }
-
-  if (isEditing.value) {
-    payload.append('ver', 'editarArea'); 
-    payload.append('id', String(datosFormulario.id));
-  } else {
-    payload.append('ver', 'registroAreas'); 
-    payload.append('empresa', ID_EMPRESA);
-  }
-
+  const editarArea = async (row: Area) => {
     try {
-      await areasService.guardarArea(payload);
-      showDialog.value = false;
-      await cargarDatos(); // Recargamos la tabla
+      const data = await areasService.verificarArea(row.id);
+      if (data.estado === 'exito') {
+        formData.value = {
+          id: data.datos.id,
+          nombre: data.datos.nombre,
+          descripcion: data.datos.descripcion,
+          sucursal: data.datos.idsucursal
+        };
+        esEdicion.value = true;
+        mostrarDialogo.value = true;
+      }
     } catch (error) {
       console.error(error);
     }
   };
-  // Función Eliminar
-  const eliminar = async (id: string | number) => {
-    if (!confirm('¿Deseas eliminar esta área?')) return;
+
+  // 5. Función de Guardado (POST)
+  const guardarArea = async (datosFormulario: Area) => {
+    const payload = new FormData();
+    
+    payload.append('nombre', datosFormulario.nombre);
+    payload.append('descripcion', datosFormulario.descripcion);
+
+    if (datosFormulario.sucursal !== null) {
+      const idParaEnviar = typeof datosFormulario.sucursal === 'object' 
+        ? datosFormulario.sucursal.idsucursal || datosFormulario.sucursal.id || '' 
+        : datosFormulario.sucursal;
+      payload.append('sucursal', String(idParaEnviar));
+    }
+
+    if (esEdicion.value) {
+      payload.append('ver', 'editarArea'); 
+      payload.append('id', String(datosFormulario.id));
+    } else {
+      payload.append('ver', 'registroAreas'); 
+      // Aquí inyectamos el ID de la empresa dinámico para registros nuevos
+      payload.append('empresa', idEmpresa);
+    }
+
+    try {
+      await areasService.guardarArea(payload);
+      mostrarDialogo.value = false;
+      await cargarDatos(); 
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // 6. Función de Eliminación
+  const eliminarArea = async (id: string | number) => {
+    if (!confirm(t('common.actions.delete'))) return;
+    
     try {
       await areasService.eliminarArea(id);
       await cargarDatos();
@@ -89,10 +98,19 @@ export function useAreas() {
     }
   };
 
+  // 7. Ciclo de Vida
   onMounted(cargarDatos);
 
+  // 8. El "Escaparate" (Exportación)
   return {
-    areasList, sucursalesList, showDialog, isEditing, formData,
-    abrirNuevo, abrirEditar, guardar, eliminar
+    areasLista, 
+    sucursalesLista, 
+    mostrarDialogo, 
+    esEdicion, 
+    formData,
+    nuevaArea, 
+    editarArea, 
+    guardarArea, 
+    eliminarArea
   };
 }

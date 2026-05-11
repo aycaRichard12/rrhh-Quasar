@@ -21,7 +21,7 @@ defineProps<{ rows: Area[] }>();
 defineEmits(['edit', 'delete']);
 
 const columns: QTableColumn[] = [
-  { name: 'numero', label: 'N°', align: 'center', field: 'numero', style: 'width: 40px' },
+  { name: 'numero', label: 'N°', align: 'center', field: 'numero', style: 'width: 40px'},
   { name: 'area', label: 'Área', align: 'left', field: 'nombre', sortable: true, style: 'white-space: normal; width: 100px' },
   { name: 'descripcion', label: 'Descripción', align: 'left', field: 'descripcion',style: 'white-space: normal; min-width: 150px;', classes: 'ellipsis-3-lines' },
   { name: 'sucursal', label: 'Sucursal', align: 'left', field: 'sucursal', style: 'width: 120px',
