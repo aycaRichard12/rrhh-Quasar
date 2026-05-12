@@ -11,6 +11,7 @@ const routes: RouteRecordRaw[] = [
       { path: 'welcome', component: () => import('pages/WelcomePage.vue') },
       // CONFIGURACIONES
       { path: 'areas', component: () => import('src/modules/areas/pages/AreasPage.vue') },
+      { path: 'entesReguladores', component: () => import('src/modules/entesReguladores/pages/EntesReguladoresPage.vue') },
 
 
     ],

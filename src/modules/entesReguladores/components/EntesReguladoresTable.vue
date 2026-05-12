@@ -40,6 +40,7 @@
 <script setup lang="ts">
 import { inject, type Ref } from 'vue';
 import type { EnteRegulador } from '../types/entesReguladores.types';
+import type { QTableColumn } from 'quasar'; // 1. AGREGAMOS ESTA IMPORTACIÓN
 
 const listaEntes = inject<Ref<EnteRegulador[]>>('listaEntes')!;
 const cargando = inject<Ref<boolean>>('cargando')!;
@@ -49,13 +50,13 @@ const abrirDialogoEdicion = inject<(id: string) => Promise<void>>('abrirDialogoE
 const confirmarEliminacion = inject<(id: string) => void>('confirmarEliminacion')!;
 const cambiarEstado = inject<(id: string, nuevoEstado: string) => Promise<void>>('cambiarEstado')!;
 
-const columnas = [
+const columnas: QTableColumn[] = [
   { name: 'nombre', label: 'Ente Regulador', align: 'left', field: 'nombre', sortable: true },
   { name: 'porcentaje', label: 'Porcentaje', align: 'right', field: 'porcentaje' },
   { name: 'descripcion', label: 'Descripción', align: 'left', field: 'descripcion' },
   { name: 'monto', label: 'Monto', align: 'right', field: 'monto' },
   { name: 'orden', label: 'Orden', align: 'right', field: 'orden' },
   { name: 'estado', label: 'Estado', align: 'center', field: 'estado' },
-  { name: 'opciones', label: 'Opciones', align: 'center' }
+  { name: 'opciones', label: 'Opciones', align: 'center', field: 'opciones'}
 ];
 </script>
