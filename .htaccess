@@ -1,11 +1,8 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /app/rrhhvq/
-
-  # No reescribir archivos o carpetas que existen físicamente
+  RewriteBase /app/rrhhv1/
+  RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-
-  # Todo lo demás va al index.html (SPA fallback)
   RewriteRule . /app/rrhhv1/index.html [L]
 </IfModule>

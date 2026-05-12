@@ -57,7 +57,7 @@ export default defineConfig((/* ctx */) => {
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
       // Public path where the app will be served in production
-      publicPath: '/app/rrhh/',
+      publicPath: '/app/rrhhv1/',
       // Quasar gestionará SERVICE_WORKER_FILE automáticamente basado en publicPath
       env: {},
         // Use root publicPath for deployments served from root (e.g. tunnel URLs)
@@ -188,7 +188,7 @@ export default defineConfig((/* ctx */) => {
         json.description = 'Estrategia de Recursos Humanos MisterSofts';
         json.display = 'standalone';
         json.orientation = 'portrait';
-        json.start_url = '/app/rrhh/';
+        json.start_url = '/app/rrhhv1/';
       },
       // useCredentialsForManifestTag: true,
       // Inject standard PWA meta tags (manifest, theme-color, mobile-web-app-capable, etc.)
