@@ -4,8 +4,8 @@
     :position="$q.screen.lt.sm ? 'bottom' : 'standard'"
   >
     <q-card :style="$q.screen.lt.sm ? 'width: 100vw' : 'width: 400px; max-width: 90vw;'">
-      <q-card-section class="bg-primary text-white row items-center justify-between">
-        <div class="text-h6">{{ isEditing ? 'Editar Área' : 'Nueva Área' }}</div>
+      <q-card-section class="bg-primary row items-center justify-between">
+        <div class="text-h6">{{ esEdicion ? 'Editar Área' : 'Nueva Área' }}</div>
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
 
@@ -52,7 +52,7 @@ import type { Area, Sucursal } from '../types/areas.types';
 
 const props = defineProps<{
   modelValue: boolean;
-  isEditing: boolean;
+  esEdicion: boolean;
   formData: Area;
   sucursales: Sucursal[];
 }>();
