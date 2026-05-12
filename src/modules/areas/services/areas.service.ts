@@ -28,5 +28,5 @@ export const areasService = {
     const { data } = await api.get(`eliminarAreas/${id}`);
     return data;
   }
-
+  
 };
