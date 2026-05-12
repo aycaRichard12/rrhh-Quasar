@@ -19,17 +19,3 @@ export interface SucursalAnidada {
   nombre?: string;
   region?: string;
 }
-
-// OPCIONAL?
-export interface VerificarIDarea {
-  estado: string;
-  mensaje: string;
-  datos: datos; // <-- anidacion
-}
-
-export interface datos {
-  id: string;
-  nombre: string;
-  descripcion: string;
-  idsucursal: string;
-}

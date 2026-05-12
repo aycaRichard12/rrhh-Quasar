@@ -7,16 +7,16 @@
     </div>
     <!-- La Tabla -->
     <AreasTable
-      :rows="areasLista"
+      :rows="listaAreas"
       @edit="editarArea"
       @delete="eliminarArea"
     />
     <!-- El Popup -->
     <AreaFormDialog
-      v-model="mostrarDialogo"
-      :is-editing="esEdicion"
-      :form-data="formData"
-      :sucursales="sucursalesLista"
+      v-model="esVisibleDialogo"
+      :es-edicion="esModoEdicion"
+      :form-data="datosFormulario"
+      :sucursales="listaSucursales"
       @save="guardarArea"
     />
   </div>
@@ -30,14 +30,7 @@ import AreaFormDialog from '../components/AreaFormDialog.vue';
 
 // Extraemos las funciones y variables que necesitamos para dibujar la pantalla
 const {
-    areasLista, 
-    sucursalesLista, 
-    mostrarDialogo, 
-    esEdicion, 
-    formData,
-    nuevaArea, 
-    editarArea, 
-    guardarArea, 
-    eliminarArea
+    listaAreas, listaSucursales, esVisibleDialogo, esModoEdicion, datosFormulario,
+    nuevaArea, editarArea, guardarArea, eliminarArea
 } = useAreas();
 </script>

@@ -21,10 +21,10 @@ defineProps<{ rows: Area[] }>();
 defineEmits(['edit', 'delete']);
 
 const columns: QTableColumn[] = [
-  { name: 'numero', label: 'N°', align: 'center', field: 'numero', style: 'width: 40px'},
-  { name: 'area', label: 'Área', align: 'left', field: 'nombre', sortable: true, style: 'white-space: normal; width: 100px' },
-  { name: 'descripcion', label: 'Descripción', align: 'left', field: 'descripcion',style: 'white-space: normal; min-width: 150px;', classes: 'ellipsis-3-lines' },
-  { name: 'sucursal', label: 'Sucursal', align: 'left', field: 'sucursal', style: 'width: 120px',
+  { name: 'numero',     label: 'N°',          align: 'center',field: 'numero',     style: 'width: 40px'},
+  { name: 'area',       label: 'Área',        align: 'left',  field: 'nombre',     style: 'white-space: normal; width: 100px', sortable: true},
+  { name: 'descripcion',label: 'Descripción', align: 'left',  field: 'descripcion',style: 'white-space: normal; min-width: 150px;'},
+  { name: 'sucursal',   label: 'Sucursal',    align: 'left',  field: 'sucursal',   style: 'width: 120px',
     // 2. Cambiamos 'any' por el tipo exacto (objeto de sucursal o nulo)
     format: (val: SucursalAnidada | null) => {
       if (val && typeof val === 'object') {
@@ -33,6 +33,6 @@ const columns: QTableColumn[] = [
       return 'Sin sucursal';
     }
   },
-  { name: 'opciones', label: 'Opciones', align: 'center', field: 'opciones', style: 'width: 80px' }
+  { name: 'opciones',   label: 'Opciones',    align: 'center', field: 'opciones', style: 'width: 80px' }
 ];
 </script>
