@@ -1,21 +1,26 @@
 export interface Sucursal {
-  id: string;
+  id?: string | number;
   sucursal: string;
   region: string;
-  idregion: string;
-  idempresa: string;
+  idregion: string | number;
+  idempresa: string | number;
 }
 
 export interface Area {
-  id: number | string;
+  id?: string | number | undefined;
   nombre: string;
   descripcion: string;
-  sucursal: SucursalAnidada | string | number | null;
+  sucursal: SucursalAnidada | null;
 }
 
 export interface SucursalAnidada {
-  idsucursal?: string | number;
-  id?: string | number;
-  nombre?: string;
-  region?: string;
+  idsucursal: string | number;
+  nombre: string;
+  region: string;
+  idregion: string | number;
+}
+export interface RespuestaApi<T = undefined> {
+  estado: 'exito' | 'error';
+  mensaje: string;
+  datos?: T;
 }

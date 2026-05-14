@@ -85,10 +85,34 @@ export default {
     deleteData: 'Error deleting record',
     reportError: 'Error generating PDF report',
   },
-
   navigation,
   welcome: {
     title: 'Welcome to HR Management!',
     subtitle: 'Select an option from the side menu to get started.'
-  }
+  },
+  formBtn: {
+    registration: 'New Registration',
+    save: 'Save',
+    cancel: 'Cancel',
+  },
+  areas: {
+    title: 'Areas',
+    subtitle: 'Description $$$$$$$',
+    form: {
+      area: 'Area*',
+      description: 'Description*',
+      branch: 'Branch*',
+      noBranch: 'No Branch',
+    },
+    table: {
+      title: 'Area Management',
+      index: 'N°',
+      name: 'Area',
+      description: 'Description',
+      branch: 'Branch',
+      options: 'Options',
+      recordsPerPage: "Record per Page:",
+      of: "of",
+    }
+  },
 };

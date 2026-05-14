@@ -14,16 +14,15 @@
       </div>
       <q-table :rows="listaTemplates" :loading="cargando" title="Templates Disponibles" flat bordered />
     </div>
-
     <EntesReguladoresForm />
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { provide } from 'vue';
 import EntesReguladoresTable from '../components/EntesReguladoresTable.vue';
 import EntesReguladoresForm from '../components/EntesReguladoresForm.vue';
 import { useEntesReguladores } from '../composables/useEntesReguladores';
+import { provide } from 'vue';
 
 // Instanciamos nuestro cerebro
 const entesCore = useEntesReguladores();

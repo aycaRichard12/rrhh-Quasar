@@ -1,31 +1,30 @@
-import { ref, onMounted } from 'vue';
-import { areasService } from 'src/modules/areas/services/areas.service';
 import type { Area, Sucursal } from 'src/modules/areas/types/areas.types';
+import { areasService } from 'src/modules/areas/services/areas.service';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
+import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 export function useAreas() {
   // 1. Configuraciones Globales del Composable
   const idEmpresa = String(idempresa_md5());
-  const { t } = useI18n();
-
+  const { t }     = useI18n();
   // 2. Variables Reactivas
   const esModoEdicion    = ref(false);
   const esVisibleDialogo = ref(false);
   const listaAreas       = ref<Area[]>([]);
   const listaSucursales  = ref<Sucursal[]>([]);
-  const datosFormulario  = ref<Area>({ id: 0, nombre: '', descripcion: '', sucursal: null });
+  const datosFormulario  = ref<Area>({ id: undefined, nombre: '', descripcion: '', sucursal: null});
 
   // 3. Funciones de Obtención
   const cargarDatos = async () => {
     try {
       listaSucursales.value = await areasService.obtenerSucursales();
       const dataAreas = await areasService.obtenerAreas();
-      if (dataAreas.estado !== 'error') {
+      if (Array.isArray(dataAreas)) {
         listaAreas.value = dataAreas;
       }
     } catch (error) {
-      console.error(error);
+      console.error('Error al cargar datos de áreas:', error);
     }
   };
 
@@ -33,42 +32,46 @@ export function useAreas() {
   const nuevaArea = () => {
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
-    datosFormulario.value = { id: 0, nombre: '', descripcion: '', sucursal: null };
+    datosFormulario.value = { id: undefined, nombre: '', descripcion: '', sucursal: null};
   };
 
   const editarArea = async (row: Area) => {
-    try {
-      const data = await areasService.verificarArea(row.id);
-      if (data.estado === 'exito') {
-        datosFormulario.value = {
-          id: data.datos.id,
-          nombre: data.datos.nombre,
-          descripcion: data.datos.descripcion,
-          sucursal: data.datos.idsucursal
-        };
-        esModoEdicion.value = true;
-        esVisibleDialogo.value = true;
+      if (!row.id) {
+        console.error('El área seleccionado no tiene un ID válido');
+        return;
       }
-    } catch (error) {
-      console.error(error);
-    }
+      try {
+        const data = await areasService.verificarArea(row.id.toString());
+        
+        if (data.estado ==='exito' && data.datos){
+          datosFormulario.value = {
+            id:          data.datos.id,
+            nombre:      data.datos.nombre,
+            descripcion: data.datos.descripcion,
+            sucursal:    data.datos.sucursal
+          };
+          esModoEdicion.value    = true;
+          esVisibleDialogo.value = true;
+          }
+      } catch (error) {
+          console.error('Error al editar área:', error);
+        } 
   };
 
-  // 5. Función de Guardado (POST)
   const guardarArea = async (datosFormulario: Area) => {
     const payload = new FormData();
     
     payload.append('nombre', datosFormulario.nombre);
     payload.append('descripcion', datosFormulario.descripcion);
 
-    if (datosFormulario.sucursal !== null) {
+    if (datosFormulario.sucursal !== null && datosFormulario.sucursal !== undefined) {
       const idParaEnviar = typeof datosFormulario.sucursal === 'object' 
-        ? datosFormulario.sucursal.idsucursal || datosFormulario.sucursal.id || '' 
+        ? datosFormulario.sucursal.idsucursal
         : datosFormulario.sucursal;
       payload.append('sucursal', String(idParaEnviar));
     }
 
-    if (esModoEdicion.value) {
+    if (esModoEdicion.value && datosFormulario.id) {
       payload.append('ver', 'editarArea'); 
       payload.append('id', String(datosFormulario.id));
     } else {
@@ -81,7 +84,7 @@ export function useAreas() {
       esVisibleDialogo.value = false;
       await cargarDatos(); 
     } catch (error) {
-      console.error(error);
+      console.error('Error al guardar área:', error);
     }
   };
 
@@ -100,6 +103,6 @@ export function useAreas() {
 
   return {
     listaAreas, listaSucursales, esVisibleDialogo, esModoEdicion, datosFormulario,
-    nuevaArea, editarArea, guardarArea, eliminarArea
+    nuevaArea, editarArea, guardarArea, eliminarArea, cargarDatos
   };
 }

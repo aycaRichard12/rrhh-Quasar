@@ -89,5 +89,30 @@ export default {
   welcome: {
     title: '¡Bienvenido a Gestión RRHH!',
     subtitle: 'Selecciona una opción del menú lateral para gestionar el talento humano.',
-  }
+  },
+  formBtn: {
+    registration: 'Nuevo Registro',
+    save: 'Guardar',
+    cancel: 'Cancelar',
+  },
+  areas: {
+    title: 'Áreas',
+    subtitle: 'Descripcion $$$$$$$',
+    form: {
+      area: 'Area*',
+      description: 'Descripción*',
+      branch: 'Sucursal*',
+      noBranch: 'Sin sucursal',
+    },
+    table: {
+      title: 'Gestión de Áreas',
+      index: 'N°',
+      name: 'Área',
+      description: 'Descripción',
+      branch: 'Sucursal',
+      options: 'Opciones',
+      recordsPerPage: "Registros por página:",
+      of: "de",
+    }
+  },
 };
