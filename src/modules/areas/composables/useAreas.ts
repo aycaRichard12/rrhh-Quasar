@@ -3,11 +3,13 @@ import { areasService } from 'src/modules/areas/services/areas.service';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useQuasar} from 'quasar';
 
 export function useAreas() {
   // 1. Configuraciones Globales del Composable
   const idEmpresa = String(idempresa_md5());
   const { t }     = useI18n();
+  const $q        = useQuasar();
   // 2. Variables Reactivas
   const esModoEdicion    = ref(false);
   const esVisibleDialogo = ref(false);
@@ -88,15 +90,23 @@ export function useAreas() {
     }
   };
 
-  const eliminarArea = async (id: string | number) => {
-    if (!confirm(t('common.actions.delete'))) return;
-    
-    try {
-      await areasService.eliminarArea(id);
-      await cargarDatos();
-    } catch (error) {
-      console.error(error);
-    }
+  const eliminarArea = (id: string | number) => {
+    $q.dialog({
+      title: t('cambio¿Está Seguro?'), 
+      message: t('cambioNo podrá recuperar el registro del Área'),
+      ok: { color: 'negative', label: t('cambioEliminar') },
+      cancel: { color: 'primary', label: t('formBtn.cancel'), flat: true }
+    }).onOk(() => {
+      areasService.eliminarArea(id)
+        .then(() => {
+          $q.notify({ type: 'positive', message: t('cambioEliminación exitosa') });
+          void cargarDatos();
+        })
+        .catch(error => {
+          console.error(error);
+          $q.notify({ type: 'negative', message: t('cambioError al eliminar') });
+        });
+    });
   };
 
   onMounted(cargarDatos);

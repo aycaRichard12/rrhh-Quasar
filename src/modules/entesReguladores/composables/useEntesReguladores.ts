@@ -13,7 +13,7 @@ export function useEntesReguladores() {
   const esVisibleDialogo = ref(false);
   const esVistaTemplates = ref(false);
   const cargando         = ref(false);
-  const esEdicion        = ref(false);
+  const esModoEdicion        = ref(false);
   
   const enteActual = ref<EnteRegulador>({
     nombre: '', porcentaje: '', descripcion: '', monto: '', orden: ''
@@ -47,7 +47,7 @@ export function useEntesReguladores() {
 
   const abrirDialogoNuevo = () => {
     enteActual.value = { nombre: '', porcentaje: '', descripcion: '', monto: '', orden: '' };
-    esEdicion.value = false;
+    esModoEdicion.value = false;
     esVisibleDialogo.value = true;
   };
 
@@ -57,7 +57,7 @@ export function useEntesReguladores() {
       const respuesta = await entesReguladoresService.verificarEnteRegulador(id);
       if (respuesta.estado === 'exito' && respuesta.datos) {
         enteActual.value = { ...respuesta.datos };
-        esEdicion.value = true;
+        esModoEdicion.value = true;
         esVisibleDialogo.value = true;
       }
     } catch (error) {
@@ -68,21 +68,20 @@ export function useEntesReguladores() {
     }
   };
 
-  const guardarEnte = async () => {
-    // ESTANDARIZACIÓN: El Composable construye el FormData
+  const guardarEnte = async (datosParaGuardar: EnteRegulador) => {
     const payload = new FormData();
-    payload.append('ver', esEdicion.value ? 'editarEnteregulador' : 'registroEnteregulador');
+    payload.append('ver', esModoEdicion.value ? 'editarEnteregulador' : 'registroEnteregulador');
     payload.append('idempresa', idEmpresa);
     
-    if (enteActual.value.id) {
-      payload.append('id', String(enteActual.value.id));
+    if (datosParaGuardar.id) {
+      payload.append('id', String(datosParaGuardar.id));
     }
     
-    payload.append('nombre', enteActual.value.nombre);
-    payload.append('porcentaje', String(enteActual.value.porcentaje));
-    payload.append('descripcion', enteActual.value.descripcion);
-    payload.append('monto', String(enteActual.value.monto));
-    payload.append('orden', String(enteActual.value.orden));
+    payload.append('nombre', datosParaGuardar.nombre);
+    payload.append('porcentaje', String(datosParaGuardar.porcentaje));
+    payload.append('descripcion', datosParaGuardar.descripcion);
+    payload.append('monto', String(datosParaGuardar.monto));
+    payload.append('orden', String(datosParaGuardar.orden));
 
     try {
       const respuesta = await entesReguladoresService.guardarEnteRegulador(payload);
@@ -160,7 +159,7 @@ export function useEntesReguladores() {
   onMounted(cargarEntes);
 
   return {
-    listaEntes, listaTemplates, esVisibleDialogo, esVistaTemplates, cargando, enteActual, esEdicion,
+    listaEntes, listaTemplates, esVisibleDialogo, esVistaTemplates, cargando, enteActual, esModoEdicion,
     cargarEntes, cargarTemplates, abrirDialogoNuevo, abrirDialogoEdicion, guardarEnte, confirmarEliminacion, cambiarEstado, procesarTemplates
   };
 }

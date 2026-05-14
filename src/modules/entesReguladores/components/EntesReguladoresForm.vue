@@ -7,13 +7,15 @@
     <q-card :style="$q.screen.lt.sm ? 'width: 100vw' : 'width: 400px; max-width: 90vw;'">
 
       <q-form @submit.prevent="onSave">
+
         <q-card-section class="bg-primary row items-center justify-between">
-          <div class="text-h6">{{ esEdicion ? $t('CambiarEditar Ente Regulador') : $t('cambiarNuevo Registro') }}</div>
+          <div class="text-h6">{{ esModoEdicion ? $t('CambiarEditar Ente Regulador') : $t('cambiarNuevo Registro') }}</div>
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
 
         <q-card-section class="q-pt-md scroll" style="max-height: 70vh;">
           <div class="row q-col-gutter-md">
+
             <div class="col-12">
               <q-input 
                   v-model="datosLocales.nombre" 
@@ -87,7 +89,8 @@
             flat
             :label="$t('formBtn.cancel')"
             color="negative"
-            v-close-popup />
+            v-close-popup
+          />
           <q-btn 
             type="submit" 
             icon="save" 
@@ -108,7 +111,7 @@ import { computed, ref, watch } from 'vue';
 
 const props = defineProps<{
   modelValue:     boolean;
-  esEdicion:      boolean;
+  esModoEdicion:  boolean;
   datosFormulario:EnteRegulador;
   guardando?:     boolean;
 }>();

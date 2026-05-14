@@ -14,7 +14,7 @@
 
         <q-card-section class="q-pt-md scroll" style="max-height: 70vh;">
           <div class="row q-col-gutter-md">
-            
+          
             <div class="col-12">
               <q-input
                 v-model="datosLocales.nombre"
@@ -68,7 +68,12 @@
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary q-pb-md q-pr-md">
-          <q-btn flat :label="$t('formBtn.cancel')" color="negative" v-close-popup />
+          <q-btn
+            flat
+            :label="$t('formBtn.cancel')"
+            color="negative"
+            v-close-popup
+          />
           <q-btn 
             type="submit"
             icon="save"
