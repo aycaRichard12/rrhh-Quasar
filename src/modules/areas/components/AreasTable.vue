@@ -1,11 +1,11 @@
 <template>
   <q-table
-    :title="$t('areas.table.title')"
+    :title="$t('areas.table.title', 'Gestion de Areas')"
     :rows="rows"
     :columns="columnas"
     row-key="id"
     :loading="cargando"
-    :rows-per-page-label="t('areas.table.recordsPerPage')"
+    :rows-per-page-label="t('areas.table.recordsPerPage', 'Registros por página:')"
     :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${t('areas.table.of')} ${totalRows}`"
     flat
     bordered
@@ -18,15 +18,17 @@
       <q-td :props="props">{{ props.rowIndex + 1 }}</q-td>
     </template>
     
+    <!-- revisar q-gutter -->
+         <!-- class="q-mr-xs"  revisar su efecto-->
     <template v-slot:body-cell-opciones="props">
-      <q-td :props="props" class="text-center">
+      <q-td :props="props" class="text-center q-gutter-xs">
         <q-btn
           icon="edit" 
           color="info"
           round
           dense
           size="sm"
-          class="q-mr-xs"
+      
           @click="$emit('edit', props.row)">
           <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
             {{ t('common.actions.edit') }}

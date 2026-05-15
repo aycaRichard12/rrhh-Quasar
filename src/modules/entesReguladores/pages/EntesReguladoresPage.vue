@@ -1,40 +1,51 @@
-<template>
-  <q-page padding>
-
+<!-- 
     <div class="row justify-center q-mb-md">
       <div class="text-h5 text-primary text-bold">
         {{ $t('Entes Reguladores (Título Provisional)') }}
       </div>
+    </div> -->
+
+<template>
+  <q-page padding>
+    
+    <div class="col">
+      <div class="row col justify-center">
+        <h4 class="q-my-none text-primary">{{ $t('entes.title', 'Módulo de Entes Reguladores') }}</h4>
+        </div>
+        <div class="row col justify-center">
+        <p class="text-grey-7">{{ $t('entes.description', 'Gestión de aportes y regulaciones.') }}</p>
+      </div>
     </div>
 
-    <div v-if="!esVistaTemplates">
+    <div v-if="!esVistaEstandar">
       <EntesReguladoresTable
         :rows="listaEntes"
         :cargando="cargando"
         @create="abrirDialogoNuevo"
-        @import="cargarTemplates"
-        @edit="abrirDialogoEdicion"
+        @import="alternarVistaEstandar"
+        @edit="abrirDialogoEditar"
         @delete="confirmarEliminacion"
-        @change-status="cambiarEstado"
+        @change-status="cambiarEstadoRegistro"
       />
     </div>
 
     <div v-else>
       <EntesReguladoresStandar
-      :templates="listaTemplates"
-      :cargando="cargando"
-      @volver="esVistaTemplates = false"
-      @procesar="procesarTemplates"
+        :rows="listaEntesEstandar"
+        :cargando="cargando"
+        @volver="alternarVistaEstandar"
+        @procesar="(tipoAccion) => confirmarImportacion(tipoAccion === 1 ? 'reemplazar' : 'anadir')"
       />
     </div>
 
     <EntesReguladoresForm
       v-model="esVisibleDialogo"
       :es-modo-edicion="esModoEdicion"
+      :cargando="cargando"
       :datos-formulario="enteActual"
-      :guardando="cargando"
-      @save="guardarEnte"
+      @save="procesarGuardado"
     />
+
   </q-page>
 </template>
 
@@ -44,9 +55,8 @@ import EntesReguladoresStandar from '../components/EntesReguladoresStandar.vue';
 import EntesReguladoresForm from '../components/EntesReguladoresForm.vue';
 import { useEntesReguladores } from '../composables/useEntesReguladores';
 
-// Instanciamos nuestro cerebro (Composable) y extraemos lo necesario
 const {
-  listaEntes, listaTemplates, esVisibleDialogo, esVistaTemplates, cargando, enteActual, esModoEdicion,
-  cargarTemplates, abrirDialogoNuevo, abrirDialogoEdicion, guardarEnte, confirmarEliminacion, cambiarEstado, procesarTemplates
+  listaEntes, listaEntesEstandar, cargando, esVisibleDialogo, esVistaEstandar, esModoEdicion, enteActual,
+  abrirDialogoNuevo, abrirDialogoEditar, procesarGuardado, confirmarEliminacion, cambiarEstadoRegistro, alternarVistaEstandar, confirmarImportacion
 } = useEntesReguladores();
 </script>

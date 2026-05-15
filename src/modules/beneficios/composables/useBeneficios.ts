@@ -1,60 +1,44 @@
-import { ref, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
-import { 
-  obtenerBeneficios, 
-  obtenerBeneficiosEstandar, 
-  guardarBeneficio, 
-  eliminarBeneficio, 
-  cambiarEstadoBeneficio,
-  ejecutarAccionEstandar 
-} from '../services/beneficios.service';
+import { ref, onMounted } from 'vue';
+import { beneficiosService } from '../services/beneficios.service';
+import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import type { Beneficio, BeneficioEstandar } from '../types/beneficios.types';
 
-// 🌟 ESTADO GLOBAL COMPARTIDO: Todo lo que está fuera de la función es compartido por los componentes
 const listaBeneficios = ref<Beneficio[]>([]);
 const listaBeneficiosEstandar = ref<BeneficioEstandar[]>([]);
-const esCargando = ref<boolean>(false);
+const cargando = ref<boolean>(false);
 const esVisibleDialogo = ref<boolean>(false);
 const esModoEdicion = ref<boolean>(false);
 const esVistaEstandar = ref<boolean>(false);
 
 const beneficioActual = ref<Beneficio>({
-  nombre: '',
-  descripcion: '',
-  tipo: '1',
-  cantidad: '',
-  orden: '',
-  destino: ''
+  nombre: '', descripcion: '', tipo: '1', cantidad: '', orden: '', destino: '1'
 });
-
-// Este es el ID que usa el sistema antiguo por defecto (Luego lo sacaremos de tu AuthStore)
-const idEmpresa = 'd09bf41544a3365a46c9077ebb5e35c3';
 
 export function useBeneficios() {
   const $q = useQuasar();
 
   const cargarBeneficios = async () => {
-    esCargando.value = true;
+    cargando.value = true;
     try {
-      // 🌟 CORRECCIÓN: Le pasamos el idEmpresa en lugar del tokenApp
-      const respuesta = await obtenerBeneficios(idEmpresa);
-      listaBeneficios.value = respuesta;
-    } catch {
+      listaBeneficios.value = await beneficiosService.listarBeneficios();
+    } catch (error: unknown) {
+      console.error('Error al cargar beneficios:', error);
       $q.notify({ type: 'negative', message: 'Error al cargar los beneficios.' });
     } finally {
-      esCargando.value = false;
+      cargando.value = false;
     }
   };
 
   const cargarBeneficiosEstandar = async () => {
-    esCargando.value = true;
+    cargando.value = true;
     try {
-      const respuesta = await obtenerBeneficiosEstandar();
-      listaBeneficiosEstandar.value = respuesta;
-    } catch {
+      listaBeneficiosEstandar.value = await beneficiosService.listarBeneficiosEstandar();
+    } catch (error: unknown) {
+      console.error('Error al cargar beneficios estándar:', error);
       $q.notify({ type: 'negative', message: 'Error al cargar beneficios estándar.' });
     } finally {
-      esCargando.value = false;
+      cargando.value = false;
     }
   };
 
@@ -66,161 +50,143 @@ export function useBeneficios() {
   };
 
   const abrirDialogoNuevo = () => {
-    beneficioActual.value = {
-      nombre: '',
-      descripcion: '',
-      tipo: '1',
-      cantidad: '',
-      orden: '',
-      destino: '1' // Corregido: 1 es Planilla en el código antiguo
-    };
+    beneficioActual.value = { nombre: '', descripcion: '', tipo: '1', cantidad: '', orden: '', destino: '1' };
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
   };
 
-  const abrirDialogoEditar = (beneficio: Beneficio) => {
-    beneficioActual.value = { ...beneficio };
-    esModoEdicion.value = true;
-    esVisibleDialogo.value = true;
+  const abrirDialogoEditar = async (beneficio: Beneficio) => {
+    if (!beneficio.id) return;
+    cargando.value = true;
+    try {
+      const respuesta = await beneficiosService.actualizarBeneficio(beneficio.id);
+      if (respuesta.estado === 'exito' && respuesta.datos) {
+        beneficioActual.value = { ...respuesta.datos };
+        esModoEdicion.value = true;
+        esVisibleDialogo.value = true;
+      }
+    } catch (error: unknown) {
+      console.error('Error al obtener beneficio:', error);
+      $q.notify({ type: 'negative', message: 'Error al obtener datos.' });
+    } finally {
+      cargando.value = false;
+    }
   };
 
-  const procesarGuardado = async () => {
-    esCargando.value = true;
+  // REFACTORIZADO: Eliminar "any", usar la interfaz "Beneficio"
+  const procesarGuardado = async (datosFormulario: Beneficio) => {
+    cargando.value = true;
     try {
-      const datosFormulario = new FormData();
-      datosFormulario.append('ver', 'registrobeneficio'); // El código antiguo exige esto
-      datosFormulario.append('idempresa', idEmpresa);
+      const payload = new FormData();
+      const idEmpresa = String(idempresa_md5());
+      
+      payload.append('ver', esModoEdicion.value ? 'editar' : 'registro');
+      payload.append('idempresa', idEmpresa);
 
-      if (esModoEdicion.value && beneficioActual.value.id) {
-        datosFormulario.set('ver', 'editarbeneficio');
-        datosFormulario.append('id', beneficioActual.value.id);
+      if (esModoEdicion.value && datosFormulario.id) {
+        payload.append('id', String(datosFormulario.id));
       }
 
-      Object.entries(beneficioActual.value).forEach(([clave, valor]) => {
+      Object.entries(datosFormulario).forEach(([clave, valor]) => {
         if (valor !== undefined && valor !== null && clave !== 'id') {
-          datosFormulario.append(clave, valor.toString());
+          payload.append(clave, String(valor));
         }
       });
 
-      const respuesta = await guardarBeneficio(datosFormulario);
-
+      const respuesta = await beneficiosService.guardarBeneficio(payload);
       if (respuesta.estado === 'exito') {
         $q.notify({ type: 'positive', message: 'Registro guardado exitosamente.' });
         esVisibleDialogo.value = false;
         void cargarBeneficios();
-      } else {
-        $q.notify({ type: 'negative', message: respuesta.mensaje || 'Error al guardar.' });
       }
-    } catch {
-      $q.notify({ type: 'negative', message: 'Error de comunicación con el servidor.' });
+    } catch (error: unknown) {
+      console.error('Error al guardar beneficio:', error);
+      $q.notify({ type: 'negative', message: 'Error de comunicación.' });
     } finally {
-      esCargando.value = false;
+      cargando.value = false;
     }
   };
 
-  const confirmarEliminacion = (idBeneficio: string) => {
+  const confirmarEliminacion = (idBeneficio: string | number) => {
     $q.dialog({
       title: '¿Está Seguro?',
-      message: 'No podrá recuperar el registro del Beneficio.',
+      message: 'No podrá recuperar este registro.',
       persistent: true,
       ok: { color: 'negative', label: 'Eliminar' },
       cancel: { color: 'primary', flat: true, label: 'Cancelar' }
     }).onOk(() => {
-      void ejecutarEliminacion(idBeneficio);
+      cargando.value = true;
+      beneficiosService.eliminarBeneficio(idBeneficio)
+        .then(() => {
+          $q.notify({ type: 'positive', message: 'Beneficio eliminado.' });
+          void cargarBeneficios();
+        })
+        .catch((error: unknown) => {
+          console.error('Error al eliminar beneficio:', error);
+          $q.notify({ type: 'negative', message: 'Error al eliminar beneficio.' });
+        })
+        .finally(() => { cargando.value = false; });
     });
-  };
-
-  const ejecutarEliminacion = async (idBeneficio: string) => {
-    esCargando.value = true;
-    try {
-      const respuesta = await eliminarBeneficio(idBeneficio);
-      if (respuesta.estado === 'exito') {
-        $q.notify({ type: 'positive', message: 'Beneficio eliminado.' });
-        void cargarBeneficios();
-      } else {
-        $q.notify({ type: 'negative', message: respuesta.mensaje });
-      }
-    } catch {
-      $q.notify({ type: 'negative', message: 'Error al eliminar el registro.' });
-    } finally {
-      esCargando.value = false;
-    }
   };
 
   const cambiarEstadoRegistro = async (beneficio: Beneficio) => {
     if (!beneficio.id) return;
-    esCargando.value = true;
-    const nuevoEstado = beneficio.estado === '1' ? '2' : '1'; 
+    cargando.value = true;
+    const nuevoEstado = beneficio.estado == '1' ? '2' : '1'; 
     try {
-      const respuesta = await cambiarEstadoBeneficio(beneficio.id, nuevoEstado);
-      if (respuesta.estado === 'exito') {
-        $q.notify({ type: 'positive', message: 'Estado actualizado correctamente.' });
-        void cargarBeneficios();
-      }
-    } catch {
-      $q.notify({ type: 'negative', message: 'Error al cambiar el estado.' });
+      await beneficiosService.cambiarEstadoBeneficio(beneficio.id, nuevoEstado);
+      $q.notify({ type: 'positive', message: 'Estado actualizado.' });
+      void cargarBeneficios();
+    } catch (error: unknown) {
+      console.error('Error al cambiar estado:', error);
+      $q.notify({ type: 'negative', message: 'Error al cambiar estado.' });
     } finally {
-      esCargando.value = false;
+      cargando.value = false;
     }
   };
 
   const confirmarImportacion = (tipoAccion: 'reemplazar' | 'anadir') => {
-    const mensajeDialogo = tipoAccion === 'reemplazar'
-      ? 'Esta acción reemplazará todos sus datos de la tabla de beneficios por el template.'
-      : 'Esta acción agregará los datos del template a la tabla de beneficios.';
+    const mensaje = tipoAccion === 'reemplazar'
+      ? 'Esta acción reemplazará todos sus datos por el template.'
+      : 'Esta acción agregará los datos del template a la tabla actual.';
 
     $q.dialog({
-      title: '¿Está seguro?',
-      message: mensajeDialogo,
-      persistent: true,
-      ok: { color: 'primary', label: 'Sí' },
-      cancel: { color: 'negative', flat: true, label: 'Cancelar' }
-    }).onOk(() => {
-      void procesarImportacion(tipoAccion);
-    });
+      title: '¿Está seguro?', message: mensaje, persistent: true,
+      ok: { color: 'primary', label: 'Proceder' }, cancel: { color: 'negative', flat: true, label: 'Cancelar' }
+    }).onOk(() => { void procesarImportacion(tipoAccion); });
   };
 
   const procesarImportacion = async (tipoAccion: 'reemplazar' | 'anadir') => {
-    esCargando.value = true;
+    cargando.value = true;
     try {
-      // Pasamos los datos que requiere el backend antiguo
-      const respuesta = await ejecutarAccionEstandar(tipoAccion, listaBeneficiosEstandar.value, idEmpresa);
+      const payload = new FormData();
+      const idEmpresa = String(idempresa_md5());
       
+      payload.append('ver', 'remplazarocopiardatosbeneficios');
+      payload.append('idempresa', idEmpresa);
+      payload.append('datos', JSON.stringify(listaBeneficiosEstandar.value));
+      payload.append('tipo', tipoAccion === 'reemplazar' ? '1' : '2');
+
+      const respuesta = await beneficiosService.guardarBeneficio(payload);
       if (respuesta.estado === 'exito') {
-        $q.notify({ type: 'positive', message: 'Plantilla procesada correctamente.' });
+        $q.notify({ type: 'positive', message: 'Catálogo procesado correctamente.' });
         alternarVistaEstandar();
         void cargarBeneficios();
-      } else {
-        $q.notify({ type: 'negative', message: respuesta.mensaje || 'Error al procesar la plantilla.' });
       }
-    } catch {
-      $q.notify({ type: 'negative', message: 'Error de red al procesar los beneficios estándar.' });
+    } catch (error: unknown) {
+      console.error('Error procesando importación:', error);
+      $q.notify({ type: 'negative', message: 'Error al procesar catálogo.' });
     } finally {
-      esCargando.value = false;
+      cargando.value = false;
     }
   };
 
-  // Solo cargar datos si la lista está vacía para evitar que cada componente haga un fetch repetido
   onMounted(() => {
-    if (listaBeneficios.value.length === 0) {
-      void cargarBeneficios();
-    }
+    if (listaBeneficios.value.length === 0) void cargarBeneficios();
   });
 
   return {
-    listaBeneficios,
-    listaBeneficiosEstandar,
-    esCargando,
-    esVisibleDialogo,
-    esModoEdicion,
-    esVistaEstandar,
-    beneficioActual,
-    abrirDialogoNuevo,
-    abrirDialogoEditar,
-    procesarGuardado,
-    confirmarEliminacion,
-    cambiarEstadoRegistro,
-    alternarVistaEstandar,
-    confirmarImportacion
+    listaBeneficios, listaBeneficiosEstandar, cargando, esVisibleDialogo, esModoEdicion, esVistaEstandar, beneficioActual,
+    abrirDialogoNuevo, abrirDialogoEditar, procesarGuardado, confirmarEliminacion, cambiarEstadoRegistro, alternarVistaEstandar, confirmarImportacion
   };
 }

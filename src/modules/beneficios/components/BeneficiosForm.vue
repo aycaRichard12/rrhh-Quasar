@@ -1,96 +1,138 @@
 <template>
-  <q-dialog v-model="esVisibleDialogo" persistent>
-    <q-card style="min-width: 400px">
-      <q-card-section class="bg-primary text-white">
-        <div class="text-h6">
-          {{ esModoEdicion ? 'Editar Beneficio' : 'Nuevo Beneficio' }}
-        </div>
-      </q-card-section>
+  <q-dialog 
+    v-model="estaAbierto"
+    :position="$q.screen.lt.sm ? 'bottom' : 'standard'"
+  >
+    <q-card :style="$q.screen.lt.sm ? 'width: 100vw' : 'width: 400px; max-width: 90vw;'">
+      
+      <q-form @submit.prevent="onSave">
+        <q-card-section class="bg-primary row items-center justify-between text-white">
+          <div class="text-h6">{{ esModoEdicion ? $t('beneficios.edit', 'Editar Beneficio') : $t('beneficios.new', 'Nuevo Beneficio') }}</div>
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
 
-      <q-card-section class="q-pt-md">
-        <q-form @submit.prevent="procesarGuardado" class="q-gutter-md">
-          <q-input
-            v-model="beneficioActual.nombre"
-            label="Nombre del Beneficio *"
-            outlined
-            dense
-            :rules="[val => !!val || 'El nombre es obligatorio']"
-          />
+        <q-card-section class="q-pt-md scroll" style="max-height: 70vh;">
+          <div class="row q-col-gutter-md">
+            
+            <div class="col-12">
+              <q-input
+                v-model="datosLocales.nombre"
+                :label="$t('beneficios.name', 'Nombre del Beneficio') + ' *'"
+                outlined
+                dense
+                autofocus
+                lazy-rules
+                :rules="[val => !!val || $t('rules.required', 'Obligatorio')]"
+              />
+            </div>
 
-          <q-input
-            v-model="beneficioActual.descripcion"
-            label="Descripción *"
-            outlined
-            dense
-            type="textarea"
-            rows="3"
-            :rules="[val => !!val || 'La descripción es obligatoria']"
-          />
+            <div class="col-12">
+              <q-input
+                v-model="datosLocales.descripcion"
+                :label="$t('beneficios.description', 'Descripción') + ' *'"
+                outlined
+                dense
+                type="textarea"
+                autogrow
+                lazy-rules
+                :rules="[val => !!val || $t('rules.required', 'Obligatorio')]"
+              />
+            </div>
 
-          <q-select
-            v-model="beneficioActual.tipo"
-            :options="opcionesTipo"
-            label="Tipo *"
-            outlined
-            dense
-            emit-value
-            map-options
-          />
+            <div class="col-12">
+              <q-select
+                v-model="datosLocales.tipo"
+                :options="opcionesTipo"
+                :label="$t('beneficios.type', 'Tipo') + ' *'"
+                outlined
+                dense
+                emit-value
+                map-options
+              />
+            </div>
 
-          <q-input
-            v-model="beneficioActual.cantidad"
-            label="Cantidad *"
-            outlined
-            dense
-            type="number"
-            step="0.01"
-            :rules="[val => !!val || 'La cantidad es obligatoria']"
-          />
+            <div class="col-12">
+              <q-input
+                v-model="datosLocales.cantidad"
+                :label="$t('beneficios.amount', 'Cantidad') + ' *'"
+                outlined
+                dense
+                type="number"
+                step="0.01"
+                lazy-rules
+                :rules="[val => !!val || $t('rules.required', 'Obligatorio')]"
+              />
+            </div>
 
-          <div class="row q-gutter-sm">
-            <q-input
-              v-model="beneficioActual.orden"
-              label="Orden"
-              outlined
-              dense
-              type="number"
-              class="col"
-            />
-            <q-input
-              v-model="beneficioActual.destino"
-              label="Destino"
-              outlined
-              dense
-              class="col"
-            />
+            <div class="col-6">
+              <q-input
+                v-model="datosLocales.orden"
+                :label="$t('beneficios.order', 'Orden')"
+                outlined
+                dense
+                type="number"
+              />
+            </div>
+
+            <div class="col-6">
+              <q-select
+                v-model="datosLocales.destino"
+                :options="opcionesDestino"
+                :label="$t('beneficios.destination', 'Destino')"
+                outlined
+                dense
+                emit-value
+                map-options
+              />
+            </div>
+
           </div>
+        </q-card-section>
 
-          <div class="row justify-end q-gutter-sm q-mt-md">
-            <q-btn label="Cancelar" color="negative" flat v-close-popup />
-            <q-btn 
-              label="Guardar" 
-              color="primary" 
-              type="submit" 
-              :loading="esCargando" 
-            />
-          </div>
-        </q-form>
-      </q-card-section>
+        <q-card-actions align="right" class="text-primary q-pb-md q-pr-md">
+          <q-btn flat :label="$t('formBtn.cancel', 'Cancelar')" color="negative" v-close-popup />
+          <q-btn type="submit" icon="save" :label="$t('formBtn.save', 'Guardar')" color="primary" :loading="cargando" :disable="cargando" />
+        </q-card-actions>
+      </q-form>
     </q-card>
   </q-dialog>
 </template>
 
 <script setup lang="ts">
-import { useBeneficios } from '../composables/useBeneficios';
+import { computed, ref, watch } from 'vue';
+import type { Beneficio } from '../types/beneficios.types';
 
-const {
-  esVisibleDialogo, esModoEdicion, esCargando, beneficioActual,
-  procesarGuardado
-} = useBeneficios();
+const props = defineProps<{
+  modelValue: boolean;
+  esModoEdicion: boolean;
+  cargando: boolean;
+  datosFormulario: Beneficio;
+}>();
 
-// Adaptamos las opciones según lo que espera el sistema antiguo
+const emit = defineEmits(['update:modelValue', 'save']);
+
+const estaAbierto = computed({
+  get: () => props.modelValue,
+  set: (val) => emit('update:modelValue', val)
+});
+
+const datosLocales = ref<Beneficio>({ ...props.datosFormulario });
+
+watch(() => props.datosFormulario, (newVal) => {
+  datosLocales.value = { ...newVal };
+}, { deep: true });
+
+const onSave = () => {
+  emit('save', datosLocales.value);
+};
+
 const opcionesTipo = [
   { label: 'Porcentaje', value: '1' },
   { label: 'Monto Fijo', value: '2' }
+];
+
+const opcionesDestino = [
+  { label: 'Planilla', value: '1' },
+  { label: 'Finiquito', value: '2' }
 ];
 </script>

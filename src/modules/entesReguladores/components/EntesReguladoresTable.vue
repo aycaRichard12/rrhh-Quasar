@@ -12,7 +12,7 @@
   >
     <template v-slot:top-right>
       <q-btn color="primary" icon="add" :label="$t('cambioNuevo Registro')" @click="$emit('create')" class="q-mr-sm" />
-      <q-btn color="secondary" icon="download" :label="$t('cambioImportar Estándar')" @click="$emit('import')" />
+      <q-btn color="secondary" icon="cloud_download" :label="$t('cambioImportar Estándar')" @click="$emit('import')" />
     </template>
 
     <template v-slot:body-cell-numero="props">
@@ -28,8 +28,10 @@
           round
           dense
           size="sm"
-          @click="$emit('change-status', props.row.id, '2')"
+          @click="$emit('change-status', props.row.id)"
         >
+        <!-- revisar eliminacion(, '2') despues de props.row.id -->
+
           <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
             {{ $t('cambioDesactivar') }}
           </q-tooltip>
@@ -42,8 +44,10 @@
           round
           dense
           size="sm"
-          @click="$emit('change-status', props.row.id, '1')"
+          @click="$emit('change-status', props.row.id,)"
         >
+                <!-- revisar eliminacion(, '1') despues de props.row.id -->
+
           <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
             {{ $t('cambioActivar') }}
           </q-tooltip>
@@ -52,6 +56,9 @@
     </template>
 
     <template v-slot:body-cell-opciones="props">
+      <!-- revisar q-gutter-xs despues de textcenter -->
+<!-- revisar eliminacion          class="q-mr-xs" -->
+ <!-- revisar .id despues de prop.row en click emit-->
       <q-td :props="props" class="text-center">
         <q-btn
           icon="edit"
@@ -59,8 +66,8 @@
           round
           dense
           size="sm"
-          class="q-mr-xs"
-          @click="$emit('edit', props.row.id)">
+
+          @click="$emit('edit', props.row)">
           <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
             {{ $t('cambioEditar') }}
           </q-tooltip>

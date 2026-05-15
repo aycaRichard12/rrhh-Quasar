@@ -1,118 +1,139 @@
-import type { Area, Sucursal } from 'src/modules/areas/types/areas.types';
+import { useQuasar } from 'quasar';
+import { ref, onMounted } from 'vue';
 import { areasService } from 'src/modules/areas/services/areas.service';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
-import { ref, onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useQuasar} from 'quasar';
+import type { Area, Sucursal } from 'src/modules/areas/types/areas.types';
+
+// ESTADO GLOBAL COMPARTIDO
+const listaAreas = ref<Area[]>([]);
+const listaSucursales = ref<Sucursal[]>([]);
+const cargando = ref<boolean>(false);
+const esVisibleDialogo = ref<boolean>(false);
+const esModoEdicion = ref<boolean>(false);
+
+const areaActual = ref<Area>({
+  nombre: '',
+  descripcion: '',
+  sucursal: null
+});
 
 export function useAreas() {
-  // 1. Configuraciones Globales del Composable
-  const idEmpresa = String(idempresa_md5());
-  const { t }     = useI18n();
-  const $q        = useQuasar();
-  // 2. Variables Reactivas
-  const esModoEdicion    = ref(false);
-  const esVisibleDialogo = ref(false);
-  const listaAreas       = ref<Area[]>([]);
-  const listaSucursales  = ref<Sucursal[]>([]);
-  const datosFormulario  = ref<Area>({ id: undefined, nombre: '', descripcion: '', sucursal: null});
+  const $q = useQuasar();
 
-  // 3. Funciones de Obtención
-  const cargarDatos = async () => {
+  const cargarAreas = async () => {
+    cargando.value = true;
     try {
-      listaSucursales.value = await areasService.obtenerSucursales();
-      const dataAreas = await areasService.obtenerAreas();
-      if (Array.isArray(dataAreas)) {
-        listaAreas.value = dataAreas;
-      }
-    } catch (error) {
-      console.error('Error al cargar datos de áreas:', error);
+      const [dataAreas, dataSucursales] = await Promise.all([
+        areasService.listarAreas(),
+        areasService.listarSucursales()
+      ]);
+      listaAreas.value = Array.isArray(dataAreas) ? dataAreas : [];
+      listaSucursales.value = Array.isArray(dataSucursales) ? dataSucursales : [];
+    } catch (error: unknown) {
+      console.error('Error al cargar áreas o sucursales:', error);
+      $q.notify({ type: 'negative', message: 'Error al cargar los datos de áreas.' });
+    } finally {
+      cargando.value = false;
     }
   };
 
-  // 4. Funciones de Interfaz (Apertura de Modales)
-  const nuevaArea = () => {
+  const abrirDialogoNuevo = () => {
+    areaActual.value = { nombre: '', descripcion: '', sucursal: null };
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
-    datosFormulario.value = { id: undefined, nombre: '', descripcion: '', sucursal: null};
   };
 
-  const editarArea = async (row: Area) => {
-      if (!row.id) {
-        console.error('El área seleccionado no tiene un ID válido');
-        return;
-      }
-      try {
-        const data = await areasService.verificarArea(row.id.toString());
-        
-        if (data.estado ==='exito' && data.datos){
-          datosFormulario.value = {
-            id:          data.datos.id,
-            nombre:      data.datos.nombre,
-            descripcion: data.datos.descripcion,
-            sucursal:    data.datos.sucursal
-          };
-          esModoEdicion.value    = true;
-          esVisibleDialogo.value = true;
-          }
-      } catch (error) {
-          console.error('Error al editar área:', error);
-        } 
-  };
-
-  const guardarArea = async (datosFormulario: Area) => {
-    const payload = new FormData();
-    
-    payload.append('nombre', datosFormulario.nombre);
-    payload.append('descripcion', datosFormulario.descripcion);
-
-    if (datosFormulario.sucursal !== null && datosFormulario.sucursal !== undefined) {
-      const idParaEnviar = typeof datosFormulario.sucursal === 'object' 
-        ? datosFormulario.sucursal.idsucursal
-        : datosFormulario.sucursal;
-      payload.append('sucursal', String(idParaEnviar));
-    }
-
-    if (esModoEdicion.value && datosFormulario.id) {
-      payload.append('ver', 'editarArea'); 
-      payload.append('id', String(datosFormulario.id));
-    } else {
-      payload.append('ver', 'registroAreas'); 
-      payload.append('empresa', idEmpresa);
-    }
-
+  const abrirDialogoEditar = async (area: Area) => {
+    if (!area.id) return;
+    cargando.value = true;
     try {
-      await areasService.guardarArea(payload);
-      esVisibleDialogo.value = false;
-      await cargarDatos(); 
-    } catch (error) {
-      console.error('Error al guardar área:', error);
+      const respuesta = await areasService.actualizarArea(area.id);
+      if (respuesta.estado === 'exito' && respuesta.datos) {
+        areaActual.value = { ...respuesta.datos };
+        esModoEdicion.value = true;
+        esVisibleDialogo.value = true;
+      }
+    } catch (error: unknown) {
+      console.error('Error al obtener área:', error);
+      $q.notify({ type: 'negative', message: 'Error al obtener datos del área.' });
+    } finally {
+      cargando.value = false;
     }
   };
 
-  const eliminarArea = (id: string | number) => {
+  // REFACTORIZADO: Ahora recibe datosFormulario tipo 'Area'
+  const procesarGuardado = async (datosFormulario: Area) => {
+    cargando.value = true;
+    try {
+      const payload = new FormData();
+      const idEmpresa = String(idempresa_md5());
+
+      payload.append('nombre', datosFormulario.nombre);
+      payload.append('descripcion', datosFormulario.descripcion);
+
+      if (datosFormulario.sucursal) {
+        payload.append('sucursal', String(datosFormulario.sucursal.idsucursal));
+      }
+
+      if (esModoEdicion.value && datosFormulario.id) {
+        payload.append('ver', 'editarArea'); 
+        payload.append('id', String(datosFormulario.id));
+      } else {
+        payload.append('ver', 'registroAreas'); 
+        payload.append('empresa', idEmpresa); 
+      }
+
+      const respuesta = await areasService.guardarArea(payload);
+      if (respuesta.estado === 'exito') {
+        $q.notify({ type: 'positive', message: 'Área guardada exitosamente.' });
+        esVisibleDialogo.value = false;
+        void cargarAreas(); 
+      } else {
+        $q.notify({ type: 'negative', message: respuesta.mensaje || 'Error al guardar.' });
+      }
+    } catch (error: unknown) {
+      console.error('Error al guardar área:', error);
+      $q.notify({ type: 'negative', message: 'Error de comunicación con el servidor.' });
+    } finally {
+      cargando.value = false;
+    }
+  };
+
+  const confirmarEliminacion = (idArea: string | number) => {
     $q.dialog({
-      title: t('cambio¿Está Seguro?'), 
-      message: t('cambioNo podrá recuperar el registro del Área'),
-      ok: { color: 'negative', label: t('cambioEliminar') },
-      cancel: { color: 'primary', label: t('formBtn.cancel'), flat: true }
+      title: '¿Está Seguro?', 
+      message: 'No podrá recuperar el registro del Área.',
+      persistent: true,
+      ok: { color: 'negative', label: 'Eliminar' },
+      cancel: { color: 'primary', label: 'Cancelar', flat: true }
     }).onOk(() => {
-      areasService.eliminarArea(id)
-        .then(() => {
-          $q.notify({ type: 'positive', message: t('cambioEliminación exitosa') });
-          void cargarDatos();
-        })
-        .catch(error => {
-          console.error(error);
-          $q.notify({ type: 'negative', message: t('cambioError al eliminar') });
-        });
+      void ejecutarEliminacion(idArea);
     });
   };
 
-  onMounted(cargarDatos);
+  const ejecutarEliminacion = async (idArea: string | number) => {
+    cargando.value = true;
+    try {
+      const respuesta = await areasService.eliminarArea(idArea);
+      if (respuesta.estado === 'exito') {
+        $q.notify({ type: 'positive', message: 'Eliminación exitosa.' });
+        void cargarAreas();
+      }
+    } catch (error: unknown) {
+      console.error('Error al eliminar área:', error);
+      $q.notify({ type: 'negative', message: 'Error al eliminar el área.' });
+    } finally {
+      cargando.value = false;
+    }
+  };
+
+  onMounted(() => {
+    if (listaAreas.value.length === 0) void cargarAreas();
+  });
 
   return {
-    listaAreas, listaSucursales, esVisibleDialogo, esModoEdicion, datosFormulario,
-    nuevaArea, editarArea, guardarArea, eliminarArea, cargarDatos
+    listaAreas, listaSucursales, cargando, esVisibleDialogo, esModoEdicion, areaActual,
+    abrirDialogoNuevo, abrirDialogoEditar, procesarGuardado, confirmarEliminacion, 
+    alternarVistaEstandar: () => {} 
   };
 }
