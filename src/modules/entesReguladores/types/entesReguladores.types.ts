@@ -1,15 +1,9 @@
 export interface EnteRegulador {
-  id?: string | number;
-  nombre: string;
-  porcentaje: string | number;
+  id?        : string | number;
+  nombre     : string;
   descripcion: string;
-  estado?: string | number;
-  orden: string | number;
-  monto: string | number;
-}
-
-export interface RespuestaApi<T = undefined> {
-  estado: 'exito' | 'error';
-  mensaje: string;
-  datos?: T;
+  porcentaje : string | number;
+  monto      : string | number;
+  orden      : string | number;
+  estado?    : string | number;
 }

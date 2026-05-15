@@ -81,10 +81,13 @@ const {
 } = useBeneficios();
 
 const columnasBeneficios: QTableColumn[] = [
-  { name: 'orden',      label: 'Orden',      field: 'orden',      align: 'center' },
+  { name: 'numero',     label: 'N°',         field: 'numero',     align: 'center' },
   { name: 'nombre',     label: 'Nombre',     field: 'nombre',     align: 'left' },
   { name: 'descripcion',label: 'Descripción',field: 'descripcion',align: 'left' },
-  { name: 'cantidad',   label: 'Cantidad',   field: 'cantidad',   align: 'center' },
+  { name: 'tipo',       label: 'Tipo',       field: 'tipo',       align: 'left' },
+  { name: 'cantidad',   label: 'Cantidad',   field: 'cantidad',   align: 'right' },
+  { name: 'orden',      label: 'Orden',      field: 'orden',      align: 'right' },
+  { name: 'destino',    label: 'Destino',    field: 'destino',    align: 'left' },
   { name: 'estado',     label: 'Estado',     field: 'estado',     align: 'center' },
   { name: 'opciones',   label: 'Opciones',   field: 'opciones',   align: 'center' }
 ];

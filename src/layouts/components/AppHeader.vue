@@ -140,7 +140,11 @@
                   <div class="text-caption text-primary" style="font-size: 11px">
                     Administrador
                   </div>
-                </div>
+                </div>               
+              </div>
+              <!-- Prueba de empresa debajo el nombre de usuario -->
+              <div :class="['text-weight-bold text-subtitle2', $q.dark.isActive ? 'text-yellow' : 'text-grey-9']">
+                    {{ authStore.user?.empresa.nombre }}
               </div>
 
               <q-separator :dark="$q.dark.isActive" class="q-mb-sm opacity-10" />

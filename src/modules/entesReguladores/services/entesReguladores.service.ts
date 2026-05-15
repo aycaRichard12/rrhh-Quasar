@@ -1,6 +1,7 @@
-import type { EnteRegulador, RespuestaApi } from '../types/entesReguladores.types';
-import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import { api } from 'src/boot/axios';
+import { idempresa_md5 } from 'src/composables/funcionesGenerales';
+import type { RespuestaApi } from 'src/types/api.types';
+import type { EnteRegulador} from '../types/entesReguladores.types';
 
 const ID_EMPRESA = idempresa_md5();
 

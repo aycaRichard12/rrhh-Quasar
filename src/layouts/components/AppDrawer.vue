@@ -48,8 +48,8 @@
           <div class="section-label q-px-sm q-mt-lg q-mb-xs">
             {{ $t('common.labels.mainMenu') }}
           </div>
-
           <!-- Menús expandibles -->
+           <!-- Color de Menus en header-class -->
           <q-expansion-item
             v-for="menu in filteredMenu"
             :key="menu.codigo"
@@ -57,7 +57,7 @@
             :icon="getIconoMenu(menu.codigo)"
             group="menu-group"
             class="drawer-expansion"
-            header-class="drawer-item drawer-expansion-header"
+            header-class="drawer-item drawer-expansion-header text-white"
             expand-icon-class="text-white opacity-40"
           >
             <q-list class="submenu-list q-py-xs">
@@ -78,9 +78,11 @@
                 <q-item-section avatar class="drawer-subicon-section">
                   <q-icon :name="getIconoMenu(submenu.codigo)" size="17px" />
                 </q-item-section>
-                <q-item-section class="drawer-item-label text-body2">
+
+                <q-item-section class="drawer-item-label text-white">
                   {{ translateTitle(submenu.codigo, submenu.titulo) }}
                 </q-item-section>
+
               </q-item>
             </q-list>
           </q-expansion-item>

@@ -1,7 +1,7 @@
-import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import { api } from 'src/boot/axios';
-// Importamos los tipos estandarizados
-import type { Area, Sucursal, RespuestaApi } from '../types/areas.types';
+import { idempresa_md5 } from 'src/composables/funcionesGenerales';
+import type { RespuestaApi } from 'src/types/api.types';
+import type { Area, Sucursal } from '../types/areas.types';
 
 const ID_EMPRESA = idempresa_md5()
 

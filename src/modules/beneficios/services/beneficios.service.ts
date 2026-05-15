@@ -1,5 +1,6 @@
+import type { Beneficio, BeneficioEstandar} from '../types/beneficios.types';
+import type { RespuestaApi } from 'src/types/api.types';
 import { api } from 'src/boot/axios';
-import type { Beneficio, BeneficioEstandar, RespuestaApi } from '../types/beneficios.types';
 
 export const obtenerBeneficios = async (idEmpresa: string): Promise<Beneficio[]> => {
   const respuesta = await api.get<Beneficio[]>(`listabeneficio/${idEmpresa}`);
@@ -27,13 +28,11 @@ export const eliminarBeneficio = async (id: string): Promise<RespuestaApi> => {
   return respuesta.data;
 };
 
-// Se envía al endpoint raíz porque el backend usa "ver: registrobeneficio" por dentro del FormData
 export const guardarBeneficio = async (payload: FormData): Promise<RespuestaApi> => {
   const respuesta = await api.post<RespuestaApi>('', payload);
   return respuesta.data;
 };
 
-// Implementado exactamente como tu función "remplazarOcopiardatos"
 export const ejecutarAccionEstandar = async (tipoAccion: 'reemplazar' | 'anadir', datosTemplate: BeneficioEstandar[], idEmpresa: string): Promise<RespuestaApi> => {
   const payload = new FormData();
   payload.append('ver', 'remplazarocopiardatosbeneficios');
@@ -41,7 +40,6 @@ export const ejecutarAccionEstandar = async (tipoAccion: 'reemplazar' | 'anadir'
   payload.append('datos', JSON.stringify(datosTemplate));
   payload.append('tipo', tipoAccion === 'reemplazar' ? '1' : '2');
   
-  // En tu código viejo: fetch(apiUrl(), { method: 'POST', body: datos }) -> va a la URL base
   const respuesta = await api.post<RespuestaApi>('', payload);
   return respuesta.data;
 };
