@@ -10,8 +10,9 @@ const routes: RouteRecordRaw[] = [
       { path: 'dashboard', component: () => import('pages/IndexPage.vue') },
       { path: 'welcome', component: () => import('pages/WelcomePage.vue') },
       // CONFIGURACIONES
-      { path: 'areas', component: () => import('src/modules/areas/pages/AreasPage.vue') },
+      { path: 'areas',            component: () => import('src/modules/areas/pages/AreasPage.vue') },
       { path: 'entesReguladores', component: () => import('src/modules/entesReguladores/pages/EntesReguladoresPage.vue') },
+      { path: 'beneficios',       component: () => import('src/modules/beneficios/pages/BeneficiosPage.vue') },
 
 
     ],

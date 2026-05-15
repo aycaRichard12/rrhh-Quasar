@@ -1,36 +1,46 @@
+   <!-- <div class="row justify-center q-mb-md">
+      <div class="text-h5 text-primary text-bold">
+        {{$t('Areas(TituloProvisional)')}}
+      </div>
+    </div> -->
 <template>
-  <div class="q-pa-md">
-
-    <div class="row justify-between items-center q-mb-md">
-      <div class="text-h5 text-primary text-bold">Areas</div>
-      <q-btn color="primary" icon="add" label="Nuevo Registro" @click="nuevaArea" />
+  <q-page padding>
+    
+    <div class="row q-mb-md">
+      <div class="col-12">
+        <h4 class="q-my-none text-primary">{{ $t('areas.title', 'Módulo de Áreas') }}</h4>
+        <p class="text-grey-7">{{ $t('areas.description', 'Gestión de áreas y sucursales de la empresa.') }}</p>
+      </div>
     </div>
-    <!-- La Tabla -->
+
     <AreasTable
       :rows="listaAreas"
-      @edit="editarArea"
-      @delete="eliminarArea"
+      :cargando="cargando"
+      @create="abrirDialogoNuevo"
+      @edit="abrirDialogoEditar"
+      @delete="confirmarEliminacion"
     />
-    <!-- El Popup -->
-    <AreaFormDialog
+
+    <AreasForm
       v-model="esVisibleDialogo"
-      :es-edicion="esModoEdicion"
-      :form-data="datosFormulario"
+      :es-modo-edicion="esModoEdicion"
+      :cargando="cargando"
+      :datos-formulario="areaActual"
       :sucursales="listaSucursales"
-      @save="guardarArea"
+      @save="procesarGuardado"
     />
-  </div>
+    
+  </q-page>
 </template>
 
 <script setup lang="ts">
-// Importamos el "cerebro" y los componentes
-import { useAreas } from '../composables/useAreas';
+import AreasForm from '../components/AreaForm.vue';
 import AreasTable from '../components/AreasTable.vue';
-import AreaFormDialog from '../components/AreaFormDialog.vue';
+import { useAreas } from '../composables/useAreas';
 
-// Extraemos las funciones y variables que necesitamos para dibujar la pantalla
+// Extraemos las funciones estandarizadas del Composable
 const {
-    listaAreas, listaSucursales, esVisibleDialogo, esModoEdicion, datosFormulario,
-    nuevaArea, editarArea, guardarArea, eliminarArea
+  listaAreas, listaSucursales, cargando, esVisibleDialogo, esModoEdicion, areaActual,
+  abrirDialogoNuevo, abrirDialogoEditar, procesarGuardado, confirmarEliminacion
 } = useAreas();
 </script>

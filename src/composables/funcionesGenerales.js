@@ -991,3 +991,10 @@ export function msgNegative($q) {
     position: 'top-right',
   })
 }
+/**
+ * Obtiene la URL base del módulo de Administración (AD) 
+ * desde las variables de entorno.
+ */
+export function urlApiAdministracion() {
+  return import.meta.env.VITE_URL_APIA;
+}
