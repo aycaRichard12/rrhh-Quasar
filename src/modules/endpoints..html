@@ -1,0 +1,66 @@
+
+GET
+https://vivasoft.link/app/rrhh/api/listabeneficio/d09bf41544a3365a46c9077ebb5e35c3
+
+[
+  {
+    "id": "33",
+    "nombre": "Indemnización",
+    "descripcion": "Extraordinario - Beneficio de 1 salario por año de trabajo realizado.",
+    "tipo": "1",
+    "cantidad": "8.33",
+    "estado": "1",
+    "orden": "1",
+    "destino": "2"
+  }
+]
+
+GET
+https://vivasoft.link/app/rrhh/api/editarEstadobeneficio/33/2
+
+{
+  "estado": "exito",
+  "mensaje": "Actualización exitosaasasa"
+}
+
+GET
+https://vivasoft.link/app/rrhh/api/verificarIDbeneficio/33
+
+{
+  "estado": "exito",
+  "mensaje": "ID encontrado",
+  "datos": {
+    "id": "33",
+    "nombre": "Indemnización",
+    "descripcion": "Extraordinario - Beneficio de 1 salario por año de trabajo realizado.",
+    "tipo": "1",
+    "cantidad": "8.33",
+    "orden": "1",
+    "destino": "2"
+  }
+}
+
+GET
+https://vivasoft.link/app/rrhh/api/eliminarbeneficio/74
+
+{
+  "estado": "exito",
+  "mensaje": "Eliminación exitosa"
+}
+
+Api que aparece al dar en el boton (importar estandar) y aparece la tabla, y cuando doy al boton volver no vuelve a cargar el endpoint "listabeneficio"
+GET
+https://vivasoft.link/app/ad/api/listabeneficios
+
+[
+  {
+    "id": "2",
+    "nombre": "Indemnización",
+    "descripcion": "Beneficio de 1 salario por año de trabajo, llamado también quinquenio.",
+    "tipo": "Porcentaje",
+    "cantidad": "8.33",
+    "estado": "1",
+    "orden": "1",
+    "destino": ""
+  }
+]

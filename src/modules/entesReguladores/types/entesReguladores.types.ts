@@ -1,15 +1,18 @@
 export interface EnteRegulador {
-  id?: string;
-  nombre: string;
-  porcentaje: string | number;
+  id?        : string | number;
+  nombre     : string;
   descripcion: string;
-  estado?: string;
-  orden: string | number;
-  monto: string | number;
+  porcentaje : string | number;
+  monto      : string | number;
+  orden      : string | number;
+  estado?    : string | number;
 }
-
-export interface RespuestaApi<T = undefined> {
-  estado: 'exito' | 'error';
-  mensaje: string;
-  datos?: T;
+export interface EnteReguladorEstandar {
+  id: string | number; // Sin el "?" porque los del catálogo siempre traen ID
+  nombre: string;
+  descripcion: string;
+  porcentaje: string | number;
+  monto: string | number;
+  orden: string | number;
+  estado: string | number;
 }

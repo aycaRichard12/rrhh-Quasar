@@ -1,42 +1,42 @@
 import { useQuasar } from 'quasar';
 import { ref, onMounted } from 'vue';
-import { entesReguladoresService } from '../services/entesReguladores.service';
+import { beneficiosService } from '../services/beneficios.service';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
-import type { EnteRegulador, EnteReguladorEstandar } from '../types/entesReguladores.types';
+import type { Beneficio, BeneficioEstandar } from '../types/beneficios.types';
 
-const listaEntes = ref<EnteRegulador[]>([]);
-const listaEntesEstandar = ref<EnteReguladorEstandar[]>([]);
+const listaBeneficios = ref<Beneficio[]>([]);
+const listaBeneficiosEstandar = ref<BeneficioEstandar[]>([]);
 const cargando = ref<boolean>(false);
 const esVisibleDialogo = ref<boolean>(false);
 const esModoEdicion = ref<boolean>(false);
 const esVistaEstandar = ref<boolean>(false);
 
-const enteActual = ref<EnteRegulador>({
-  nombre: '', porcentaje: '', descripcion: '', monto: '', orden: ''
+const beneficioActual = ref<Beneficio>({
+  nombre: '', descripcion: '', tipo: '1', cantidad: '', orden: '', destino: '1'
 });
 
-export function useEntesReguladores() {
+export function useBeneficios() {
   const $q = useQuasar();
 
-  const cargarEntes = async () => {
+  const cargarBeneficios = async () => {
     cargando.value = true;
     try {
-      listaEntes.value = await entesReguladoresService.listarEntesReguladores();
+      listaBeneficios.value = await beneficiosService.listarBeneficios();
     } catch (error: unknown) {
-      console.error('Error al cargar entes:', error);
-      $q.notify({ type: 'negative', message: 'Error al cargar entes reguladores.' });
+      console.error('Error al cargar beneficios:', error);
+      $q.notify({ type: 'negative', message: 'Error al cargar los beneficios.' });
     } finally {
       cargando.value = false;
     }
   };
 
-  const cargarEntesEstandar = async () => {
+  const cargarBeneficiosEstandar = async () => {
     cargando.value = true;
     try {
-      listaEntesEstandar.value = await entesReguladoresService.listarEntesReguladoresEstandar();
+      listaBeneficiosEstandar.value = await beneficiosService.listarBeneficiosEstandar();
     } catch (error: unknown) {
-      console.error('Error al cargar entes estándar:', error);
-      $q.notify({ type: 'negative', message: 'Error al cargar catálogo estándar.' });
+      console.error('Error al cargar beneficios estándar:', error);
+      $q.notify({ type: 'negative', message: 'Error al cargar beneficios estándar.' });
     } finally {
       cargando.value = false;
     }
@@ -44,45 +44,45 @@ export function useEntesReguladores() {
 
   const alternarVistaEstandar = () => {
     esVistaEstandar.value = !esVistaEstandar.value;
-    if (esVistaEstandar.value && listaEntesEstandar.value.length === 0) {
-      void cargarEntesEstandar();
+    if (esVistaEstandar.value && listaBeneficiosEstandar.value.length === 0) {
+      void cargarBeneficiosEstandar();
     }
   };
 
   const abrirDialogoNuevo = () => {
-    enteActual.value = { nombre: '', porcentaje: '', descripcion: '', monto: '', orden: '' };
+    beneficioActual.value = { nombre: '', descripcion: '', tipo: '1', cantidad: '', orden: '', destino: '1' };
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
   };
 
-  const abrirDialogoEditar = async (ente: EnteRegulador) => {
-    if (!ente.id) return;
+  const abrirDialogoEditar = async (beneficio: Beneficio) => {
+    if (!beneficio.id) return;
     cargando.value = true;
     try {
-      const respuesta = await entesReguladoresService.actualizarEnteRegulador(ente.id);
+      const respuesta = await beneficiosService.actualizarBeneficio(beneficio.id);
       if (respuesta.estado === 'exito' && respuesta.datos) {
-        enteActual.value = { ...respuesta.datos };
+        beneficioActual.value = { ...respuesta.datos };
         esModoEdicion.value = true;
         esVisibleDialogo.value = true;
       }
     } catch (error: unknown) {
-      console.error('Error al obtener ente:', error);
+      console.error('Error al obtener beneficio:', error);
       $q.notify({ type: 'negative', message: 'Error al obtener datos.' });
     } finally {
       cargando.value = false;
     }
   };
 
-  // REFACTORIZADO: Recibe EnteRegulador e itera sobre este parámetro
-  const procesarGuardado = async (datosFormulario: EnteRegulador) => {
+  // REFACTORIZADO: Eliminar "any", usar la interfaz "Beneficio"
+  const procesarGuardado = async (datosFormulario: Beneficio) => {
     cargando.value = true;
     try {
       const payload = new FormData();
       const idEmpresa = String(idempresa_md5());
-
-      payload.append('ver', esModoEdicion.value ? 'editarEnteregulador' : 'registroEnteregulador');
-      payload.append('idempresa', idEmpresa);
       
+      payload.append('ver', esModoEdicion.value ? 'editar' : 'registro');
+      payload.append('idempresa', idEmpresa);
+
       if (esModoEdicion.value && datosFormulario.id) {
         payload.append('id', String(datosFormulario.id));
       }
@@ -93,50 +93,50 @@ export function useEntesReguladores() {
         }
       });
 
-      const respuesta = await entesReguladoresService.guardarEnteRegulador(payload);
+      const respuesta = await beneficiosService.guardarBeneficio(payload);
       if (respuesta.estado === 'exito') {
         $q.notify({ type: 'positive', message: 'Registro guardado exitosamente.' });
         esVisibleDialogo.value = false;
-        void cargarEntes();
+        void cargarBeneficios();
       }
     } catch (error: unknown) {
-      console.error('Error al guardar ente:', error);
-      $q.notify({ type: 'negative', message: 'Error al guardar ente regulador.' });
+      console.error('Error al guardar beneficio:', error);
+      $q.notify({ type: 'negative', message: 'Error de comunicación.' });
     } finally {
       cargando.value = false;
     }
   };
 
-  const confirmarEliminacion = (idEnte: string | number) => {
+  const confirmarEliminacion = (idBeneficio: string | number) => {
     $q.dialog({
       title: '¿Está Seguro?',
       message: 'No podrá recuperar este registro.',
       persistent: true,
       ok: { color: 'negative', label: 'Eliminar' },
-      cancel: { color: 'primary', label: 'Cancelar', flat: true }
+      cancel: { color: 'primary', flat: true, label: 'Cancelar' }
     }).onOk(() => {
       cargando.value = true;
-      entesReguladoresService.eliminarEnteRegulador(idEnte)
+      beneficiosService.eliminarBeneficio(idBeneficio)
         .then(() => {
-          $q.notify({ type: 'positive', message: 'Eliminación exitosa.' });
-          void cargarEntes();
+          $q.notify({ type: 'positive', message: 'Beneficio eliminado.' });
+          void cargarBeneficios();
         })
         .catch((error: unknown) => {
-          console.error('Error al eliminar ente:', error);
-          $q.notify({ type: 'negative', message: 'Error al eliminar el ente.' });
+          console.error('Error al eliminar beneficio:', error);
+          $q.notify({ type: 'negative', message: 'Error al eliminar beneficio.' });
         })
         .finally(() => { cargando.value = false; });
     });
   };
 
-  const cambiarEstadoRegistro = async (ente: EnteRegulador) => {
-    if (!ente.id) return;
+  const cambiarEstadoRegistro = async (beneficio: Beneficio) => {
+    if (!beneficio.id) return;
     cargando.value = true;
-    const nuevoEstado = ente.estado == '1' ? '0' : '1'; 
+    const nuevoEstado = beneficio.estado == '1' ? '2' : '1'; 
     try {
-      await entesReguladoresService.cambiarEstadoEnteRegulador(ente.id, nuevoEstado);
+      await beneficiosService.cambiarEstadoBeneficio(beneficio.id, nuevoEstado);
       $q.notify({ type: 'positive', message: 'Estado actualizado.' });
-      void cargarEntes();
+      void cargarBeneficios();
     } catch (error: unknown) {
       console.error('Error al cambiar estado:', error);
       $q.notify({ type: 'negative', message: 'Error al cambiar estado.' });
@@ -151,14 +151,9 @@ export function useEntesReguladores() {
       : 'Esta acción agregará los datos del template a la tabla actual.';
 
     $q.dialog({
-      title: '¿Está seguro?', 
-      message: mensaje,
-      persistent: true,
-      ok: { color: 'primary', label: 'Proceder' }, 
-      cancel: { color: 'negative', label: 'Cancelar', flat: true }
-    }).onOk(() => {
-      void procesarImportacion(tipoAccion);
-    });
+      title: '¿Está seguro?', message: mensaje, persistent: true,
+      ok: { color: 'primary', label: 'Proceder' }, cancel: { color: 'negative', flat: true, label: 'Cancelar' }
+    }).onOk(() => { void procesarImportacion(tipoAccion); });
   };
 
   const procesarImportacion = async (tipoAccion: 'reemplazar' | 'anadir') => {
@@ -167,19 +162,19 @@ export function useEntesReguladores() {
       const payload = new FormData();
       const idEmpresa = String(idempresa_md5());
       
-      payload.append('ver', 'reemplazarocopiardatosentesreguladores');
+      payload.append('ver', 'remplazarocopiardatosbeneficios');
       payload.append('idempresa', idEmpresa);
-      payload.append('datos', JSON.stringify(listaEntesEstandar.value));
+      payload.append('datos', JSON.stringify(listaBeneficiosEstandar.value));
       payload.append('tipo', tipoAccion === 'reemplazar' ? '1' : '2');
 
-      const respuesta = await entesReguladoresService.guardarEnteRegulador(payload);
+      const respuesta = await beneficiosService.guardarBeneficio(payload);
       if (respuesta.estado === 'exito') {
         $q.notify({ type: 'positive', message: 'Catálogo procesado correctamente.' });
         alternarVistaEstandar();
-        void cargarEntes();
+        void cargarBeneficios();
       }
     } catch (error: unknown) {
-      console.error('Error al procesar catálogo:', error);
+      console.error('Error procesando importación:', error);
       $q.notify({ type: 'negative', message: 'Error al procesar catálogo.' });
     } finally {
       cargando.value = false;
@@ -187,11 +182,11 @@ export function useEntesReguladores() {
   };
 
   onMounted(() => {
-    if (listaEntes.value.length === 0) void cargarEntes();
+    if (listaBeneficios.value.length === 0) void cargarBeneficios();
   });
 
   return {
-    listaEntes, listaEntesEstandar, cargando, esVisibleDialogo, esModoEdicion, esVistaEstandar, enteActual,
+    listaBeneficios, listaBeneficiosEstandar, cargando, esVisibleDialogo, esModoEdicion, esVistaEstandar, beneficioActual,
     abrirDialogoNuevo, abrirDialogoEditar, procesarGuardado, confirmarEliminacion, cambiarEstadoRegistro, alternarVistaEstandar, confirmarImportacion
   };
 }

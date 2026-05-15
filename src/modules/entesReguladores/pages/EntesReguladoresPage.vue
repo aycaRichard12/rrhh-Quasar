@@ -1,38 +1,62 @@
+<!-- 
+    <div class="row justify-center q-mb-md">
+      <div class="text-h5 text-primary text-bold">
+        {{ $t('Entes Reguladores (Título Provisional)') }}
+      </div>
+    </div> -->
+
 <template>
   <q-page padding>
-    <div v-if="!esVistaTemplates">
-      <EntesReguladoresTable />
+    
+    <div class="col">
+      <div class="row col justify-center">
+        <h4 class="q-my-none text-primary">{{ $t('entes.title', 'Módulo de Entes Reguladores') }}</h4>
+        </div>
+        <div class="row col justify-center">
+        <p class="text-grey-7">{{ $t('entes.description', 'Gestión de aportes y regulaciones.') }}</p>
+      </div>
+    </div>
+
+    <div v-if="!esVistaEstandar">
+      <EntesReguladoresTable
+        :rows="listaEntes"
+        :cargando="cargando"
+        @create="abrirDialogoNuevo"
+        @import="alternarVistaEstandar"
+        @edit="abrirDialogoEditar"
+        @delete="confirmarEliminacion"
+        @change-status="cambiarEstadoRegistro"
+      />
     </div>
 
     <div v-else>
-      <div class="row q-mb-md justify-between">
-        <q-btn icon="arrow_back" color="primary" label="Volver" @click="esVistaTemplates = false" />
-        <div class="q-gutter-sm">
-          <q-btn color="warning" label="Reemplazar" @click="procesarTemplates(1)" />
-          <q-btn color="positive" label="Añadir" @click="procesarTemplates(2)" />
-        </div>
-      </div>
-      <q-table :rows="listaTemplates" :loading="cargando" title="Templates Disponibles" flat bordered />
+      <EntesReguladoresStandar
+        :rows="listaEntesEstandar"
+        :cargando="cargando"
+        @volver="alternarVistaEstandar"
+        @procesar="(tipoAccion) => confirmarImportacion(tipoAccion === 1 ? 'reemplazar' : 'anadir')"
+      />
     </div>
 
-    <EntesReguladoresForm />
+    <EntesReguladoresForm
+      v-model="esVisibleDialogo"
+      :es-modo-edicion="esModoEdicion"
+      :cargando="cargando"
+      :datos-formulario="enteActual"
+      @save="procesarGuardado"
+    />
+
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { provide } from 'vue';
 import EntesReguladoresTable from '../components/EntesReguladoresTable.vue';
+import EntesReguladoresStandar from '../components/EntesReguladoresStandar.vue';
 import EntesReguladoresForm from '../components/EntesReguladoresForm.vue';
 import { useEntesReguladores } from '../composables/useEntesReguladores';
 
-// Instanciamos nuestro cerebro
-const entesCore = useEntesReguladores();
-
-// Proveemos todo el estado y funciones a los componentes hijos (para no pasar docenas de props)
-Object.entries(entesCore).forEach(([key, value]) => {
-  provide(key, value);
-});
-
-// Extraemos lo que necesitamos usar directamente en esta página
-const { esVistaTemplates, listaTemplates, cargando, procesarTemplates } = entesCore;
+const {
+  listaEntes, listaEntesEstandar, cargando, esVisibleDialogo, esVistaEstandar, esModoEdicion, enteActual,
+  abrirDialogoNuevo, abrirDialogoEditar, procesarGuardado, confirmarEliminacion, cambiarEstadoRegistro, alternarVistaEstandar, confirmarImportacion
+} = useEntesReguladores();
 </script>
