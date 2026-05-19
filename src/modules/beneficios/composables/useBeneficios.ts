@@ -4,14 +4,14 @@ import { beneficiosService } from '../services/beneficios.service';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import type { Beneficio, BeneficioEstandar } from '../types/beneficios.types';
 
-const listaBeneficios = ref<Beneficio[]>([]);
-const listaBeneficiosEstandar = ref<BeneficioEstandar[]>([]);
-const cargando = ref<boolean>(false);
-const esVisibleDialogo = ref<boolean>(false);
-const esModoEdicion = ref<boolean>(false);
-const esVistaEstandar = ref<boolean>(false);
+const listaBeneficios        = ref<Beneficio[]>([]);
+const listaBeneficiosEstandar= ref<BeneficioEstandar[]>([]);
+const cargando               = ref<boolean>(false);
+const esVisibleDialogo       = ref<boolean>(false);
+const esModoEdicion          = ref<boolean>(false);
+const esVistaEstandar        = ref<boolean>(false);
 
-const beneficioActual = ref<Beneficio>({
+const beneficioActual        = ref<Beneficio>({
   nombre: '', descripcion: '', tipo: '1', cantidad: '', orden: '', destino: '1'
 });
 
@@ -73,14 +73,13 @@ export function useBeneficios() {
     }
   };
 
-  // REFACTORIZADO: Eliminar "any", usar la interfaz "Beneficio"
   const procesarGuardado = async (datosFormulario: Beneficio) => {
     cargando.value = true;
     try {
       const payload = new FormData();
       const idEmpresa = String(idempresa_md5());
       
-      payload.append('ver', esModoEdicion.value ? 'editar' : 'registro');
+      payload.append('ver', esModoEdicion.value ? 'editarBeneficio' : 'registroBeneficio');
       payload.append('idempresa', idEmpresa);
 
       if (esModoEdicion.value && datosFormulario.id) {
@@ -113,7 +112,7 @@ export function useBeneficios() {
       message: 'No podrá recuperar este registro.',
       persistent: true,
       ok: { color: 'negative', label: 'Eliminar' },
-      cancel: { color: 'primary', flat: true, label: 'Cancelar' }
+      cancel: { color: 'primary', label: 'Cancelar', flat: true }
     }).onOk(() => {
       cargando.value = true;
       beneficiosService.eliminarBeneficio(idBeneficio)
@@ -153,7 +152,9 @@ export function useBeneficios() {
     $q.dialog({
       title: '¿Está seguro?', message: mensaje, persistent: true,
       ok: { color: 'primary', label: 'Proceder' }, cancel: { color: 'negative', flat: true, label: 'Cancelar' }
-    }).onOk(() => { void procesarImportacion(tipoAccion); });
+    }).onOk(() => {
+        void procesarImportacion(tipoAccion);
+    });
   };
 
   const procesarImportacion = async (tipoAccion: 'reemplazar' | 'anadir') => {
@@ -186,7 +187,7 @@ export function useBeneficios() {
   });
 
   return {
-    listaBeneficios, listaBeneficiosEstandar, cargando, esVisibleDialogo, esModoEdicion, esVistaEstandar, beneficioActual,
+    listaBeneficios, listaBeneficiosEstandar, cargando, esVisibleDialogo, esModoEdicion, beneficioActual, esVistaEstandar,
     abrirDialogoNuevo, abrirDialogoEditar, procesarGuardado, confirmarEliminacion, cambiarEstadoRegistro, alternarVistaEstandar, confirmarImportacion
   };
 }

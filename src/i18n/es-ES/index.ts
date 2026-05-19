@@ -3,6 +3,8 @@ import navigation from './navigation';
 export default {
   common: {
     actions: {
+      asset: 'Activo',
+      idle: 'Inactivo',
       edit: 'Editar',
       delete: 'Eliminar',
       save: 'Guardar',
@@ -34,7 +36,9 @@ export default {
       account: 'Cuenta',
     },
     rules: {
-      required: 'Este campo es obligatorio'
+      required: 'Este campo es obligatorio',
+      numeric: 'Debe ser numérico',
+      integer: 'Debe ser entero'
     },
     messages: {
       noData: 'No hay registros',
@@ -50,6 +54,7 @@ export default {
       reportGenerated: 'Reporte generado correctamente',
     },
     report: {
+      recordsPerPage: 'Registros por página',
       page: 'Página',
       of: 'de',
       dateTime: 'Fecha hora reporte',
@@ -90,29 +95,37 @@ export default {
     title: '¡Bienvenido a Gestión RRHH!',
     subtitle: 'Selecciona una opción del menú lateral para gestionar el talento humano.',
   },
-  formBtn: {
-    registration: 'Nuevo Registro',
-    save: 'Guardar',
-    cancel: 'Cancelar',
+  ///////////////////////////////////////////////////////////////////////////////////
+  tables:{
+    description: 'Descripción',
+    status: 'Estado',
+    options: 'Opciones'
   },
   areas: {
     title: 'Áreas',
-    subtitle: 'Descripcion $$$$$$$',
+    subtitle: 'Gestión de áreas y sucursales de la empresa.',
     form: {
-      area: 'Area*',
-      description: 'Descripción*',
-      branch: 'Sucursal*',
-      noBranch: 'Sin sucursal',
-    },
-    table: {
-      title: 'Gestión de Áreas',
-      index: 'N°',
-      name: 'Área',
-      description: 'Descripción',
+      formNew: 'Nueva Area',
+      formEdit: 'Editar Area',
+      buttonRegister: 'Nueva Area',
+      name: 'Area',
       branch: 'Sucursal',
-      options: 'Opciones',
-      recordsPerPage: "Registros por página:",
-      of: "de",
+      noBranch: 'Sin sucursal',
     }
   },
-};
+  entity:{
+    title: 'Entes Reguladores',
+    subtitle: 'Gestión de aportes y regulaciones.',
+    form: {
+      formNew: 'Nuevo Ente Regulador',
+      formEdit: 'Editar Ente Regulador',
+      buttonRegister: 'Nuevo Ente Regulador',
+      buttonImport: 'Importar Estándar',
+      name: 'Ente Regulador',
+      percentage: 'Porcentaje',
+      amount: 'Monto',
+      order: 'Orden'
+    },
+  }
+  
+}

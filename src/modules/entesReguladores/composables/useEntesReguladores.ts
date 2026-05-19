@@ -4,12 +4,12 @@ import { entesReguladoresService } from '../services/entesReguladores.service';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import type { EnteRegulador, EnteReguladorEstandar } from '../types/entesReguladores.types';
 
-const listaEntes = ref<EnteRegulador[]>([]);
-const listaEntesEstandar = ref<EnteReguladorEstandar[]>([]);
-const cargando = ref<boolean>(false);
-const esVisibleDialogo = ref<boolean>(false);
-const esModoEdicion = ref<boolean>(false);
-const esVistaEstandar = ref<boolean>(false);
+const listaEntes        = ref<EnteRegulador[]>([]);
+const listaEntesEstandar= ref<EnteReguladorEstandar[]>([]);
+const cargando          = ref<boolean>(false);
+const esVisibleDialogo  = ref<boolean>(false);
+const esModoEdicion     = ref<boolean>(false);
+const esVistaEstandar   = ref<boolean>(false);
 
 const enteActual = ref<EnteRegulador>({
   nombre: '', porcentaje: '', descripcion: '', monto: '', orden: ''
@@ -73,7 +73,6 @@ export function useEntesReguladores() {
     }
   };
 
-  // REFACTORIZADO: Recibe EnteRegulador e itera sobre este parámetro
   const procesarGuardado = async (datosFormulario: EnteRegulador) => {
     cargando.value = true;
     try {
@@ -101,7 +100,7 @@ export function useEntesReguladores() {
       }
     } catch (error: unknown) {
       console.error('Error al guardar ente:', error);
-      $q.notify({ type: 'negative', message: 'Error al guardar ente regulador.' });
+      $q.notify({ type: 'negative', message: 'Error de comunicación con el servidor.' });
     } finally {
       cargando.value = false;
     }
@@ -118,7 +117,7 @@ export function useEntesReguladores() {
       cargando.value = true;
       entesReguladoresService.eliminarEnteRegulador(idEnte)
         .then(() => {
-          $q.notify({ type: 'positive', message: 'Eliminación exitosa.' });
+          $q.notify({ type: 'positive', message: 'Ente Regulador Eliminado.' });
           void cargarEntes();
         })
         .catch((error: unknown) => {
@@ -151,11 +150,8 @@ export function useEntesReguladores() {
       : 'Esta acción agregará los datos del template a la tabla actual.';
 
     $q.dialog({
-      title: '¿Está seguro?', 
-      message: mensaje,
-      persistent: true,
-      ok: { color: 'primary', label: 'Proceder' }, 
-      cancel: { color: 'negative', label: 'Cancelar', flat: true }
+      title: '¿Está seguro?', message: mensaje, persistent: true,
+      ok: { color: 'primary', label: 'Proceder' }, cancel: { color: 'negative', label: 'Cancelar', flat: true }
     }).onOk(() => {
       void procesarImportacion(tipoAccion);
     });
@@ -191,7 +187,7 @@ export function useEntesReguladores() {
   });
 
   return {
-    listaEntes, listaEntesEstandar, cargando, esVisibleDialogo, esModoEdicion, esVistaEstandar, enteActual,
+    listaEntes, listaEntesEstandar, cargando, esVisibleDialogo, esModoEdicion,  enteActual, esVistaEstandar,
     abrirDialogoNuevo, abrirDialogoEditar, procesarGuardado, confirmarEliminacion, cambiarEstadoRegistro, alternarVistaEstandar, confirmarImportacion
   };
 }
