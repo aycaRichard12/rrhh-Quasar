@@ -17,8 +17,8 @@ export const beneficiosService = {
     return data;
   },
 
-  async cambiarEstadoBeneficio(id: string | number, estado: string | number): Promise<RespuestaApi> {
-    const { data } = await api.get(`editarEstadobeneficio/${id}/${estado}`);
+  async cambiarEstadoBeneficio(id: string | number, nuevoEstado: string | number): Promise<RespuestaApi> {
+    const { data } = await api.get(`editarEstadobeneficio/${id}/${nuevoEstado}`);
     return data;
   },
 
@@ -37,4 +37,5 @@ export const beneficiosService = {
     const { data } = await api.get(`${urlAd}api/listabeneficios`);
     return data;
   }
+  
 };

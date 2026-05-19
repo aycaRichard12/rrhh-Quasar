@@ -37,4 +37,5 @@ export const entesReguladoresService = {
     const { data } = await api.get(`${urlAd}api/listareguladores`);
     return data;
   }
+  
 };

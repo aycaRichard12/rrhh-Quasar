@@ -13,6 +13,7 @@ const routes: RouteRecordRaw[] = [
       { path: 'areas',            component: () => import('src/modules/areas/pages/AreasPage.vue') },
       { path: 'entesReguladores', component: () => import('src/modules/entesReguladores/pages/EntesReguladoresPage.vue') },
       { path: 'beneficios',       component: () => import('src/modules/beneficios/pages/BeneficiosPage.vue') },
+      { path: 'bonosEmpresa',     component: () => import('src/modules/bonosEmpresa/pages/BonosEmpresaPage.vue') }
 
 
     ],

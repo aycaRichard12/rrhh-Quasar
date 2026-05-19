@@ -79,7 +79,7 @@
             </q-card-section>
 
             <q-card-section class="q-px-xl q-pt-sm">
-              <q-form @submit.prevent="handleLogin" class="q-gutter-y-md">
+              <q-form @submit="handleLogin" class="q-gutter-y-md">
 
                 <!-- Usuario -->
                 <q-input

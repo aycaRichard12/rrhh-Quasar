@@ -50,6 +50,7 @@ export default {
       reportGenerated: 'Relatório gerado com sucesso',
     },
     report: {
+      recordsPerPage: 'Registros por página',
       page: 'Página',
       of: 'de',
       dateTime: 'Data e hora do relatório',
@@ -89,5 +90,26 @@ export default {
   welcome: {
     title: 'Bem-vindo ao Gestão de RH!',
     subtitle: 'Selecione uma opção no menu lateral para gerenciar o talento humano.',
-  }
+  },
+  ///////////////////////////////////////////////////////////////////////////////////
+  tables:{
+    description: 'Descrição',
+    options: 'Opções',
+  },
+  areas: {
+    title: 'Áreas',
+    subtitle: 'Gestão de áreas e filiais da empresa',
+    form: {
+      formNew: 'Nova Área',
+      formEdit: 'Editar Área',
+      buttonRegister: 'Nova Área',
+      name: 'Área',
+      branch: 'Filial',
+      noBranch: 'Sem filial',
+    },
+    table: {
+      name: 'Área',
+      branch: 'Filial',
+    }
+  },
 };
