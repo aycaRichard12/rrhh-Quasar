@@ -3,6 +3,8 @@ import navigation from './navigation';
 export default {
   common: {
     actions: {
+      asset: 'Asset',
+      idle: 'Idle',
       edit: 'Edit',
       delete: 'Delete',
       save: 'Save',
@@ -34,7 +36,9 @@ export default {
       account: 'Account',
     },
     rules: {
-      required: 'This field is required'
+      required: 'This field is required',
+      numeric: 'It must be numerical',
+      integer: 'It must be integer'
     },
     messages: {
       noData: 'No records found',
@@ -50,6 +54,7 @@ export default {
       reportGenerated: 'Report generated successfully',
     },
     report: {
+      recordsPerPage: 'Records per page',
       page: 'Page',
       of: 'of',
       dateTime: 'Report date time',
@@ -90,29 +95,36 @@ export default {
     title: 'Welcome to HR Management!',
     subtitle: 'Select an option from the side menu to get started.'
   },
-  formBtn: {
-    registration: 'New Registration',
-    save: 'Save',
-    cancel: 'Cancel',
+  ///////////////////////////////////////////////////////////////////////////////////
+  tables:{
+    description: 'Description',
+    status: 'Status',
+    options: 'Options',
   },
   areas: {
     title: 'Areas',
-    subtitle: 'Description $$$$$$$',
+    subtitle: 'Management of company areas and branches.',
     form: {
-      area: 'Area*',
-      description: 'Description*',
-      branch: 'Branch*',
-      noBranch: 'No Branch',
-    },
-    table: {
-      title: 'Area Management',
-      index: 'N°',
+      formNew: 'New Area',
+      formEdit: 'Edit Area',
+      buttonRegister: 'New Area',
       name: 'Area',
-      description: 'Description',
       branch: 'Branch',
-      options: 'Options',
-      recordsPerPage: "Record per Page:",
-      of: "of",
+      noBranch: 'No Branch',
     }
   },
+  entity:{
+    title: 'Regulatory Bodies',
+    subtitle: 'Management of contributions and regulations.',
+    form: {
+      formNew: 'New Regulatory Entity',
+      formEdit: 'Edit Regulatory Entity',
+      buttonRegister: 'New Regulatory Entity',
+      buttonImport: 'Import Standard',
+      name: 'Regulatory Body',
+      percentage: 'Percentage',
+      amount: 'Amount',
+      order: 'Order'
+    },
+  }
 };
