@@ -11,45 +11,63 @@
   </div>
 
   <div v-if="!esVistaEstandar">
-   <EntesReguladoresTable
-    :rows="listaEntes"
-    :cargando="cargando"
-    @create="abrirDialogoNuevo"
-    @import="alternarVistaEstandar"
-    @edit="abrirDialogoEditar"
-    @delete="confirmarEliminacion"
-    @change-status="cambiarEstadoRegistro"
-   />
+   <div class="row justify-between items-center q-mb-md">
+      <q-btn color="primary" label="Nuevo Registro" @click="prepararNuevoEnteRegulador" />
+      <q-btn color="secondary" label="Importar Standar" @click="cargarEntesReguladoresEstandar" />
+   </div> 
+
+    <EntesReguladoresTable
+      :lista-entes-reguladores="listaEntesReguladores"
+      @editar="prepararEdicionEnteRegulador"
+      @eliminar="confirmarEliminarEnteRegulador"
+      @cambiar-estado="cambiarEstadoEnteRegulador"
+    />
+
+    <q-dialog v-model="esVisibleDialogo" persistent>
+    <EntesReguladoresForm
+      :ente-regulador="enteReguladorActual"
+      :es-modo-edicion="esModoEdicion"
+      @guardar="guardarEnteRegulador"
+      @cerrar="esVisibleDialogo = false"
+    />
+    </q-dialog>
   </div>
 
   <div v-else>
-   <EntesReguladoresStandar
-    :rows="listaEntesEstandar"
-    :cargando="cargando"
-    @volver="alternarVistaEstandar"
-    @procesar="(tipoAccion) => confirmarImportacion(tipoAccion === 1 ? 'reemplazar' : 'anadir')"
-   />
+    <EntesReguladoresStandar
+      :lista-entes-reguladores-estandar="listaEntesReguladoresEstandar"
+      @volver="esVistaEstandar = false"
+      @procesar-importacion="procesarImportacion"
+    />
   </div>
-
-  <EntesReguladoresForm
-   v-model="esVisibleDialogo"
-   :es-modo-edicion="esModoEdicion"
-   :cargando="cargando"
-   :datos-formulario="enteActual"
-   @save="procesarGuardado"
-  />
-
  </q-page>
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue';
+import { useEntesReguladores } from '../composables/useEntesReguladores';
 import EntesReguladoresTable from '../components/EntesReguladoresTable.vue';
 import EntesReguladoresStandar from '../components/EntesReguladoresStandar.vue';
 import EntesReguladoresForm from '../components/EntesReguladoresForm.vue';
-import { useEntesReguladores } from '../composables/useEntesReguladores';
 
 const {
-  listaEntes, listaEntesEstandar, cargando, esVisibleDialogo, esModoEdicion, enteActual, esVistaEstandar,
-  abrirDialogoNuevo, abrirDialogoEditar, procesarGuardado, confirmarEliminacion, cambiarEstadoRegistro, alternarVistaEstandar, confirmarImportacion
+  listaEntesReguladores,
+  listaEntesReguladoresEstandar,
+  esVistaEstandar,
+  esVisibleDialogo,
+  esModoEdicion, 
+  enteReguladorActual,
+  cargarEntesReguladores,
+  prepararNuevoEnteRegulador,
+  prepararEdicionEnteRegulador,
+  guardarEnteRegulador,
+  confirmarEliminarEnteRegulador,
+  cambiarEstadoEnteRegulador,
+  cargarEntesReguladoresEstandar,
+  procesarImportacion
 } = useEntesReguladores();
+
+onMounted(() => {
+  void cargarEntesReguladores();
+})
 </script>

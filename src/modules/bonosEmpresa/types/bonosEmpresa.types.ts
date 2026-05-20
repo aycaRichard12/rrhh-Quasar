@@ -10,8 +10,8 @@ export interface BonoEmpresa {
   fecha?     : string;
 }
 
-export interface RespuestaApi<T = undefined> {
-  estado: 'exito' | 'error';
-  mensaje: string;
-  datos?: T;
-}
+// export interface RespuestaApi<T = undefined> {
+//   estado: 'exito' | 'error';
+//   mensaje: string;
+//   datos?: T;
+// }
