@@ -58,8 +58,6 @@ export function useEntesReguladores() {
     }
   };
   const guardarEnteRegulador = async (datosGuardar: EnteRegulador) => {
-    console.log('2 COMPOSABLE');
-    console.log(datosGuardar);
     try {
       const formData = new FormData();
       const idEmpresa = String(idempresa_md5());
@@ -75,10 +73,7 @@ export function useEntesReguladores() {
       formData.append('descripcion', String(datosGuardar.descripcion));
       formData.append('monto', String(datosGuardar.monto));
       formData.append('orden', String(datosGuardar.orden));
-console.log('3 ANTES SERVICE');
       const respuesta = await entesReguladoresService.guardarEnteRegulador(formData);
-console.log('4 DESPUES SERVICE');
-console.log(respuesta);
       if (respuesta.estado === 'exito') {
         $q.notify({ type: 'positive', message: esModoEdicion.value ? 'Registro Actualizado con éxito' : 'Registro creado con exito' });
         esVisibleDialogo.value = false;

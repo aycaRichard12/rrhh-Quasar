@@ -10,33 +10,40 @@
    </div>
   </div>
 
+  <div class="row justify-between items-center q-mb-md">
+      <q-btn color="primary" label="Nuevo Registro" @click="prepararNuevaArea" />
+   </div> 
+
   <AreasTable
-   :rows="listaAreas"
-   :cargando="cargando"
-   @create="abrirDialogoNuevo"
-   @edit="abrirDialogoEditar"
-   @delete="confirmarEliminacion"
+    :lista-areas="listaAreas"
+    @editar="prepararEdicionArea"
+    @eliminar="confirmarEliminarArea"
   />
 
-  <AreasForm
-   v-model="esVisibleDialogo"
-   :es-modo-edicion="esModoEdicion"
-   :cargando="cargando"
-   :datos-formulario="areaActual"
-   :sucursales="listaSucursales"
-   @save="procesarGuardado"
+  <q-dialog v-model="esVisibleDialogo" >
+  <AreaForm
+    :area="areaActual"
+    :sucursales="listaSucursales"
+    :es-modo-edicion="esModoEdicion"
+    @guardar="guardarArea"
+    @cerrar="esVisibleDialogo = false"
   />
-
+  </q-dialog>
  </q-page>
 </template>
 
 <script setup lang="ts">
-import AreasForm from '../components/AreaForm.vue';
-import AreasTable from '../components/AreasTable.vue';
+import { onMounted } from 'vue';
 import { useAreas } from '../composables/useAreas';
+import AreaForm from '../components/AreaForm.vue';
+import AreasTable from '../components/AreasTable.vue';
 
 const {
-  listaAreas, listaSucursales, cargando, esVisibleDialogo, esModoEdicion, areaActual,
-  abrirDialogoNuevo, abrirDialogoEditar, procesarGuardado, confirmarEliminacion
+  listaAreas, listaSucursales, esVisibleDialogo, esModoEdicion, areaActual,
+  cargarAreasSucursales, prepararNuevaArea, prepararEdicionArea, guardarArea, confirmarEliminarArea
 } = useAreas();
+
+onMounted(() => { 
+  void cargarAreasSucursales();
+})
 </script>

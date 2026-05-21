@@ -1,23 +1,11 @@
 <template>
- <div class="row justify-end q-mb-md">
-  <q-btn
-   color="primary"
-   icon="add"
-   :label="t('areas.form.formNew')"
-   @click="$emit('create')"
-  />
- </div>
-
  <q-card>
-  <q-table
-   :rows="rows"
+  <q-table flat bordered
+   :rows="props.listaAreas"
    :columns="columnas"
    row-key="id"
-   :loading="cargando"
    :rows-per-page-label="t('common.report.recordsPerPage')"
    :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${t('common.report.of')} ${totalRows}`"
-   flat
-   bordered
   >
 
    <template v-slot:body-cell-numero="props">
@@ -26,26 +14,21 @@
       
    <template v-slot:body-cell-opciones="props">
     <q-td :props="props" class="text-center q-gutter-xs">
-     <q-btn
+     <q-btn round dense
       icon="edit" 
       color="info"
-      round
-      dense
-      size="sm"
-      @click="$emit('edit', props.row)"
+      @click="emitirEditar(props.row.id)"
      >
       <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
        {{ t('common.actions.edit') }}
       </q-tooltip>
      </q-btn>
      
-     <q-btn
+     <q-btn round dense
       icon="delete"
       color="negative"
-      round
-      dense
-      size="sm"
-      @click="$emit('delete', props.row.id)">
+      @click="emitirEliminar(props.row.id)"
+      >
       <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
        {{ t('common.actions.delete') }}
       </q-tooltip>
@@ -64,15 +47,23 @@ import type { Area } from '../types/areas.types'
 
 const { t } = useI18n()
 
-defineProps<{ rows: Area[] ; cargando: boolean }>();
+const props = defineProps<{
+  listaAreas: Area[]
+}>();
 
-defineEmits([ 'create', 'edit', 'delete' ]);
+const emits = defineEmits<{
+  (e: 'editar', id: string | number): void;
+  (e: 'eliminar', id: string | number): void;
+}>();
 
-const columnas = computed<QTableColumn[]>(() => [
-  { name: 'numero',     label: 'N°',                   align: 'center',field: 'numero'},
-  { name: 'nombre',     label: t('areas.form.name'),  align: 'left',  field: 'nombre',     style: 'white-space: normal; width: 150px;'},
+const emitirEditar = (id: string | number) => emits('editar', id);
+const emitirEliminar = (id: string | number) => emits('eliminar', id);
+
+const columnas = computed<QTableColumn<Area>[]>(() => [
+  { name: 'numero',     label: 'N°',                   align: 'center',field: () => null },
+  { name: 'nombre',     label: t('areas.form.name'),   align: 'left',  field: 'nombre',     style: 'white-space: normal; width: 150px;'},
   { name: 'descripcion',label: t('tables.description'),align: 'left',  field: 'descripcion',style: 'white-space: normal; min-width: 150px;'},
-  { name: 'sucursal',   label: t('areas.form.branch'),align: 'center',
+  { name: 'sucursal',   label: t('areas.form.branch'), align: 'center',
   field: (row: Area) => {
     if (row.sucursal) {
       return `${row.sucursal.nombre} - ${row.sucursal.region}`;
@@ -80,6 +71,6 @@ const columnas = computed<QTableColumn[]>(() => [
     return t('areas.form.noBranch');
     }, style: 'white-space: normal; width: 150px;'
   },
-  { name: 'opciones',   label: t('tables.options'),    align: 'center', field: 'opciones' }
+  { name: 'opciones',   label: t('tables.options'),    align: 'center', field: () => null  }
 ]);
 </script>

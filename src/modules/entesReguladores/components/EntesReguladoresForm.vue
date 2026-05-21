@@ -75,7 +75,7 @@
 
     <q-card-actions align="right" class="text-primary">
         <q-btn flat label="Cancelar" @click="emitirCerrar" />
-        <q-btn color="primary" label="Registrar" type="submit" />
+        <q-btn icon="save" color="primary" label="Registrar" type="submit" />
     </q-card-actions>
    </q-form>
   </q-card>
@@ -101,11 +101,7 @@ watch(() => props.enteRegulador, (nuevosDatos) => {
   datosLocales.value = { ...nuevosDatos };
 }, { deep: true });
 
-const emitirGuardar = (evt?: Event) => {
-  evt?.preventDefault();
-  console.log('FORMULARIO ENVIADO');
-  console.log(datosLocales.value);
-
+const emitirGuardar = () => {
   emits('guardar', datosLocales.value);
 };
 const emitirCerrar = () => {
