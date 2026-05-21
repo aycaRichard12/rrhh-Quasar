@@ -1,21 +1,20 @@
 export interface Sucursal {
-  id?: string | number;
-  sucursal: string;
-  region: string;
-  idregion: string | number;
-  idempresa: string | number;
+  id?      :string;
+  sucursal :string;
+  region   :string;
+  idregion :string;
+  idempresa:string;
 }
 
 export interface Area {
-  id?: string | number;
-  nombre: string;
-  descripcion: string;
-  idsucursal?: string | number | null; 
+  id?          : string;
+  nombre       : string;
+  descripcion  : string;
+  idsucursal?  : string;
   sucursal?: {
-    idsucursal?: string | number;
-    id?: string | number;
-    nombre?: string;
-    region?: string;
-    idregion?: string | number;
-  } | null;
+    idsucursal?: string;
+    nombre     : string;
+    region     : string;
+    idregion?  : string;
+  };
 }

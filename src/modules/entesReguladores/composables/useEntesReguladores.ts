@@ -57,6 +57,7 @@ export function useEntesReguladores() {
         $q.notify({ type: 'negative', message: 'Error al obtener datos del ente regulador' });
     }
   };
+
   const guardarEnteRegulador = async (datosGuardar: EnteRegulador) => {
     try {
       const formData = new FormData();

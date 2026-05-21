@@ -48,11 +48,6 @@
         lazy-rules
         :rules="[val => (val !== null && val !== '') || $t('rules.required', 'Campo obligatorio')]"
        >
-        <!-- <template v-slot:selected-item="scope">
-         <div v-if="scope.opt">
-          {{ scope.opt.sucursal || scope.opt.nombre }} - {{ scope.opt.region }}
-         </div>
-        </template> -->
        </q-select>
       </div>
      </div>

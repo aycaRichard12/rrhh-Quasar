@@ -41,7 +41,9 @@
 
    <template v-slot:body-cell-destino="props">
     <q-td :props="props" class="text-center">
+      <q-chip dense outline color="primary">
      {{ props.row.destino === '1' || props.row.destino === 1 ? 'Planilla' : 'Finiquito' }}
+     </q-chip>
     </q-td>
    </template>
 

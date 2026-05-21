@@ -52,12 +52,12 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e: 'editar', id: string | number): void;
-  (e: 'eliminar', id: string | number): void;
+  (e: 'editar', id: string): void;
+  (e: 'eliminar', id: string): void;
 }>();
 
-const emitirEditar = (id: string | number) => emits('editar', id);
-const emitirEliminar = (id: string | number) => emits('eliminar', id);
+const emitirEditar = (id: string) => emits('editar', id);
+const emitirEliminar = (id: string) => emits('eliminar', id);
 
 const columnas = computed<QTableColumn<Area>[]>(() => [
   { name: 'numero',     label: 'N°',                   align: 'center',field: () => null },

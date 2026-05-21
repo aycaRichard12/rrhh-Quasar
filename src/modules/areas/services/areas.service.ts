@@ -22,12 +22,12 @@ export const areasService = {
     return data;
   },
 
-  async editarArea(id: string | number): Promise<RespuestaApi<Area>> {
+  async editarArea(id: string): Promise<RespuestaApi<Area>> {
     const { data } = await api.get<RespuestaApi<Area>>(`verificarIDarea/${id}`);
     return data;
   },
 
-  async eliminarArea(id: string | number): Promise<RespuestaApi> {
+  async eliminarArea(id: string): Promise<RespuestaApi> {
     const { data } = await api.get<RespuestaApi>(`eliminarAreas/${id}`);
     return data;
   }

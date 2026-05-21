@@ -1,12 +1,11 @@
 import { useQuasar } from 'quasar';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { beneficiosService } from '../services/beneficios.service';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
-import type { Beneficio, BeneficioEstandar } from '../types/beneficios.types';
+import type { Beneficio } from '../types/beneficios.types';
 
 const listaBeneficios        = ref<Beneficio[]>([]);
-const listaBeneficiosEstandar= ref<BeneficioEstandar[]>([]);
-const cargando               = ref<boolean>(false);
+const listaBeneficiosEstandar= ref<Beneficio[]>([]);
 const esVisibleDialogo       = ref<boolean>(false);
 const esModoEdicion          = ref<boolean>(false);
 const esVistaEstandar        = ref<boolean>(false);
@@ -19,57 +18,43 @@ export function useBeneficios() {
   const $q = useQuasar();
 
   const cargarBeneficios = async () => {
-    cargando.value = true;
     try {
       listaBeneficios.value = await beneficiosService.listarBeneficios();
-    } catch (error: unknown) {
+    } catch (error) {
       console.error('Error al cargar beneficios:', error);
       $q.notify({ type: 'negative', message: 'Error al cargar los beneficios.' });
-    } finally {
-      cargando.value = false;
     }
   };
 
   const cargarBeneficiosEstandar = async () => {
-    cargando.value = true;
     try {
       listaBeneficiosEstandar.value = await beneficiosService.listarBeneficiosEstandar();
-    } catch (error: unknown) {
+      esVistaEstandar.value = true;
+    } catch (error) {
       console.error('Error al cargar beneficios estándar:', error);
       $q.notify({ type: 'negative', message: 'Error al cargar beneficios estándar.' });
-    } finally {
-      cargando.value = false;
     }
   };
 
-  const alternarVistaEstandar = () => {
-    esVistaEstandar.value = !esVistaEstandar.value;
-    if (esVistaEstandar.value && listaBeneficiosEstandar.value.length === 0) {
-      void cargarBeneficiosEstandar();
-    }
-  };
-
-  const abrirDialogoNuevo = () => {
-    beneficioActual.value = { nombre: '', descripcion: '', tipo: '1', cantidad: '', orden: '', destino: '1' };
+  const prepararNuevoBeneficio = () => {
+    beneficioActual.value = {
+      nombre: '', descripcion: '', tipo: '1', cantidad: '', orden: '', destino: '1'
+    };
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
   };
 
-  const abrirDialogoEditar = async (beneficio: Beneficio) => {
-    if (!beneficio.id) return;
-    cargando.value = true;
-    try {
-      const respuesta = await beneficiosService.actualizarBeneficio(beneficio.id);
+  const prepararEdicionBeneficio = async (id: string | number) => {
+      try {
+      const respuesta = await beneficiosService.editarBeneficio(id);
       if (respuesta.estado === 'exito' && respuesta.datos) {
         beneficioActual.value = { ...respuesta.datos };
         esModoEdicion.value = true;
         esVisibleDialogo.value = true;
       }
-    } catch (error: unknown) {
+    } catch (error) {
       console.error('Error al obtener beneficio:', error);
       $q.notify({ type: 'negative', message: 'Error al obtener datos.' });
-    } finally {
-      cargando.value = false;
     }
   };
 

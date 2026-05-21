@@ -12,8 +12,8 @@
 
   <div v-if="!esVistaEstandar">
    <div class="row justify-between items-center q-mb-md">
-      <q-btn color="primary" label="Nuevo Registro" @click="prepararNuevoEnteRegulador" />
-      <q-btn color="secondary" label="Importar Standar" @click="cargarEntesReguladoresEstandar" />
+      <q-btn outline icon="cloud_download" color="secondary" label="Importar Standar" @click="cargarEntesReguladoresEstandar" />
+      <q-btn icon="add" color="primary" label="Nuevo Registro" @click="prepararNuevoEnteRegulador" />
    </div> 
 
     <EntesReguladoresTable
