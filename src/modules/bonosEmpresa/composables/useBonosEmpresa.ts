@@ -1,10 +1,10 @@
-import { ref } from 'vue';
 import { useQuasar } from 'quasar';
+import { ref } from 'vue';
 import { bonosEmpresaService } from '../services/bonosEmpresa.service';
 import type { BonoEmpresa } from '../types/bonosEmpresa.types';
 
 const listaBonosEmpresa = ref<BonoEmpresa[]>([]);
-const listaBonosEstandar = ref<BonoEmpresa[]>([]);
+const listaBonosEstandar  = ref<BonoEmpresa[]>([]);
 const esVisibleDialogo = ref(false);
 const esVisibleEstandar = ref(false);
 const esModoEdicion = ref(false);
@@ -178,19 +178,7 @@ export function useBonosEmpresa() {
   };
 
   return {
-    listaBonosEmpresa,
-    listaBonosEstandar,
-    esVisibleDialogo,
-    esVisibleEstandar,
-    esModoEdicion,
-    bonoEmpresaActual,
-    cargarBonosEmpresa,
-    cargarBonosEstandar,
-    prepararNuevoBonoEmpresa,
-    prepararEdicionBonoEmpresa,
-    guardarBonoEmpresa,
-    confirmarEliminarBonoEmpresa,
-    cambiarEstadoBonoEmpresa,
-    procesarImportacion
+    listaBonosEmpresa, listaBonosEstandar, esVisibleDialogo, esVisibleEstandar, esModoEdicion, bonoEmpresaActual,
+    cargarBonosEmpresa, cargarBonosEstandar, prepararNuevoBonoEmpresa, prepararEdicionBonoEmpresa, guardarBonoEmpresa, confirmarEliminarBonoEmpresa, cambiarEstadoBonoEmpresa, procesarImportacion
   };
 }

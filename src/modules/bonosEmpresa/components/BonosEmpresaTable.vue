@@ -154,8 +154,8 @@ const mapearDestino = (val: string | number) => {
 
 const columnas: QTableColumn<BonoEmpresa>[] = [
   { name: 'numero', label: 'N°', align: 'left', field: 'id' }, // El field aquí no importa gracias al slot
-  { name: 'nombre', label: 'Beneficio', align: 'left', field: 'nombre', sortable: true, style: 'white-space: normal'},
-  { name: 'descripcion', label: 'Descripción', align: 'left', field: 'descripcion', style: 'white-space: normal'},
+  { name: 'nombre', label: 'areas.form.name', align: 'left', field: 'nombre', sortable: true, style: 'white-space: normal'},
+  { name: 'descripcion', label: 'tables.description', align: 'left', field: 'descripcion', style: 'white-space: normal'},
   { name: 'tipo', label: 'Tipo', align: 'center', field: row => mapearTipo(row.tipo) },
   { name: 'cantidad', label: 'Cantidad', align: 'right', field: 'cantidad' },
   { name: 'orden', label: 'Orden', align: 'right', field: 'orden', sortable: true },

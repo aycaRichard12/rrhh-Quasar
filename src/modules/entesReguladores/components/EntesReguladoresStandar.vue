@@ -1,72 +1,58 @@
 <template>
-  <div class="row justify-between items-center q-mb-md">
-   <q-btn 
-    icon="arrow_back" 
-    :label="$t('formBtn.back', 'Volver')" 
-    color="negative" 
-    outline
-    @click="$emit('volver')" 
-   />
+  <div>
+    <div class="row justify-between items-center q-mb-md">
+      <q-btn color="primary" icon="arrow_back" label="Volver" @click="emitirVolver" />
+      
+      <div class="q-gutter-sm">
+        <q-btn color="primary" label="Reemplazar" @click="emitirProcesar(1)" />
+        <q-btn color="secondary" label="Añadir" @click="emitirProcesar(2)" />
+      </div>
+    </div>
 
-   <div class="q-gutter-sm">
-    <q-btn 
-     icon="autorenew" 
-     :label="$t('formBtn.replace', 'Reemplazar')" 
-     color="warning" 
-     :loading="cargando"
-     :disable="cargando"
-     @click="$emit('procesar', 1)" 
-    />
-    <q-btn 
-     icon="add" 
-     :label="$t('formBtn.add', 'Añadir')" 
-     color="positive" 
-     :loading="cargando"
-     :disable="cargando"
-     @click="$emit('procesar', 2)" 
-    />
-   </div>
+    <q-table
+      :rows="props.listaEntesReguladoresEstandar"
+      :columns="columnas"
+      row-key="id"
+      :rows-per-page-label="$t('table.recordsPerPage', 'Registros por página:')"
+      :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${$t('table.of', 'de')} ${totalRows}`"
+      flat 
+      bordered
+    >
+    <template v-slot:body-cell-numero="props">
+      <q-td :props="props">{{ props.rowIndex + 1 }}</q-td>
+    </template>
+
+    <template v-slot:body-cell-porcentaje="props">
+      <q-td :props="props" class="text-center">
+      {{ props.row.porcentaje }} %
+      </q-td>
+    </template>
+    </q-table>
   </div>
-
-  <q-table
-   :rows="rows"
-   :columns="columnas"
-   row-key="id"
-   :loading="cargando"
-   :rows-per-page-label="$t('table.recordsPerPage', 'Registros por página:')"
-   :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${$t('table.of', 'de')} ${totalRows}`"
-   flat 
-   bordered
-  >
-   <template v-slot:body-cell-numero="props">
-    <q-td :props="props">{{ props.rowIndex + 1 }}</q-td>
-   </template>
-
-   <template v-slot:body-cell-porcentaje="props">
-    <q-td :props="props" class="text-center">
-     {{ props.row.porcentaje }} %
-    </q-td>
-   </template>
-  </q-table>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { QTableColumn } from 'quasar';
-import type { EnteReguladorEstandar } from '../types/entesReguladores.types';
+import type { EnteRegulador } from '../types/entesReguladores.types';
 
 const { t } = useI18n();
 
-defineProps<{
-  rows: EnteReguladorEstandar[];
-  cargando: boolean;
+const props = defineProps<{
+  listaEntesReguladoresEstandar: EnteRegulador[];
 }>();
 
-defineEmits(['volver', 'procesar']);
+const emits = defineEmits<{
+  (e: 'volver'): void;
+  (e: 'procesarImportacion', tipo: number): void;
+}>();
 
-const columnas = computed<QTableColumn[]>(() => [
-  { name: 'numero',     label: 'N°',                        align: 'center',field: 'numero',     style: 'width: 50px' },
+const emitirVolver = () => emits('volver');
+const emitirProcesar = (tipo: number) => emits('procesarImportacion', tipo);
+
+const columnas = computed<QTableColumn<EnteRegulador>[]>(() => [
+  { name: 'numero',     label: 'N°',                        align: 'center',field: () => null,     style: 'width: 50px' },
   { name: 'nombre',     label: t('entes.table.name'),       align: 'left',  field: 'nombre',     style: 'white-space: normal; width: 180px' },
   { name: 'porcentaje', label: t('entes.table.percentage'), align: 'center',field: 'porcentaje', style: 'width: 80px' },
   { name: 'descripcion',label: t('entes.table.description'),align: 'left',  field: 'descripcion',style: 'white-space: normal' },
