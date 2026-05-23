@@ -1,5 +1,5 @@
 import { api } from 'boot/axios';
-import { idempresa_md5 } from 'src/composables/funcionesGenerales';
+import { idempresa_md5, urlApiAdministracion } from 'src/composables/funcionesGenerales';
 import type { RespuestaApi } from 'src/types/api.types';
 import type { BonoEmpresa } from '../types/bonosEmpresa.types';
 
@@ -32,10 +32,16 @@ export const bonosEmpresaService = {
     return data;
   },
 
-  // Estandar methods
+  // con la URL quemada
+  // obtenerBonosEstandar: async () => {
+  //   // Apunta al endpoint de administración externa
+  //   const { data } = await api.get<BonoEmpresa[]>('https://vivasoft.link/app/ad/api/listabonosempresa');
+  //   return data;
+  // },
+
   obtenerBonosEstandar: async () => {
-    // Apunta al endpoint de administración externa
-    const { data } = await api.get<BonoEmpresa[]>('https://vivasoft.link/app/ad/api/listabonosempresa');
+    const urlAd = urlApiAdministracion();
+    const { data } = await api.get<BonoEmpresa[]>(`${urlAd}api/listabonosempresa`);
     return data;
   },
 

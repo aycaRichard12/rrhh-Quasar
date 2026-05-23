@@ -1,28 +1,9 @@
 <template>
- <div>
-  <div class="row justify-between items-center q-mb-md">
-   <q-btn
-    color="secondary"
-    icon="cloud_download"
-    :label="$t('entity.form.buttonImport')"
-    outline
-    @click="$emit('import')"
-   />
-   <q-btn
-    color="primary"
-    icon="add"
-    :label="$t('entity.form.formNew')"
-    @click="$emit('create')"
-   />
-  </div>
- </div>
-
  <q-card>
-  <q-table
-   :rows="rows"
+  <q-table 
+   :rows="props.listaEntesReguladores"
    :columns="columnas"
    row-key="id"
-   :loading="cargando"
    :rows-per-page-label="t('common.report.recordsPerPage')"
    :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${t('common.report.of')} ${totalRows}`"
    flat
@@ -35,31 +16,13 @@
 
    <template v-slot:body-cell-estado="props">
     <q-td :props="props" class="text-center">
-     <q-btn
-      v-if="props.row.estado === '1' || props.row.estado === 1"
-      icon="thumb_up"
-      color="primary"
-      round
-      dense
-      size="sm"
-      @click="$emit('change-status', props.row)"
+     <q-btn round dense
+      :color="String(props.row.estado) === '1' ? 'positive' : 'negative'"
+      :icon="String(props.row.estado) === '1' ? 'thumb_up' : 'thumb_down'"
+      @click="emitirCambiarEstado(props.row.id, props.row.estado)"
      >
       <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
        {{ $t('common.actions.active') }}
-      </q-tooltip>
-     </q-btn>
-
-     <q-btn 
-      v-else
-      icon="thumb_down"
-      color="negative"
-      round
-      dense
-      size="sm"
-      @click="$emit('change-status', props.row)"
-     >
-      <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-       {{ $t('common.actions.inactive') }}
       </q-tooltip>
      </q-btn>
     </q-td>
@@ -67,26 +30,20 @@
 
    <template v-slot:body-cell-opciones="props">
     <q-td :props="props" class="text-center">
-     <q-btn
+     <q-btn round dense
       icon="edit"
       color="info"
-      round
-      dense
-      size="sm"
-      @click="$emit('edit', props.row)"
+      @click="emitirEditar(props.row.id)"
      >
       <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
        {{ $t('common.actions.edit') }}
       </q-tooltip>
      </q-btn>
           
-     <q-btn
+     <q-btn round dense
       icon="delete"
       color="negative"
-      round
-      dense
-      size="sm"
-      @click="$emit('delete', props.row.id)"
+      @click="emitirEliminar(props.row.id)"
      >
       <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
        {{ $t('common.actions.delete') }}
@@ -106,18 +63,28 @@ import type { EnteRegulador } from '../types/entesReguladores.types';
 
 const { t } = useI18n();
 
-defineProps<{ rows: EnteRegulador[]; cargando: boolean }>();
+const props = defineProps<{
+  listaEntesReguladores: EnteRegulador[]
+}>();
 
-defineEmits([ 'create', 'edit', 'delete', 'change-status', 'import' ]);
+const emits = defineEmits<{
+  (e: 'editar', id: string | number): void;
+  (e: 'eliminar', id: string | number): void;
+  (e: 'cambiarEstado', id: string | number, estado: string | number): void;
+}>();
 
-const columnas= computed<QTableColumn[]>(() => [
-  { name: 'numero',     label: 'N°',                       align: 'center', field: 'numero',     style: 'width: 20px' },
-  { name: 'nombre',     label: t('entity.form.name'),      align: 'left', field: 'nombre',       style: 'white-space: normal; width: 150px' },
-  { name: 'porcentaje', label: t('entity.form.percentage'),align: 'center', field: 'porcentaje', style: 'width: 20px' },
+const emitirEditar = (id: string | number) => emits('editar', id);
+const emitirEliminar = (id: string | number) => emits('eliminar', id);
+const emitirCambiarEstado = (id: string | number, estado: string | number) => emits('cambiarEstado', id, estado);
+
+const columnas = computed<QTableColumn<EnteRegulador>[]>(() => [
+  { name: 'numero',     label: 'N°',                       align: 'center', field: () => null ,  style: 'width: 20px' },
+  { name: 'nombre',     label: t('entity.form.name'),      align: 'left', field: 'nombre',       style: 'white-space: normal; width: 170px' },
+  { name: 'porcentaje', label: t('entity.form.percentage'),align: 'center', field: 'porcentaje', style: 'width: 100px' },
   { name: 'descripcion',label: t('tables.description'),    align: 'left',   field: 'descripcion',style: 'white-space: normal' },
-  { name: 'monto',      label: t('entity.form.amount'),    align: 'right',  field: 'monto',      style: 'width: 50px'},
-  { name: 'orden',      label: t('entity.form.order'),     align: 'center', field: 'orden',      style: 'width: 30px'},
-  { name: 'estado',     label: t('tables.status'),         align: 'center', field: 'estado' ,    style: 'width: 30px'},
-  { name: 'opciones',   label: t('tables.options'),        align: 'center', field: 'opciones',   style: 'width: 50px'}
+  { name: 'monto',      label: t('entity.form.amount'),    align: 'right',  field: 'monto',      style: 'width: 100px'},
+  { name: 'orden',      label: t('entity.form.order'),     align: 'center', field: 'orden',      style: 'width: 70px'},
+  { name: 'estado',     label: t('tables.status'),         align: 'center', field: 'estado' ,    style: 'width: 90px'},
+  { name: 'opciones',   label: t('tables.options'),        align: 'center', field: () => null ,  style: 'width: 100px'}
 ]);
 </script>

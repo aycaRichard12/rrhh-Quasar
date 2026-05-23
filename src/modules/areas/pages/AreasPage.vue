@@ -2,41 +2,47 @@
  <q-page padding>
     
   <div class="col q-mb-md">
-   <div class="row justify-center">
+   <div class="row justify-left">
     <h4 class="q-my-none text-primary">{{ $t('areas.title') }}</h4>
    </div>
-   <div class="row justify-center">
+   <div class="row justify-left">
     <p class="text-grey-7">{{ $t('areas.subtitle') }}</p>
    </div>
   </div>
 
+  <div class="row justify-end items-center q-mb-md">
+      <q-btn icon="add" color="primary" label="Nueva Area" @click="prepararNuevaArea" />
+   </div> 
+
   <AreasTable
-   :rows="listaAreas"
-   :cargando="cargando"
-   @create="abrirDialogoNuevo"
-   @edit="abrirDialogoEditar"
-   @delete="confirmarEliminacion"
+    :lista-areas="listaAreas"
+    @editar="prepararEdicionArea"
+    @eliminar="confirmarEliminarArea"
   />
 
+  <q-dialog v-model="esVisibleDialogo" >
   <AreasForm
-   v-model="esVisibleDialogo"
-   :es-modo-edicion="esModoEdicion"
-   :cargando="cargando"
-   :datos-formulario="areaActual"
-   :sucursales="listaSucursales"
-   @save="procesarGuardado"
+    :area="areaActual"
+    :sucursales="listaSucursales"
+    :es-modo-edicion="esModoEdicion"
+    @guardar="guardarArea"
   />
-
+  </q-dialog>
  </q-page>
 </template>
 
 <script setup lang="ts">
-import AreasForm from '../components/AreaForm.vue';
-import AreasTable from '../components/AreasTable.vue';
+import { onMounted } from 'vue';
 import { useAreas } from '../composables/useAreas';
+import AreasForm from '../components/AreasForm.vue';
+import AreasTable from '../components/AreasTable.vue';
 
 const {
-  listaAreas, listaSucursales, cargando, esVisibleDialogo, esModoEdicion, areaActual,
-  abrirDialogoNuevo, abrirDialogoEditar, procesarGuardado, confirmarEliminacion
+  listaAreas, listaSucursales, esVisibleDialogo, esModoEdicion, areaActual,
+  cargarAreasSucursales, prepararNuevaArea, prepararEdicionArea, guardarArea, confirmarEliminarArea
 } = useAreas();
+
+onMounted(() => { 
+  void cargarAreasSucursales();
+})
 </script>
