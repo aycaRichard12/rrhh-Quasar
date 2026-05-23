@@ -1,7 +1,8 @@
-import { useQuasar } from 'quasar';
 import { ref } from 'vue';
-import { beneficiosService } from '../services/beneficios.service';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
+import { prepararDatosFormulario } from 'src/utils/formUtils';
+import { useNotificaciones } from 'src/composables/useNotificaciones';
+import { beneficiosService } from '../services/beneficios.service';
 import type { Beneficio } from '../types/beneficios.types';
 
 const listaBeneficios        = ref<Beneficio[]>([]);
@@ -15,14 +16,15 @@ const beneficioActual        = ref<Beneficio>({
 });
 
 export function useBeneficios() {
-  const $q = useQuasar();
+
+  const { notificarExito, notificarError, notificarAdvertencia, confirmarAccion } = useNotificaciones();
 
   const cargarBeneficios = async () => {
     try {
       listaBeneficios.value = await beneficiosService.listarBeneficios();
     } catch (error) {
       console.error('Error al cargar beneficios:', error);
-      $q.notify({ type: 'negative', message: 'Error al cargar los beneficios.' });
+      notificarError('Error al cargar los datos o conexión a internet desactivada');
     }
   };
 
@@ -32,7 +34,7 @@ export function useBeneficios() {
       esVistaEstandar.value = true;
     } catch (error) {
       console.error('Error al cargar beneficios estándar:', error);
-      $q.notify({ type: 'negative', message: 'Error al cargar beneficios estándar.' });
+      notificarError('Error al cargar los datos o conexión a internet desactivada');
     }
   };
 
@@ -44,7 +46,7 @@ export function useBeneficios() {
     esVisibleDialogo.value = true;
   };
 
-  const prepararEdicionBeneficio = async (id: string | number) => {
+  const prepararEdicionBeneficio = async (id: string) => {
       try {
       const respuesta = await beneficiosService.editarBeneficio(id);
       if (respuesta.estado === 'exito' && respuesta.datos) {
@@ -53,126 +55,119 @@ export function useBeneficios() {
         esVisibleDialogo.value = true;
       }
     } catch (error) {
-      console.error('Error al obtener beneficio:', error);
-      $q.notify({ type: 'negative', message: 'Error al obtener datos.' });
+      console.error(error);
+      notificarError('Error al obtener datos del beneficio');
     }
   };
 
-  const procesarGuardado = async (datosFormulario: Beneficio) => {
-    cargando.value = true;
+  const guardarBeneficio = async (datosGuardar: Beneficio) => {
     try {
-      const payload = new FormData();
-      const idEmpresa = String(idempresa_md5());
-      
-      payload.append('ver', esModoEdicion.value ? 'editarBeneficio' : 'registroBeneficio');
-      payload.append('idempresa', idEmpresa);
+      const payload = {
+        ver        : esModoEdicion.value ? 'editarbeneficio' : 'registrobeneficio',
+        idempresa  : idempresa_md5(),
+        id         : esModoEdicion.value ? datosGuardar.id : undefined, 
+        nombre     : datosGuardar.nombre,
+        descripcion: datosGuardar.descripcion,
+        tipo       : datosGuardar.tipo,
+        cantidad   : datosGuardar.cantidad,
+        orden      : datosGuardar.orden,
+        destino    : datosGuardar.destino,
+      };
 
-      if (esModoEdicion.value && datosFormulario.id) {
-        payload.append('id', String(datosFormulario.id));
-      }
+      const datosformularo = prepararDatosFormulario(payload)
+      const respuesta = await beneficiosService.guardarBeneficio(datosformularo);
 
-      Object.entries(datosFormulario).forEach(([clave, valor]) => {
-        if (valor !== undefined && valor !== null && clave !== 'id') {
-          payload.append(clave, String(valor));
-        }
-      });
-
-      const respuesta = await beneficiosService.guardarBeneficio(payload);
       if (respuesta.estado === 'exito') {
-        $q.notify({ type: 'positive', message: 'Registro guardado exitosamente.' });
+        notificarExito(esModoEdicion.value ? 'Registro Actualizado con éxito' : 'Registro creado con éxito');
         esVisibleDialogo.value = false;
         void cargarBeneficios();
+      } else {
+        notificarAdvertencia(respuesta.mensaje);
       }
-    } catch (error: unknown) {
-      console.error('Error al guardar beneficio:', error);
-      $q.notify({ type: 'negative', message: 'Error de comunicación.' });
-    } finally {
-      cargando.value = false;
+    } catch (error){
+      console.error(error);
+      notificarError('Error al procesar la solicitud');
     }
   };
 
-  const confirmarEliminacion = (idBeneficio: string | number) => {
-    $q.dialog({
-      title: '¿Está Seguro?',
-      message: 'No podrá recuperar este registro.',
-      persistent: true,
-      ok: { color: 'negative', label: 'Eliminar' },
-      cancel: { color: 'primary', label: 'Cancelar', flat: true }
-    }).onOk(() => {
-      cargando.value = true;
-      beneficiosService.eliminarBeneficio(idBeneficio)
-        .then(() => {
-          $q.notify({ type: 'positive', message: 'Beneficio eliminado.' });
-          void cargarBeneficios();
-        })
-        .catch((error: unknown) => {
-          console.error('Error al eliminar beneficio:', error);
-          $q.notify({ type: 'negative', message: 'Error al eliminar beneficio.' });
-        })
-        .finally(() => { cargando.value = false; });
-    });
+  const confirmarEliminarBeneficio = (id: string) => {
+    confirmarAccion(
+      '¿Está Seguro?', 
+      'No podrá recuperar este registro.', 
+      async () => {
+        try {
+          const respuesta = await beneficiosService.eliminarBeneficio(id);
+          if (respuesta.estado === 'exito') {
+            notificarExito(respuesta.mensaje);
+            void cargarBeneficios();
+          }
+        } catch (error) {
+          console.error(error);
+          notificarError('Error al eliminar el registro');
+        }
+      }
+    );
   };
 
-  const cambiarEstadoRegistro = async (beneficio: Beneficio) => {
+const cambiarEstadoRegistro = async (beneficio: Beneficio) => {
     if (!beneficio.id) return;
-    cargando.value = true;
+    
     const nuevoEstado = beneficio.estado == '1' ? '2' : '1'; 
     try {
       await beneficiosService.cambiarEstadoBeneficio(beneficio.id, nuevoEstado);
-      $q.notify({ type: 'positive', message: 'Estado actualizado.' });
+      notificarExito('Estado actualizado correctamente');
       void cargarBeneficios();
-    } catch (error: unknown) {
+    } catch (error) {
       console.error('Error al cambiar estado:', error);
-      $q.notify({ type: 'negative', message: 'Error al cambiar estado.' });
-    } finally {
-      cargando.value = false;
+      notificarError('Error al cambiar el estado del registro');
     }
   };
 
   const confirmarImportacion = (tipoAccion: 'reemplazar' | 'anadir') => {
     const mensaje = tipoAccion === 'reemplazar'
-      ? 'Esta acción reemplazará todos sus datos por el template.'
-      : 'Esta acción agregará los datos del template a la tabla actual.';
+      ? 'Esta acción reemplazará todos sus datos actuales por los del catálogo estándar. ¿Desea continuar?'
+      : 'Esta acción agregará los datos del catálogo estándar a su tabla actual. ¿Desea continuar?';
 
-    $q.dialog({
-      title: '¿Está seguro?', message: mensaje, persistent: true,
-      ok: { color: 'primary', label: 'Proceder' }, cancel: { color: 'negative', flat: true, label: 'Cancelar' }
-    }).onOk(() => {
+    confirmarAccion(
+      'Confirmar Importación', 
+      mensaje, 
+      () => {
         void procesarImportacion(tipoAccion);
-    });
+      }
+    );
   };
 
   const procesarImportacion = async (tipoAccion: 'reemplazar' | 'anadir') => {
-    cargando.value = true;
     try {
-      const payload = new FormData();
-      const idEmpresa = String(idempresa_md5());
-      
-      payload.append('ver', 'remplazarocopiardatosbeneficios');
-      payload.append('idempresa', idEmpresa);
-      payload.append('datos', JSON.stringify(listaBeneficiosEstandar.value));
-      payload.append('tipo', tipoAccion === 'reemplazar' ? '1' : '2');
+      const payload = {
+        ver: 'remplazarocopiardatosbeneficios',
+        idempresa: idempresa_md5(),
+        datos: JSON.stringify(listaBeneficiosEstandar.value),
+        tipo: tipoAccion === 'reemplazar' ? '1' : '2'
+      };
 
-      const respuesta = await beneficiosService.guardarBeneficio(payload);
+      const datosFormulario = prepararDatosFormulario(payload);
+      const respuesta = await beneficiosService.guardarBeneficio(datosFormulario);
+      
       if (respuesta.estado === 'exito') {
-        $q.notify({ type: 'positive', message: 'Catálogo procesado correctamente.' });
+        notificarExito('Catálogo procesado correctamente');
         alternarVistaEstandar();
         void cargarBeneficios();
+      } else {
+        notificarAdvertencia(respuesta.mensaje);
       }
-    } catch (error: unknown) {
+    } catch (error) {
       console.error('Error procesando importación:', error);
-      $q.notify({ type: 'negative', message: 'Error al procesar catálogo.' });
-    } finally {
-      cargando.value = false;
+      notificarError('Error al procesar el catálogo');
     }
   };
 
-  onMounted(() => {
-    if (listaBeneficios.value.length === 0) void cargarBeneficios();
-  });
+  const alternarVistaEstandar = () => {
+    esVistaEstandar.value = !esVistaEstandar.value;
+  };
 
   return {
-    listaBeneficios, listaBeneficiosEstandar, cargando, esVisibleDialogo, esModoEdicion, beneficioActual, esVistaEstandar,
-    abrirDialogoNuevo, abrirDialogoEditar, procesarGuardado, confirmarEliminacion, cambiarEstadoRegistro, alternarVistaEstandar, confirmarImportacion
+    listaBeneficios, listaBeneficiosEstandar, esVisibleDialogo, esModoEdicion, beneficioActual, esVistaEstandar, cargarBeneficios,
+    cargarBeneficiosEstandar, prepararNuevoBeneficio, prepararEdicionBeneficio, guardarBeneficio, confirmarEliminarBeneficio, cambiarEstadoRegistro, confirmarImportacion, alternarVistaEstandar
   };
 }

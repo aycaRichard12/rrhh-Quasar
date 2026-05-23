@@ -1,12 +1,11 @@
 <template>
   <q-card style="min-width: 50vw;">
     <q-card-section class="bg-primary row items-center justify-between text-white">
-     <div class="text-h6">{{ props.esModoEdicion ? $t('areas.form.formEdit') : $t('areas.form.formNew') }}</div>
-     <q-btn icon="close" flat round dense v-close-popup />  
+      <div class="text-h6">{{ props.esModoEdicion ? $t('areas.form.formEdit') : $t('areas.form.formNew') }}</div>
+      <q-btn icon="close" flat round dense v-close-popup />  
     </q-card-section>
 
    <q-form @submit="emitirGuardar">
-    <!-- <q-card-section class="bg-primary row items-center justify-between text-white"> -->
     <q-card-section class="q-pt-md scroll" style="max-height: 70vh;">
      <div class="row q-col-gutter-md">
       <div class="col-12">
@@ -54,7 +53,7 @@
     </q-card-section>
 
     <q-card-actions align="right" class="text-primary q-pb-md q-pr-md">
-     <q-btn flat :label="$t('common.actions.cancel')" @click="emitirCerrar" color="negative" v-close-popup />
+     <q-btn flat :label="$t('common.actions.cancel')" color="negative" v-close-popup />
      <q-btn type="submit" icon="save" :label="$t('common.actions.save')" color="primary" />
     </q-card-actions>
    </q-form>
@@ -86,7 +85,4 @@ const emitirGuardar = () => {
   emits('guardar', datosLocales.value);
 };
 
-const emitirCerrar = () => {
-  emits('cerrar');
-}
 </script>

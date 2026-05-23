@@ -17,17 +17,17 @@ export const beneficiosService = {
     return data;
   },
 
-  async cambiarEstadoBeneficio(id: string | number, estado: string | number): Promise<RespuestaApi> {
+  async cambiarEstadoBeneficio(id: string, estado: string): Promise<RespuestaApi> {
     const { data } = await api.get<RespuestaApi>(`editarEstadobeneficio/${id}/${estado}`);
     return data;
   },
 
-  async editarBeneficio(id: string | number): Promise<RespuestaApi<Beneficio>> {
+  async editarBeneficio(id: string): Promise<RespuestaApi<Beneficio>> {
     const { data } = await api.get<RespuestaApi<Beneficio>>(`verificarIDbeneficio/${id}`);
     return data;
   },
 
-  async eliminarBeneficio(id: string | number): Promise<RespuestaApi> {
+  async eliminarBeneficio(id: string): Promise<RespuestaApi> {
     const { data } = await api.get<RespuestaApi>(`eliminarbeneficio/${id}`);
     return data;
   },

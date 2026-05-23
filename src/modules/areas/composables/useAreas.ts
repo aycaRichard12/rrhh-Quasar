@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
-import { appendFormData } from 'src/utils/formUtils';
+import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
 import { areasService } from 'src/modules/areas/services/areas.service';
 import type { Area, Sucursal } from 'src/modules/areas/types/areas.types';
@@ -48,22 +48,20 @@ export function useAreas() {
         notificarError('Error al obtener datos del area');
     }
   };
-
   const guardarArea = async (datosGuardar: Area) => {
     try {
-      const formData = new FormData();
-      const idEmpresa = String(idempresa_md5());
-    
-      const payload: Record<string, unknown> = {
+      const payload = {
         ver        : esModoEdicion.value ? 'editarArea' : 'registroAreas',
-        idempresa  : idEmpresa,
-        id         : esModoEdicion.value ? datosGuardar.id : undefined, 
+        idempresa  : idempresa_md5(),
+        id         : datosGuardar.id,
         nombre     : datosGuardar.nombre,
         descripcion: datosGuardar.descripcion,
         sucursal   : datosGuardar.idsucursal
-      };
-      appendFormData(formData, payload);
-      const respuesta = await areasService.guardarArea(formData);
+        };
+
+        // La utilidad crea, llena y retorna el FormData en un solo paso
+        const datosFormulario = prepararDatosFormulario(payload);
+        const respuesta = await areasService.guardarArea(datosFormulario);
 
       if (respuesta.estado === 'exito') {
         notificarExito(esModoEdicion.value ? 'Registro Actualizado con éxito' : 'Registro creado con éxito');
