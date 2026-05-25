@@ -7,13 +7,13 @@ const ID_EMPRESA = idempresa_md5();
 
 export const beneficiosService = {
 
-  async listarBeneficios(): Promise<Beneficio[]> {
-    const { data } = await api.get<Beneficio[]>(`listabeneficio/${ID_EMPRESA}`);
-    return data;
+	async listarBeneficios(): Promise<Beneficio[]> {
+  const { data } = await api.get<Beneficio[]>(`listabeneficio/${ID_EMPRESA}`);
+   return data;
   },
   
   async guardarBeneficio(payload: FormData): Promise<RespuestaApi> {
-    const { data } = await api.post<RespuestaApi>('', payload);
+    const { data } = await api.post<RespuestaApi>('/', payload);
     return data;
   },
 
@@ -37,10 +37,10 @@ export const beneficiosService = {
     const { data } = await api.get<Beneficio[]>(`${urlAd}api/listabeneficios`);
     return data;
   },
-  
+
   async procesarImportacionEstandar (payload: FormData): Promise<RespuestaApi> {
     const { data } = await api.post<RespuestaApi>('/', payload);
     return data;
   }
   
-};
+};				

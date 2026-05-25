@@ -8,7 +8,6 @@
       table-header-class="bg-primary"
       :rows-per-page-label="$t('table.recordsPerPage', 'Registros por página:')"
       :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${$t('table.of', 'de')} ${totalRows}`"
-      
     >
 
       <template v-slot:body-cell-numero="propsCell">
@@ -35,7 +34,7 @@
         <q-td :props="propsCell" class="text-center">
           <q-btn round dense
             :color="String(propsCell.row.estado) === '1' ? 'positive' : 'negative'"
-            :icon="String(propsCell.row.estado) === '1' ? 'thumb_up' : 'thumb_down'"
+            :icon ="String(propsCell.row.estado) === '1' ? 'thumb_up' : 'thumb_down'"
             @click="$emit('cambiarEstadoRegistro', propsCell.row)"
           >
         <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
@@ -47,11 +46,9 @@
 
       <template v-slot:body-cell-opciones="propsCell">
         <q-td :props="propsCell" class="text-center q-gutter-xs">
-          <q-btn
+          <q-btn dense round
             icon="edit"
             color="info"
-            round
-            dense
             @click="emitirEditar(propsCell.row.id)"
           >
             <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
@@ -59,11 +56,9 @@
             </q-tooltip>
           </q-btn>
           
-          <q-btn
+          <q-btn dense round
             icon="delete"
             color="negative"
-            round
-            dense
             @click="emitirEliminar(propsCell.row.id)"
           >
             <q-tooltip>{{ $t('common.actions.delete', 'Eliminar') }}</q-tooltip>

@@ -12,7 +12,7 @@
           <div class="col-12">
             <q-input
               v-model="datosLocales.nombre"
-              :label="$t('beneficios.name', 'Nombre del Beneficio') + ' *'"
+              :label="$t('beneficios.name') + ' *'"
               outlined
               dense
               autofocus
@@ -34,7 +34,7 @@
             />
           </div>
 
-          <div class="col-12">
+          <div class="col-6">
             <q-select
               v-model="datosLocales.tipo"
               :options="opcionesTipo"
@@ -46,7 +46,7 @@
             />
           </div>
 
-          <div class="col-12">
+          <div class="col-6">
             <q-input
               v-model="datosLocales.cantidad"
               :label="$t('beneficios.amount', 'Cantidad') + ' *'"
@@ -109,6 +109,7 @@ const datosLocales = ref<Beneficio>({ ...props.beneficio });
 watch(() => props.beneficio, (nuevosDatos) => {
   datosLocales.value = { ...nuevosDatos };
 }, { deep: true });
+
 const emitirGuardar = () => {
   emits('guardar', datosLocales.value);
 };

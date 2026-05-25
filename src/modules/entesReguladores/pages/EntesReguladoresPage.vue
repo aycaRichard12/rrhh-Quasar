@@ -1,45 +1,53 @@
 <template>
- <q-page padding>
+  <q-page padding>
     
-  <div class="col q-mb-md">
-   <div class="row justify-center">
-    <h4 class="q-my-none text-primary">{{ $t('entity.title') }}</h4>
-   </div>
-   <div class="row justify-center">
-    <p class="text-grey-7">{{ $t('entity.subtitle') }}</p>
-   </div>
-  </div>
+    <div class="col q-mb-md">
+      <div class="row justify-left">
+        <h4 class="q-my-none text-primary">{{ $t('entity.title') }}</h4>
+      </div>
+      <div class="row justify-left">
+        <p class="text-grey-7">{{ $t('entity.subtitle') }}</p>
+      </div>
+    </div>
 
-  <div v-if="!esVistaEstandar">
-   <div class="row justify-between items-center q-mb-md">
-      <q-btn outline icon="cloud_download" color="secondary" label="Importar Standar" @click="cargarEntesReguladoresEstandar" />
-      <q-btn icon="add" color="primary" label="Nuevo Registro" @click="prepararNuevoEnteRegulador" />
-   </div> 
+    <div class="row justify-between items-center q-mb-md">
 
-    <EntesReguladoresTable
-      :lista-entes-reguladores="listaEntesReguladores"
-      @editar="prepararEdicionEnteRegulador"
-      @eliminar="confirmarEliminarEnteRegulador"
-      @cambiar-estado="cambiarEstadoEnteRegulador"
-    />
+      <template v-if="!esVistaEstandar">
+        <q-btn color="secondary" label="Importar Standar" @click="cargarEntesReguladoresEstandar" icon="cloud_download" outline />
+        <q-btn color="primary"   label="Nuevo Registro"   @click="prepararNuevoEnteRegulador" icon="add"/>
+      </template> 
 
-    <q-dialog v-model="esVisibleDialogo" persistent>
-    <EntesReguladoresForm
-      :ente-regulador="enteReguladorActual"
-      :es-modo-edicion="esModoEdicion"
-      @guardar="guardarEnteRegulador"
-      @cerrar="esVisibleDialogo = false"
-    />
+      <template v-else>
+        <q-btn color="negative" :label="$t('formBtn.back', 'Volver')" @click="alternarVistaEstandar" icon="arrow_back" outline/>
+        <div class="q-gutter-sm">
+          <q-btn color="warning" :label="$t('formBtn.replace', 'Reemplazar')" @click="confirmarImportacion('reemplazar')" icon="autorenew"/>
+          <q-btn color="positive" :label="$t('formBtn.add', 'Añadir')" @click="confirmarImportacion('agregar')" icon="add"/>
+        </div>
+      </Template>
+    </div>
+
+    <div v-if="!esVistaEstandar">
+      <EntesReguladoresTable
+        :lista-entes-reguladores="listaEntesReguladores"
+        @import="alternarVistaEstandar"
+        @editar="prepararEdicionEnteRegulador"
+        @eliminar="confirmarEliminarEnteRegulador"
+        @cambiar-estado-ente-regulador="cambiarEstadoEnteRegulador"
+      />
+    </div>
+    <div v-else>
+      <EntesReguladoresStandar
+        :rows="listaEntesReguladoresEstandar"
+      />
+    </div>
+
+    <q-dialog v-model="esVisibleDialogo">
+      <EntesReguladoresForm
+        :ente-regulador="enteReguladorActual"
+        :es-modo-edicion="esModoEdicion"
+        @guardar="guardarEnteRegulador"
+      />
     </q-dialog>
-  </div>
-
-  <div v-else>
-    <EntesReguladoresStandar
-      :lista-entes-reguladores-estandar="listaEntesReguladoresEstandar"
-      @volver="esVistaEstandar = false"
-      @procesar-importacion="procesarImportacion"
-    />
-  </div>
  </q-page>
 </template>
 
@@ -51,23 +59,9 @@ import EntesReguladoresStandar from '../components/EntesReguladoresStandar.vue';
 import EntesReguladoresForm from '../components/EntesReguladoresForm.vue';
 
 const {
-  listaEntesReguladores,
-  listaEntesReguladoresEstandar,
-  esVistaEstandar,
-  esVisibleDialogo,
-  esModoEdicion, 
-  enteReguladorActual,
-  cargarEntesReguladores,
-  prepararNuevoEnteRegulador,
-  prepararEdicionEnteRegulador,
-  guardarEnteRegulador,
-  confirmarEliminarEnteRegulador,
-  cambiarEstadoEnteRegulador,
-  cargarEntesReguladoresEstandar,
-  procesarImportacion
+  listaEntesReguladores, listaEntesReguladoresEstandar, esVisibleDialogo, esModoEdicion, enteReguladorActual, esVistaEstandar,
+  cargarEntesReguladores, cargarEntesReguladoresEstandar, prepararNuevoEnteRegulador, prepararEdicionEnteRegulador, guardarEnteRegulador, confirmarEliminarEnteRegulador, cambiarEstadoEnteRegulador, alternarVistaEstandar, confirmarImportacion
 } = useEntesReguladores();
 
-onMounted(() => {
-  void cargarEntesReguladores();
-})
+onMounted(() => { void cargarEntesReguladores() })
 </script>

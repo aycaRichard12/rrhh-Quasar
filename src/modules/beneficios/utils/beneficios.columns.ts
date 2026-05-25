@@ -10,8 +10,8 @@ export const obtenerColumnasBeneficios = (t: (key: string) => string): QTableCol
   { name: 'orden',      label: t('Orden'), align: 'center', field: 'orden',style: 'width: 80px'},
   { name: 'destino',    label: t('Destino'), align: 'center', field: 'destino',style: 'width: 100px'},
   { name: 'estado',     label: t('Estado'), align: 'center', field: 'estado', style: 'width: 80px' },
-  { name: 'opciones',   label: t('Opciones'), align: 'center', field: () => '',style: 'width: 100px'
-}]
+  { name: 'opciones',   label: t('Opciones'), align: 'center', field: () => '',style: 'width: 100px'}
+]
 
 export const obtenerColumnasBeneficiosEstandar = (t: (key: string) => string): QTableColumn<Beneficio>[] => [
   { name: 'numero',     label: 'N°',                             align: 'center',field: () => '',     style: 'width: 50px' },
