@@ -1,37 +1,66 @@
 export const PAGINAS = Object.freeze({
-  areas: ['areas'],
-  cargos: ['cargos'],
-  prerrequisitosdecargo: ['prerrequisitosdecargo'],
-  tiposdecontratos: ['tiposdecontratos'],
-  entesreguladores: ['entesreguladores'],
-  funcionesyobligaciones: ['funcionesyobligaciones'],
-  metodosdeevaluacion: ['metodosdeevaluacion'],
-  actividadesdeevaluacion: ['actividadesdeevaluacion'],
-  beneficios: ['beneficios'],
-  tiposdesanciones: ['tiposdesanciones'],
-  niveles: ['niveles'],
-  motivosdebaja: ['motivosdebaja'],
-  metodosdepago: ['metodosdepago'],
-  bonosempresa: ['bonosempresa'],
-  salariominimo: ['salariominimo'],
-  convocatorias: ['convocatorias'],
-  postulantes: ['postulantes'],
-  trabajadores: ['trabajadores'],
-  contrataciones: ['contrataciones'],
-  permisos: ['permisos'],
-  anticipos: ['anticipos'],
-  vacaciones: ['vacaciones'],
-  sanciones: ['sanciones'],
-  memorandums: ['memorandums'],
-  bajas: ['bajas'],
+  organizacion: ['areas', 'cargos', 'prerrequisitosdecargo', 'tiposdecontratos', 'funcionesyobligaciones'],
+  beneficiossociales: ['entesreguladores', 'beneficios'],
+  valoracion: ['metodosdeevaluacion', 'actividadesdeevaluacion', 'tiposdesanciones'],
+  sanciones: ['niveles', 'motivosdebaja', 'bajas'],
+  remuneracion: ['metodosdepago', 'bonosempresa', 'salariominimo'],
+  admision:['convocatorias', 'postulantes', 'evaluacionadmision'],
+  personal:['trabajadores', 'contrataciones'],
+  novedades:['permisos', 'anticipos', 'vacaciones'],
+  procesoslaborales:['sanciones', 'memorandums'],
+  evento:['actividades'],
+  planillas:['sueldosysalarios', 'aportes', 'aguinaldosbp', 'reintegros'],
+  boletas:['salarios', 'aguinaldos', 'retroactivos'],
+
+
+/////////////ORGANIZACION
+  areas: ['areas'], ////////////////////////////////////1
+  cargos: ['cargos'], //////////////////////////////////2
+  prerrequisitosdecargo: ['prerrequisitosdecargo'], ////3
+  tiposdecontratos: ['tiposdecontratos'], //////////////4
+  funcionesyobligaciones: ['funcionesyobligaciones'], //5
+/////////////BENEFICIOS SOCIALES
+  entesreguladores: ['entesreguladores'], //1
+  beneficios: ['beneficios'], //////////////2
+/////////////VALORACION
+  metodosdeevaluacion: ['metodosdeevaluacion'], ///////////1
+  actividadesdeevaluacion: ['actividadesdeevaluacion'], ///2
+  tiposdesanciones: ['tiposdesanciones'], /////////////////3
+/////////////SANCIONES
+  niveles: ['niveles'], //////////////1
+  motivosdebaja: ['motivosdebaja'], //2
+  bajas: ['bajas'], //////////////////3
+/////////////REMUNERACION
+  metodosdepago: ['metodosdepago'], //1
+  bonosempresa: ['bonosempresa'], ////2
+  salariominimo: ['salariominimo'], //3
+/////////////ADMISION
+  convocatorias: ['convocatorias'], //1
+  postulantes: ['postulantes'], //////2
+/////////////PERSONAL
+  trabajadores: ['trabajadores'], //////1
+  contrataciones: ['contrataciones'], //2
+/////////////NOVEDADES
+  permisos: ['permisos'], //////1
+  anticipos: ['anticipos'], ////2
+  vacaciones: ['vacaciones'], //3
+/////////////PROCESOS LABORALES
+  sancion: ['sanciones'], //////1 ///////     sanciones -> sancion
+  memorandums: ['memorandums'], //2
+/////////////EVENTO
+
+/////////////PLANILLAS
+  sueldosysalarios: ['sueldosysalarios'], //1
+  aportes: ['aportes'], ////////////////////2
+  aguinaldosbp: ['aguinaldosbp'], //////////3
+  reintegros: ['reintegros'], //////////////4
+/////////////BOLETAS
+  salarios: ['salarios'], //////////1
+  aguinaldos: ['aguinaldos'], //////2
+  retroactivos: ['retroactivos'], //3
+
+
   actividades: ['actividades'],
-  sueldosysalarios: ['sueldosysalarios'],
-  aportes: ['aportes'],
-  aguinaldos: ['aguinaldos'],
-  reintegros: ['reintegros'],
-  salarios: ['salarios'],
-  aguinaldosbp: ['aguinaldosbp'],
-  retroactivos: ['retroactivos'],
 })
 
 export const PAGINAS_ICONS = Object.freeze({

@@ -2,10 +2,10 @@
   <q-page padding>
     
     <div class="col q-mb-md">
-      <div class="row justify-center">
+      <div class="row justify-left">
         <h4 class="q-my-none text-primary">{{ $t('Beneficios') }}</h4>
       </div>
-      <div class="row justify-center">
+      <div class="row justify-left">
         <p class="text-grey-7">{{ $t('beneficios.description', 'Gestión de beneficios e indemnizaciones del personal.') }}</p>
       </div>
     </div>

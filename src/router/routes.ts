@@ -9,12 +9,12 @@ const routes: RouteRecordRaw[] = [
     children: [
       { path: 'dashboard', component: () => import('pages/IndexPage.vue') },
       { path: 'welcome', component: () => import('pages/WelcomePage.vue') },
-      // CONFIGURACIONES
+      // CONFIGURACION
       { path: 'areas',            component: () => import('src/modules/areas/pages/AreasPage.vue') },
       { path: 'entesReguladores', component: () => import('src/modules/entesReguladores/pages/EntesReguladoresPage.vue') },
       { path: 'beneficios',       component: () => import('src/modules/beneficios/pages/BeneficiosPage.vue') },
-      { path: 'bonosEmpresa',     component: () => import('src/modules/bonosEmpresa/pages/BonosEmpresaPage.vue') }
-
+      { path: 'bonosEmpresa',     component: () => import('src/modules/bonosEmpresa/pages/BonosEmpresaPage.vue') },
+      { path: 'convocatorias',     component: () => import('src/modules/convocatorias/pages/convocatoriasPage.vue') }
 
     ],
   },
