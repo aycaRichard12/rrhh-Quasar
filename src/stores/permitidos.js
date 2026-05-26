@@ -14,41 +14,46 @@ export const usePaginas = defineStore('permitidos', {
   actions: {
     initStore() {
       try {
-        const storedData = localStorage.getItem('mistersofts-rrhh')
+        const storedData = localStorage.getItem('mistersofts-rrhh');
         if (!storedData) {
-          this.resetStore()
-          return
+          this.resetStore();
+          return;
         }
 
-        const parsedData = JSON.parse(storedData)
+        const parsedData = JSON.parse(storedData);
 
-        // Verificamos que el objeto tenga la propiedad 'menu' y que sea un array
         if (!parsedData || !Array.isArray(parsedData.menu)) {
-          console.error('Estructura de datos inválida: "menu" no encontrado o no es array')
-          this.resetStore()
-          return
+          console.error('Estructura de datos inválida: "menu" no encontrado o no es array');
+          this.resetStore();
+          return;
         }
 
-        // Asignamos los datos al estado
-        this.modulo = parsedData.menu
+        this.modulo = parsedData.menu;
         this.modulo.forEach((seccion) => {
           if (Array.isArray(seccion.submenu)) {
             seccion.submenu.forEach((pagina) => {
-              this.permisos[pagina.codigo] = pagina.permiso
-                .split('') // convierte '1111' en ['1', '1', '1', '1']
-                .map((u) => u === '1') // convierte cada '1' en true, '0' en false
-            })
+              // Validar que exista codigo y permiso antes de usarlos
+              if (pagina.codigo && typeof pagina.permiso === 'string') {
+                this.permisos[pagina.codigo] = pagina.permiso
+                  .split('')
+                  .map((u) => u === '1');
+              } else {
+                // Si falta algún dato, asignar permisos por defecto (todos false)
+                console.warn(`Página con datos incompletos:`, pagina);
+                if (pagina.codigo) {
+                  this.permisos[pagina.codigo] = [false, false, false, false];
+                }
+              }
+            });
           }
-        })
-        // Aplanamos los submenus para facilitar la búsqueda en 'permitidos'
-        this.permitidos = parsedData.menu.flatMap(m => m.submenu || [])
-        
-        this.cargado = true
-        console.log('Store inicializado con éxito')
-        
+        });
+
+        this.permitidos = parsedData.menu.flatMap(m => m.submenu || []);
+        this.cargado = true;
+        console.log('Store inicializado con éxito');
       } catch (error) {
-        console.error('Error al parsear o inicializar el store:', error)
-        this.resetStore()
+        console.error('Error al parsear o inicializar el store:', error);
+        this.resetStore();
       }
     },
 
@@ -71,13 +76,13 @@ export const usePaginas = defineStore('permitidos', {
       console.log(resultado)
       return resultado
     },
-    
+
     existePagina: (state) => (codigopagina) => {
       return state.todos.find((p) => p.codigo === codigopagina)
     },
 
     obtenerMenuPrincipal: (state) => state.menuPrincipal,
-    
+
     permisoPagina: (state) => (codigopagina) => state.permisos[codigopagina] || []
   }
 })
