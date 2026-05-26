@@ -2,7 +2,7 @@
   "name": "Gestión RRHH - MisterSofts",
   "short_name": "RRHH",
   "description": "Aplicación de gestión estratégica de recursos humanos",
-  "start_url": "/app/prod/",
+  "start_url": "/app/rrhhv1/",
   "orientation": "portrait",
   "background_color": "#111827",
   "theme_color": "#111827",
