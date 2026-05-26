@@ -11,59 +11,58 @@
     </div>
 
     <div class="row justify-between items-center q-mb-md">
-
   <!-- VISTA NORMAL -->
-  <template v-if="!esVistaEstandar">
+      <template v-if="!esVistaEstandar">
 
-    <q-btn
-      color="secondary"
-      icon="cloud_download"
-      :label="$t('formBtn.import', 'Importar Estándar')"
-      outline
-      @click="cargarBeneficiosEstandar"
-    />
+        <q-btn
+          color="secondary"
+          icon="cloud_download"
+          :label="$t('formBtn.import', 'Importar Estándar')"
+          outline
+          @click="cargarBeneficiosEstandar"
+        />
 
-    <q-btn
-      icon="add"
-      color="primary"
-      :label="$t('formBtn.new', 'Nuevo Registro')"
-      @click="prepararNuevoBeneficio"
-    />
+        <q-btn
+          icon="add"
+          color="primary"
+          :label="$t('formBtn.new', 'Nuevo Registro')"
+          @click="prepararNuevoBeneficio"
+        />
 
-  </template>
+      </template>
 
-  <!-- VISTA IMPORTACIÓN -->
-  <template v-else>
+      <!-- VISTA IMPORTACIÓN -->
+      <template v-else>
 
-    <q-btn
-      icon="arrow_back"
-      :label="$t('formBtn.back', 'Volver')"
-      color="negative"
-      outline
-      @click="alternarVistaEstandar"
-    />
+        <q-btn
+          icon="arrow_back"
+          :label="$t('formBtn.back', 'Volver')"
+          color="negative"
+          outline
+          @click="alternarVistaEstandar"
+        />
 
-    <div class="q-gutter-sm">
+        <div class="q-gutter-sm">
 
-      <q-btn
-        icon="autorenew"
-        :label="$t('formBtn.replace', 'Reemplazar')"
-        color="warning"
-        @click="confirmarImportacion('reemplazar')"
-      />
+          <q-btn
+            icon="autorenew"
+            :label="$t('formBtn.replace', 'Reemplazar')"
+            color="warning"
+            @click="confirmarImportacion('reemplazar')"
+          />
 
-      <q-btn
-        icon="add"
-        :label="$t('formBtn.add', 'Añadir')"
-        color="positive"
-        @click="confirmarImportacion('anadir')"
-      />
+          <q-btn
+            icon="add"
+            :label="$t('formBtn.add', 'Añadir')"
+            color="positive"
+            @click="confirmarImportacion('anadir')"
+          />
+
+        </div>
+
+      </template>
 
     </div>
-
-  </template>
-
-</div>
 
     <div v-if="!esVistaEstandar">
       <BeneficiosTable
@@ -104,5 +103,7 @@ const {
   cargarBeneficios, cargarBeneficiosEstandar, prepararNuevoBeneficio, prepararEdicionBeneficio, guardarBeneficio, confirmarEliminarBeneficio, cambiarEstadoRegistro, alternarVistaEstandar, confirmarImportacion
 } = useBeneficios();
 
-onMounted(() => { void cargarBeneficios() })
+onMounted(() => {
+  void cargarBeneficios()
+  })
 </script>

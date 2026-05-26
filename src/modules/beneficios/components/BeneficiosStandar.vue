@@ -1,10 +1,10 @@
 <template>
   <q-table bordered flat
-   :rows="props.rows"
-   :columns="listaColumnas"
-   row-key="id"
-   :rows-per-page-label="$t('table.recordsPerPage', 'Registros por página:')"
-   :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${$t('table.of', 'de')} ${totalRows}`"
+    row-key="id"
+    :rows="props.rows"
+    :columns="listaColumnas"
+    :rows-per-page-label="$t('table.recordsPerPage', 'Registros por página:')"
+    :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${$t('table.of', 'de')} ${totalRows}`"
   >   
    <template v-slot:body-cell-numero="propsCell">
     <q-td :props="propsCell">{{ propsCell.rowIndex + 1 }}</q-td>

@@ -1,9 +1,9 @@
 <template>
   <q-card>
     <q-table flat bordered
+      row-key="id"
       :rows="props.listaBeneficios"
       :columns="listaColumnas"
-      row-key="id"
       :grid="$q.screen.lt.sm"
       table-header-class="bg-primary"
       :rows-per-page-label="$t('table.recordsPerPage', 'Registros por página:')"
@@ -37,30 +37,21 @@
             :icon ="String(propsCell.row.estado) === '1' ? 'thumb_up' : 'thumb_down'"
             @click="$emit('cambiarEstadoRegistro', propsCell.row)"
           >
-        <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-        {{ $t('common.actions.active') }}
-        </q-tooltip>
-      </q-btn>
-      </q-td>
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
+              {{ $t('common.actions.active') }}
+            </q-tooltip>
+          </q-btn>
+        </q-td>
       </template>
 
       <template v-slot:body-cell-opciones="propsCell">
         <q-td :props="propsCell" class="text-center q-gutter-xs">
-          <q-btn dense round
-            icon="edit"
-            color="info"
-            @click="emitirEditar(propsCell.row.id)"
-          >
+          <q-btn dense round icon="edit" color="info" @click="emitirEditar(propsCell.row.id)">
             <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
             {{ $t('common.actions.edit', 'Editar') }}
             </q-tooltip>
           </q-btn>
-          
-          <q-btn dense round
-            icon="delete"
-            color="negative"
-            @click="emitirEliminar(propsCell.row.id)"
-          >
+          <q-btn dense round icon="delete" color="negative" @click="emitirEliminar(propsCell.row.id)">
             <q-tooltip>{{ $t('common.actions.delete', 'Eliminar') }}</q-tooltip>
           </q-btn>
         </q-td>

@@ -1,184 +1,159 @@
-import { useQuasar } from 'quasar';
 import { ref } from 'vue';
+import { idempresa_md5 } from 'src/composables/funcionesGenerales';
+import { prepararDatosFormulario } from 'src/utils/formUtils';
+import { useNotificaciones } from 'src/composables/useNotificaciones';
 import { bonosEmpresaService } from '../services/bonosEmpresa.service';
 import type { BonoEmpresa } from '../types/bonosEmpresa.types';
 
 const listaBonosEmpresa = ref<BonoEmpresa[]>([]);
-const listaBonosEstandar  = ref<BonoEmpresa[]>([]);
-const esVisibleDialogo = ref(false);
-const esVisibleEstandar = ref(false);
+const listaBonosEmpresaEstandar = ref<BonoEmpresa[]>([]);
 const esModoEdicion = ref(false);
+const esVistaEstandar = ref(false);
+const esVisibleDialogo = ref(false);
 
 const bonoEmpresaActual = ref<BonoEmpresa>({
-  nombre: '',
-  descripcion: '',
-  tipo: '1',
-  cantidad: '0',
-  orden: '',
-  destino: '1'
+  nombre: '', descripcion: '', tipo: '1', cantidad: '0', orden: '', destino: '1'
 });
 
 export function useBonosEmpresa() {
-  const $q = useQuasar();
+  const { notificarExito, notificarError, notificarAdvertencia, confirmarAccion } = useNotificaciones();
+  const idEmpresa = String(idempresa_md5());
 
   const cargarBonosEmpresa = async () => {
     try {
-      listaBonosEmpresa.value = await bonosEmpresaService.obtenerBonosEmpresa();
+      listaBonosEmpresa.value = await bonosEmpresaService.listarBonosEmpresa();
     } catch (error) {
-      console.error(error); // ESLint Fix: Usar la variable error
-      $q.notify({ type: 'negative', message: 'Error al cargar los bonos de empresa' });
+      console.error('Error al cargar bonos beneficio:', error);
+      notificarError('Error al cargar los datos o conexión a internet desactivada');
     }
   };
 
-  const cargarBonosEstandar = async () => {
+  const cargarBonosEmpresaEstandar = async () => {
     try {
-      listaBonosEstandar.value = await bonosEmpresaService.obtenerBonosEstandar();
-      esVisibleEstandar.value = true;
+      listaBonosEmpresaEstandar.value = await bonosEmpresaService.listarBonosEmpresaEstandar();
+      esVistaEstandar.value = true;
     } catch (error) {
-      console.error(error); // ESLint Fix
-      $q.notify({ type: 'negative', message: 'Error al cargar el estándar de bonos' });
+      console.error('Error al cargar bonos empresa estándar:', error);
+      notificarError('Error al cargar los datos o conexión a internet desactivada');
     }
   };
 
   const prepararNuevoBonoEmpresa = () => {
     bonoEmpresaActual.value = {
-      nombre: '',
-      descripcion: '',
-      tipo: '1',
-      cantidad: '0',
-      orden: '',
-      destino: '1'
+      nombre: '', descripcion: '', tipo: '1', cantidad: '0', orden: '', destino: '1'
     };
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
   };
 
-  const prepararEdicionBonoEmpresa = async (id: string | number) => {
+  const prepararEdicionBonoEmpresa = async (id: string) => {
     try {
-      const respuesta = await bonosEmpresaService.obtenerBonoEmpresaPorId(id);
+      const respuesta = await bonosEmpresaService.editarBonoEmpresa(id);
       if (respuesta.estado === 'exito' && respuesta.datos) {
         bonoEmpresaActual.value = { ...respuesta.datos };
         esModoEdicion.value = true;
         esVisibleDialogo.value = true;
       }
     } catch (error) {
-      console.error(error); // ESLint Fix
-      $q.notify({ type: 'negative', message: 'Error al obtener datos del bono' });
+      console.error(error);
+      notificarError('Error al obtener datos del bono empresa');
     }
   };
 
   const guardarBonoEmpresa = async (datosGuardar: BonoEmpresa) => {
     try {
-      const formData = new FormData();
-      formData.append('ver', esModoEdicion.value ? 'editarbonosempresa' : 'registrobonosempresa');
-      formData.append('idempresa', 'd09bf41544a3365a46c9077ebb5e35c3');
-      
-      if (esModoEdicion.value && datosGuardar.id) {
-        formData.append('id', String(datosGuardar.id));
-      }
-      
-      formData.append('nombre', String(datosGuardar.nombre));
-      formData.append('descripcion', String(datosGuardar.descripcion));
-      formData.append('tipo', String(datosGuardar.tipo));
-      formData.append('cantidad', String(datosGuardar.cantidad));
-      formData.append('orden', String(datosGuardar.orden));
-      formData.append('destino', String(datosGuardar.destino));
-
-      const respuesta = await bonosEmpresaService.guardarBonoEmpresa(formData);
-      
+      const payload = {
+        ver : esModoEdicion.value ? 'editarbonosempresa' : 'registrobonosempresa',
+        idempresa :idEmpresa,
+        id : esModoEdicion.value ? datosGuardar.id : undefined,
+        nombre : datosGuardar.nombre,
+        descripcion : datosGuardar.descripcion,
+        tipo : datosGuardar.tipo,
+        cantidad : datosGuardar.cantidad,
+        orden : datosGuardar.orden,
+        destino : datosGuardar.destino,
+      };
+      const datosFormulario = prepararDatosFormulario(payload)
+      const respuesta = await bonosEmpresaService.guardarBonoEmpresa(datosFormulario);
       if (respuesta.estado === 'exito') {
-        $q.notify({ type: 'positive', message: esModoEdicion.value ? 'Registro actualizado con éxito' : 'Registro creado con éxito' });
+        notificarExito(esModoEdicion.value ? 'Registro Actualizado con éxito' : 'Registro creado con éxito');
         esVisibleDialogo.value = false;
         void cargarBonosEmpresa();
       } else {
-        $q.notify({ type: 'warning', message: respuesta.mensaje });
+        notificarAdvertencia(respuesta.mensaje);
       }
-    } catch (error) {
-      console.error(error); // ESLint Fix
-      $q.notify({ type: 'negative', message: 'Error al procesar la solicitud' });
+    } catch (error){
+      console.error(error);
+      notificarError('Error al procesar la solicitud');
     }
   };
 
-  const confirmarEliminarBonoEmpresa = (id: string | number) => {
-    $q.dialog({
-      title: 'Confirmación',
-      message: '¿Está seguro? No podrá recuperar el registro de este bono de empresa.',
-      cancel: true,
-      persistent: true
-    }).onOk(() => { // ESLint Fix: Quitamos el async de aquí
-      
-      // Creamos la función asíncrona por dentro
-      const ejecutarEliminacion = async () => {
-        try {
-          const respuesta = await bonosEmpresaService.eliminarBonoEmpresa(id);
-          if (respuesta.estado === 'exito') {
-            $q.notify({ type: 'positive', message: respuesta.mensaje });
-            void cargarBonosEmpresa();
-          }
-        } catch (error) {
-          console.error(error); // ESLint Fix
-          $q.notify({ type: 'negative', message: 'Error al eliminar el registro' });
+  const confirmarEliminarBonoEmpresa = (id: string) => {
+    confirmarAccion('¿Está Seguro?', 'No podrá recuperar este registro.', async () => {
+      try {
+        const respuesta = await bonosEmpresaService.eliminarBonoEmpresa(id);
+        if (respuesta.estado === 'exito') {
+          notificarExito(respuesta.mensaje);
+          void cargarBonosEmpresa();
         }
-      };
-
-      // La ejecutamos protegiéndola con el void
-      void ejecutarEliminacion();
+      } catch (error) {
+        console.error(error);
+        notificarError('Error al eliminar el registro');
+      }
     });
   };
 
-  const cambiarEstadoBonoEmpresa = async (id: string | number, estadoActual: string | number) => {
+  const cambiarEstadoBonoEmpresa = async (bonoEmpresa: BonoEmpresa) => {
+    if (!bonoEmpresa.id) return;
+    const nuevoEstado = bonoEmpresa.estado == '1' ? '2' : '1';
     try {
-      const nuevoEstado = String(estadoActual) === '1' ? '2' : '1';
-      const respuesta = await bonosEmpresaService.editarEstadoBonoEmpresa(id, nuevoEstado);
-      if (respuesta.estado === 'exito') {
-        void cargarBonosEmpresa();
-      }
+      await bonosEmpresaService.cambiarEstadoBonoEmpresa(bonoEmpresa.id, nuevoEstado);
+      notificarExito('Estado actualizado correctamente');
+      void cargarBonosEmpresa();
     } catch (error) {
-      console.error(error); // ESLint Fix
-      $q.notify({ type: 'negative', message: 'Error al cambiar el estado' });
+      console.error('Error al cambiar estado:', error);
+      notificarError('Error al cambiar el estado del registro');
     }
   };
 
-  const procesarImportacion = (tipoImportacion: number) => {
-    const textoAccion = tipoImportacion === 1 
-      ? 'reemplazará todos sus datos actuales' 
-      : 'agregará los datos';
-      
-    $q.dialog({
-      title: '¿Está seguro?',
-      message: `Esta acción ${textoAccion}.`,
-      cancel: true,
-      persistent: true
-    }).onOk(() => { // ESLint Fix: Quitamos el async de aquí
-      
-      // Creamos la función asíncrona por dentro
-      const ejecutarImportacion = async () => {
-        try {
-          const formData = new FormData();
-          formData.append('ver', 'remplazarocopiardatosBonosEmpresa');
-          formData.append('idempresa', 'd09bf41544a3365a46c9077ebb5e35c3');
-          formData.append('datos', JSON.stringify(listaBonosEstandar.value));
-          formData.append('tipo', String(tipoImportacion));
-
-          const respuesta = await bonosEmpresaService.procesarImportacionEstandar(formData);
-          if (respuesta.estado === 'exito') {
-            $q.notify({ type: 'positive', message: 'Proceso completado con éxito' });
-            esVisibleEstandar.value = false;
-            void cargarBonosEmpresa();
-          }
-        } catch (error) {
-          console.error(error); // ESLint Fix
-          $q.notify({ type: 'negative', message: 'Error en la importación' });
-        }
-      };
-
-      // La ejecutamos protegiéndola con el void
-      void ejecutarImportacion();
+  const confirmarImportacion = (tipoAccion: 'reemplazar' | 'agregar') => {
+    const mensaje = tipoAccion === 'reemplazar'
+      ? 'Esta acción reemplazará todos sus datos actuales por los del catálogo estándar. ¿Desea continuar?'
+      : 'Esta acción agregará los datos del catálogo estándar a su tabla actual. ¿Desea continuar?';
+    confirmarAccion('Confirmar Importación', mensaje, () => {
+      void procesarImportacion(tipoAccion);
     });
+  };
+  
+  const procesarImportacion = async (tipoAccion: 'reemplazar' | 'agregar') => {
+    try {
+      const payload = {
+        ver : 'remplazarocopiardatosBonosEmpresa',
+        idempresa : idEmpresa,
+        datos : JSON.stringify(listaBonosEmpresaEstandar.value),
+        tipo : tipoAccion === 'reemplazar' ? '1' : '2'
+      };
+      const datosFormulario = prepararDatosFormulario(payload);
+      const respuesta = await bonosEmpresaService.guardarBonoEmpresa(datosFormulario);
+      if (respuesta.estado === 'exito') {
+        notificarExito('Catálogo procesado correctamente');
+        alternarVistaEstandar();
+        void cargarBonosEmpresa();
+      } else {
+        notificarAdvertencia(respuesta.mensaje);
+      }
+    } catch (error) {
+      console.error('Error procesando importación:', error);
+      notificarError('Error al procesar el catálogo');
+    }
+  };
+  
+  const alternarVistaEstandar = () => {
+    esVistaEstandar.value = !esVistaEstandar.value;
   };
 
   return {
-    listaBonosEmpresa, listaBonosEstandar, esVisibleDialogo, esVisibleEstandar, esModoEdicion, bonoEmpresaActual,
-    cargarBonosEmpresa, cargarBonosEstandar, prepararNuevoBonoEmpresa, prepararEdicionBonoEmpresa, guardarBonoEmpresa, confirmarEliminarBonoEmpresa, cambiarEstadoBonoEmpresa, procesarImportacion
+    listaBonosEmpresa, listaBonosEmpresaEstandar, esVisibleDialogo, esModoEdicion, bonoEmpresaActual, esVistaEstandar, 
+    cargarBonosEmpresa, cargarBonosEmpresaEstandar, prepararNuevoBonoEmpresa, prepararEdicionBonoEmpresa, guardarBonoEmpresa, confirmarEliminarBonoEmpresa, cambiarEstadoBonoEmpresa, confirmarImportacion, alternarVistaEstandar
   };
 }

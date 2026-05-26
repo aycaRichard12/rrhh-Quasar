@@ -5,11 +5,11 @@ import { useNotificaciones } from 'src/composables/useNotificaciones';
 import { beneficiosService } from '../services/beneficios.service';
 import type { Beneficio } from '../types/beneficios.types';
 
-const listaBeneficios        = ref<Beneficio[]>([]);
-const listaBeneficiosEstandar= ref<Beneficio[]>([]);
-const esVisibleDialogo       = ref<boolean>(false);
-const esModoEdicion          = ref<boolean>(false);
-const esVistaEstandar        = ref<boolean>(false);
+const listaBeneficios         = ref<Beneficio[]>([]);
+const listaBeneficiosEstandar = ref<Beneficio[]>([]);
+const esModoEdicion           = ref<boolean>(false);
+const esVistaEstandar         = ref<boolean>(false);
+const esVisibleDialogo        = ref<boolean>(false);
 
 const beneficioActual        = ref<Beneficio>({
   nombre: '', descripcion: '', tipo: '1', cantidad: '', orden: '', destino: '1'
@@ -19,7 +19,6 @@ export function useBeneficios() {
 
   const { notificarExito, notificarError, notificarAdvertencia, confirmarAccion } = useNotificaciones();
   const idEmpresa = String(idempresa_md5());
-
 
   const cargarBeneficios = async () => {
     try {

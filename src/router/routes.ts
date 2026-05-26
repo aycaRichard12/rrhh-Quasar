@@ -7,14 +7,17 @@ const routes: RouteRecordRaw[] = [
     redirect: '/auth/login',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: 'dashboard', component: () => import('pages/IndexPage.vue') },
-      { path: 'welcome', component: () => import('pages/WelcomePage.vue') },
-      // CONFIGURACION
-      { path: 'areas',            component: () => import('src/modules/areas/pages/AreasPage.vue') },
-      { path: 'entesReguladores', component: () => import('src/modules/entesReguladores/pages/EntesReguladoresPage.vue') },
-      { path: 'beneficios',       component: () => import('src/modules/beneficios/pages/BeneficiosPage.vue') },
-      { path: 'bonosEmpresa',     component: () => import('src/modules/bonosEmpresa/pages/BonosEmpresaPage.vue') },
-      { path: 'convocatorias',     component: () => import('src/modules/convocatorias/pages/convocatoriasPage.vue') }
+      { path: 'dashboard',       component: () => import('pages/IndexPage.vue') },
+      { path: 'welcome',         component: () => import('pages/WelcomePage.vue') },
+      // CONFIGURACION-Organizacion
+      { path: 'areas',           component: () => import('src/modules/areas/pages/AreasPage.vue') },
+      // CONFIGURACION-Beneficios Sociales
+      { path: 'entesReguladores',component: () => import('src/modules/entesReguladores/pages/EntesReguladoresPage.vue') },
+      { path: 'beneficios',      component: () => import('src/modules/beneficios/pages/BeneficiosPage.vue') },
+      // CONFIGURACION-Remuneración
+      { path: 'bonosEmpresa',    component: () => import('src/modules/bonosEmpresa/pages/BonosEmpresaPage.vue') },
+      // GESTIÓN RECLUTAMIENTO-Admisión
+      { path: 'convocatorias',   component: () => import('src/modules/convocatorias/pages/convocatoriasPage.vue') },
 
     ],
   },
