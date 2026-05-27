@@ -15,7 +15,7 @@
         <q-btn icon="add" color="primary" :label="$t('cargos.form.new', 'Nuevo Registro')" @click="prepararNuevoCargo" />
       </div>
 
-      <div class="col-12 col-md-4">
+      <div class="col-6 col-md-4">
         <q-select
           dense
           outlined
@@ -29,7 +29,7 @@
         />
       </div>
 
-      <div class="col-12 col-md-4">
+      <div class="col-6 col-md-4">
         <q-input 
           v-model="filtroBusqueda" 
           dense 
