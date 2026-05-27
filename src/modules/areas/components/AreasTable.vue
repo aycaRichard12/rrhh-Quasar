@@ -6,6 +6,7 @@
       row-key="id"
       :grid="$q.screen.lt.sm"
       table-header-class="bg-primary"
+      :filter="props.filtro"
       :rows-per-page-label="t('common.report.recordsPerPage')"
       :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${t('common.report.of')} ${totalRows}`"
     >
@@ -114,7 +115,8 @@ const { t } = useI18n()
 const $q = useQuasar()
 
 const props = defineProps<{
-  listaAreas: Area[]
+  listaAreas: Area[];
+  filtro: string;
 }>()
 
 const emits = defineEmits<{

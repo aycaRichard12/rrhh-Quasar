@@ -62,8 +62,8 @@
       </q-card-section>
 
     <q-card-actions align="right" class="text-primary q-pb-md q-pr-md">
-        <q-btn flat label="$t('common.actions.cancel')" color="negative" v-close-popup  />
-        <q-btn icon="save" color="primary" label="$t('common.actions.save')" type="submit" />
+        <q-btn flat :label="$t('common.actions.cancel')" color="negative" v-close-popup  />
+        <q-btn icon="save" color="primary" :label="$t('common.actions.save')" type="submit" />
     </q-card-actions>
    </q-form>
   </q-card>

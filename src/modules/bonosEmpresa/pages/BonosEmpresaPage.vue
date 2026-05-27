@@ -18,10 +18,10 @@
       </template>
 
       <template v-else>
-        <q-btn outine color="negative" icon="arrow_back" label="Volver" @click="alternarVistaEstandar" />
+        <q-btn outline color="negative" icon="arrow_back" label="Volver" @click="alternarVistaEstandar" />
         <div class="q-gutter-sm">
-          <q-btn icon="autorenew" color="warning" label="Reemplazar" @click="confirmarImportacion('reemplazar')"/>
-          <q-btn icon="add" color="positive" label="Añadir" @click="confirmarImportacion('agregar')" />
+          <q-btn outline icon="autorenew" color="warning" label="Reemplazar" @click="confirmarImportacion('reemplazar')"/>
+          <q-btn outline icon="add" color="positive" label="Añadir" @click="confirmarImportacion('agregar')" />
         </div>
       </template>
     </div>

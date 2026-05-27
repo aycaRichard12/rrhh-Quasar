@@ -12,6 +12,7 @@ const routes: RouteRecordRaw[] = [
 
       // CONFIGURACION-Organizacion
       { path: 'areas', component: () => import('src/modules/areas/pages/AreasPage.vue') },
+      { path: 'cargos', component: () => import('src/modules/cargos/pages/CargosPage.vue') },
       // CONFIGURACION-Beneficios Sociales
       { path: 'entesReguladores',component: () => import('src/modules/entesReguladores/pages/EntesReguladoresPage.vue') },
       { path: 'beneficios', component: () => import('src/modules/beneficios/pages/BeneficiosPage.vue') },

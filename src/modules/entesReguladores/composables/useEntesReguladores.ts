@@ -105,7 +105,7 @@ export function useEntesReguladores() {
 
   const cambiarEstadoEnteRegulador = async (enteRegulador: EnteRegulador) => {
     if (!enteRegulador.id) return;
-      const nuevoEstado = enteRegulador.estado == '1' ? '0' : '1';
+      const nuevoEstado = enteRegulador.estado == '1' ? '2' : '1';
 		try {
 			await entesReguladoresService.cambiarEstadoEnteRegulador(enteRegulador.id, nuevoEstado);
       notificarExito('Estado actualizado correctamente');

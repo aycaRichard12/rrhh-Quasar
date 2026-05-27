@@ -23,7 +23,7 @@
           <q-btn color="warning" :label="$t('formBtn.replace', 'Reemplazar')" @click="confirmarImportacion('reemplazar')" icon="autorenew"/>
           <q-btn color="positive" :label="$t('formBtn.add', 'Añadir')" @click="confirmarImportacion('agregar')" icon="add"/>
         </div>
-      </Template>
+      </template>
     </div>
 
     <div v-if="!esVistaEstandar">

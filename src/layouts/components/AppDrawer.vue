@@ -53,7 +53,7 @@
           <q-expansion-item
             v-for="menu in filteredMenu"
             :key="menu.codigo"
-            :label="translateTitle(menu.codigo, menu.titulo)"
+            :label="translateTitle(menu.codigo, menu.titulo)+ 'hola mundo'"
             :icon="getIconoMenu(menu.codigo)"
             group="menu-group"
             class="drawer-expansion"
