@@ -2,16 +2,34 @@
   <q-page padding>
     <div class="col q-mb-md">
       <div class="row justify-left">
-        <h4 class="q-my-none text-primary">{{ $t('cargos.title', 'Cargos') }}</h4>
+        <h4 class="q-my-none text-primary">{{ $t('Cargos') }}</h4>
       </div>
       <div class="row justify-left">
         <p class="text-grey-7">{{ $t('cargos.subtitle', 'Gestión de cargos, salarios y vinculación con áreas de la empresa.') }}</p>
       </div>
     </div>
 
-    <div class="row justify-between items-center q-mb-md">
+    <div class="row q-col-gutter-md items-center q-mb-md">
       
-      <div class="col-12 col-sm-4 q-mb-sm-none q-mb-md">
+      <div class="col-12 col-md-4 text-left">
+        <q-btn icon="add" color="primary" :label="$t('cargos.form.new', 'Nuevo Registro')" @click="prepararNuevoCargo" />
+      </div>
+
+      <div class="col-12 col-md-4">
+        <q-select
+          dense
+          outlined
+          emit-value
+          map-options
+          v-model="idAreaSeleccionada"
+          :options="opcionesAreasFiltro"
+          option-value="id"
+          option-label="nombre"
+          :label="$t('cargos.filter.areaLabel', 'Filtrar por Área')"
+        />
+      </div>
+
+      <div class="col-12 col-md-4">
         <q-input 
           v-model="filtroBusqueda" 
           dense 
@@ -25,15 +43,11 @@
         </q-input>
       </div>
 
-      <div class="q-gutter-sm">
-        <q-btn icon="add" color="primary" :label="$t('cargos.form.new', 'Nuevo Registro')" @click="prepararNuevoCargo" />
-      </div>
-
     </div>
 
     <div>
       <CargosTable
-        :lista-cargos="listaCargos"
+        :lista-cargos="listaCargosFiltrados"
         :filtro="filtroBusqueda"
         @editar="prepararEdicionCargo"
         @eliminar="confirmarEliminarCargo"
@@ -52,17 +66,26 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { onMounted, computed } from 'vue';
 import { useCargos } from '../composables/useCargos';
 import CargosTable from '../components/CargosTable.vue';
 import CargosForm from '../components/CargosForm.vue';
 
+const { t } = useI18n();
+
 const {
-  listaCargos, listaAreas, esVisibleDialogo, esModoEdicion, cargoActual, filtroBusqueda,
+  listaCargosFiltrados, listaAreas, esVisibleDialogo, esModoEdicion, cargoActual, filtroBusqueda, idAreaSeleccionada,
   cargarCargosYAreas, prepararNuevoCargo, prepararEdicionCargo, guardarCargo, confirmarEliminarCargo
 } = useCargos();
 
+const opcionesAreasFiltro = computed(() => [
+  { id: '_todos_', nombre: t('common.all', 'Todos') },
+  ...listaAreas.value
+]);
+
 onMounted(() => {
+  idAreaSeleccionada.value = '_todos_';
   void cargarCargosYAreas();
 });
 </script>

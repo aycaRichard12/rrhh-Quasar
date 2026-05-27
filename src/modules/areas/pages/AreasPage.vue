@@ -8,7 +8,7 @@
       <div class="col-6 col-sm-3 q-mb-sm-none q-mb-md">
         <q-input clearable dense outlined 
           v-model="filtroBusqueda" 
-          :placeholder="$t('common.search', 'Buscar...')"
+          :placeholder="$t('common.search', 'Buscar cualquier palabra...')"
         >
           <template v-slot:append> <q-icon name="search" /> </template>
         </q-input>

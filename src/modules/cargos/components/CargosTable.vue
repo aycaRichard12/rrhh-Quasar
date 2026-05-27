@@ -17,7 +17,7 @@
       <template v-slot:body-cell-salario="propsCell">
         <q-td :props="propsCell" class="text-right font-weight-bold">
           <q-chip dense outline color="positive">
-             Bs. {{ propsCell.row.salario }}
+             {{ propsCell.row.salario }} Bs. 
           </q-chip>
         </q-td>
       </template>
