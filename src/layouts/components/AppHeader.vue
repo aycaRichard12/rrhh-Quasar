@@ -18,7 +18,7 @@
         <q-breadcrumbs-el
           v-for="crumb in breadcrumbs"
           :key="crumb.label"
-          :label="crumb.label"
+          :label="crumb.label" 
           :class="crumb.active
             ? 'text-weight-bolder crumb-active'
             : ($q.dark.isActive ? 'text-grey-5' : 'text-grey-5')"
@@ -93,7 +93,7 @@
           <div class="row items-center no-wrap q-gutter-xs">
 
             <q-avatar
-              :size="$q.screen.lt.sm ? '30px' : '34px'"
+              :size="$q.screen.lt.sm ? '28px' : '30px'"
               class="user-avatar"
             >
               <span class="avatar-initial">{{ userInitial }}</span>
@@ -111,7 +111,7 @@
             <q-icon
               v-if="$q.screen.gt.xs"
               name="expand_more"
-              size="16px"
+              size="20px"
               :class="$q.dark.isActive ? 'text-grey-5' : 'text-grey-5'"
             />
           </div>
@@ -185,7 +185,10 @@ import { useBreadcrumbs } from '../composables/useBreadcrumbs';
 import { usePwa } from 'src/composables/usePwa';
 import LanguageSelector from 'src/components/LanguageSelector.vue';
 
-defineEmits(['toggle-left-drawer']);
+defineEmits<{
+  (e: 'toggle-left-drawer'): void;
+}>();
+// defineEmits(['toggle-left-drawer']);
 
 const $q          = useQuasar();
 const router      = useRouter();
@@ -193,16 +196,29 @@ const authStore   = useAuthStore();
 const { breadcrumbs } = useBreadcrumbs();
 const { showInstall, showUpdate, installApp, updateApp } = usePwa();
 
-const userInitial = computed(() =>
+const userInitial = computed<string>(() =>
   authStore.user?.nombre?.charAt(0).toUpperCase() || 'U'
 );
 
-const toggleDarkMode = () => {
+//Antiguo Codigo
+
+// const userInitial = computed(() =>
+//   authStore.user?.nombre?.charAt(0).toUpperCase() || 'U'
+// );
+
+const toggleDarkMode = (): void => {
   $q.dark.toggle();
   localStorage.setItem('quasar.dark', String($q.dark.isActive));
 };
 
-const handleLogout = async () => {
+//Antiguo Codigo
+
+// const toggleDarkMode = () => {
+//   $q.dark.toggle();
+//   localStorage.setItem('quasar.dark', String($q.dark.isActive));
+// };
+
+const handleLogout = async (): Promise<void> => {
   try {
     authStore.logout();
     await router.push('/');
@@ -210,6 +226,17 @@ const handleLogout = async () => {
     window.location.href = '/';
   }
 };
+
+//Antiguo Codigo
+
+// const handleLogout = async () => {
+//   try {
+//     authStore.logout();
+//     await router.push('/');
+//   } catch {
+//     window.location.href = '/';
+//   }
+// };
 </script>
 
 <style>

@@ -40,8 +40,11 @@
 
         <q-space />
 
+
+        <!-- //Antiguo Codigo    ya no es necesario -->
         <!-- Dropdown de reportes -->
-        <q-btn-dropdown
+
+        <!-- <q-btn-dropdown
           v-if="activeTabsReportes.length > 0"
           flat no-caps
           :label="$q.screen.lt.sm ? '' : $t('common.labels.reports')"
@@ -68,7 +71,7 @@
               </q-item-section>
             </q-item>
           </q-list>
-        </q-btn-dropdown>
+        </q-btn-dropdown> -->
 
       </q-tabs>
     </div>
@@ -84,10 +87,19 @@ defineProps<{
   tabsVisible: boolean;
   currentTab: string;
   activeTabs: TabItem[];
-  activeTabsReportes: TabItem[];
+
+  //Antiguo Codigo
+
+  // activeTabsReportes: TabItem[];
+}>();
+defineEmits<{
+  (e: 'update:currentTab', value: string): void;
+  (e: 'navigate', tab: TabItem): void;
 }>();
 
-defineEmits(['update:currentTab', 'navigate']);
+//Antiguo Codigo
+
+// defineEmits(['update:currentTab', 'navigate']);
 
 const $q  = useQuasar();
 const { t } = useI18n();

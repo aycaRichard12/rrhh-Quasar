@@ -1,10 +1,17 @@
 export default {
+  // configuraciones: 'Settings',
+  // reclutamiento: 'Recruitment',
+  // personal: 'Personnel',
+  // actividades: 'Training & Development',
+  // planillas: 'Payroll',
+  // boletasdepago: 'Payslips',
+
+  //MENU PRINCIPAL
   configuraciones: 'Settings',
-  reclutamiento: 'Recruitment',
-  personal: 'Personnel',
-  actividades: 'Training & Development',
-  planillas: 'Payroll',
-  boletasdepago: 'Payslips',
+  gestiondereclutamiento: 'Recruitment Management',
+  trabajador: 'Worker',
+  gestiondecapacitacion: 'Training Management',
+  gestionsalarial: 'Salary Management',
 
   areas: 'Areas',
   cargos: 'Positions',
