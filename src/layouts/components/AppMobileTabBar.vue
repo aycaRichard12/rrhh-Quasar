@@ -86,12 +86,16 @@
         <q-separator class="opacity-20" />
         <q-scroll-area style="height: 300px;" class="q-px-sm q-py-sm">
           <q-list>
+    <!-- :class="{ 'sheet-item--active': subMenuSeleccionado === submenu.codigo.split('-')[0] || currentTab === submenu.codigo.split('-')[0] }" -->
             <q-item
               v-for="submenu in activeMenu?.submenu ?? []"
               :key="submenu.codigo"
               clickable v-ripple
               class="sheet-item rounded-borders q-mb-xs"
-              :class="{ 'sheet-item--active': subMenuSeleccionado === submenu.codigo.split('-')[0] || currentTab === submenu.codigo.split('-')[0] }"
+              :class="{ 
+  'sheet-item--active':
+    subMenuSeleccionado === submenu.codigo
+}"
               @click="selectAndClose(submenu)"
             >
               <q-item-section avatar>
@@ -130,12 +134,17 @@
                 expand-icon="expand_more"
               >
                 <q-list class="q-pl-md">
+        <!-- :class="{ 'sheet-item--active': subMenuSeleccionado === submenu.codigo.split('-')[0] || currentTab === submenu.codigo.split('-')[0] }" -->
+
                   <q-item
                     v-for="submenu in item.submenu"
                     :key="submenu.codigo"
                     clickable v-ripple
                     class="sheet-item rounded-borders q-mb-xs"
-                    :class="{ 'sheet-item--active': subMenuSeleccionado === submenu.codigo.split('-')[0] || currentTab === submenu.codigo.split('-')[0] }"
+                    :class="{ 
+  'sheet-item--active':
+    subMenuSeleccionado === submenu.codigo
+}"
                     @click="selectAndCloseMore(submenu)"
                   >
                     <q-item-section avatar>
@@ -236,7 +245,7 @@
                 <q-icon name="translate" size="22px" class="profile-icon" />
               </q-item-section>
               <q-item-section>
-                <q-item-label>Idioma</q-item-label>
+                <q-item-label>Idiomas</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <LanguageSelector type="menu" btn-class="profile-lang-btn" />
@@ -292,79 +301,208 @@ import { getIconoMenu } from 'src/stores/paginas';
 import { useAppNavigation } from '../composables/useAppNavigation';
 import { usePwa } from 'src/composables/usePwa';
 import LanguageSelector from 'src/components/LanguageSelector.vue';
-import type { MenuItem, SubmenuItem } from 'src/layouts/types/navigation';
+import type { MenuNodo } from 'src/layouts/types/navigation';
 
 const $q = useQuasar();
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
-const { currentTab, subMenuSeleccionado, selectSubmenu, hasValidTabsForSubmenu, translateTitle } = useAppNavigation();
+const { subMenuSeleccionado, selectSubmenu, hasValidTabsForSubmenu, translateTitle } = useAppNavigation();
 const { showInstall, showUpdate, installApp, updateApp } = usePwa();
 
 // ─── Estado de sheets ─────────────────────────────────────────────────────────
 const submenuSheet = ref(false);
 const moreSheet    = ref(false);
 const profileSheet = ref(false);
-const activeMenu   = ref<MenuItem | null>(null);
+const activeMenu   = ref<MenuNodo | null>(null);
 
 // ─── Menú filtrado ────────────────────────────────────────────────────────────
-const hasDashboard = computed(() =>
-  (authStore.user?.menu || []).some(m => m.codigo === 'dashboard')
+const hasDashboard = computed<boolean>(() =>
+  (authStore.user?.menu || []).some(
+    menu => menu.codigo === 'dashboard'
+  )
 );
+//Antiguo Codigo
+// const hasDashboard = computed<boolean>(() =>
+//   (authStore.user?.menu || []).some(
+//     menu => getCodigoBase(menu.codigo) === 'dashboard'
+//   )
+// );
+// const hasDashboard = computed(() =>
+//   (authStore.user?.menu || []).some(m => m.codigo === 'dashboard')
+// );
 
-const filteredMenu = computed((): MenuItem[] => {
-  const rawMenu = (authStore.user?.menu || []) as MenuItem[];
+const filteredMenu = computed<MenuNodo[]>(() => {
+  const rawMenu = authStore.user?.menu || [];
+
   return rawMenu
-    .filter(m => m.codigo !== 'opcionesocultas' && m.codigo !== 'dashboard')
-    .map(menu => {
-      const validSubmenus = (menu.submenu || []).filter(s => hasValidTabsForSubmenu(s));
-      return { ...menu, submenu: validSubmenus };
-    })
-    .filter(menu => menu.submenu.length > 0);
+    .filter(menu => menu.codigo !== 'dashboard')
+    .map(menu => ({
+      ...menu,
+      submenu: (menu.submenu || []).filter(submenu =>
+        hasValidTabsForSubmenu(submenu)
+      )
+    }))
+    .filter(menu => (menu.submenu?.length || 0) > 0);
 });
+
+//Antiguo Codigo
+
+// const filteredMenu = computed<MenuNodo[]>(() => {
+//   const rawMenu = authStore.user?.menu || [];
+
+//   return rawMenu
+//     .filter(menu => {
+//       const codigoBase = getCodigoBase(menu.codigo);
+
+//       return (
+//         codigoBase !== 'opcionesocultas' &&
+//         codigoBase !== 'dashboard'
+//       );
+//     })
+//     .map(menu => ({
+//       ...menu,
+//       hijo: (menu.hijo || []).filter(submenu =>
+//         hasValidTabsForSubmenu(submenu)
+//       )
+//     }))
+//     .filter(menu => (menu.hijo?.length || 0) > 0);
+// });
+
+// const filteredMenu = computed((): MenuNodo[] => {
+//   const rawMenu = (authStore.user?.menu || []) as MenuNodo[];
+//   return rawMenu
+//     .filter(m => m.codigo !== 'opcionesocultas' && m.codigo !== 'dashboard')
+//     .map(menu => {
+//       const validSubmenus = (menu.hijo || []).filter(s => hasValidTabsForSubmenu(s));
+//       return { ...menu, submenu: validSubmenus };
+//     })
+//     .filter(menu => menu.submenu.length > 0);
+// });
+
+
+
 
 // 5 tabs total: [Dashboard?] + [menús] + [Más] + [Cuenta]
 // Con dashboard: 1 + 2 + 1 + 1 = 5
 // Sin dashboard: 0 + 3 + 1 + 1 = 5
-const MAX_VISIBLE = computed(() => hasDashboard.value ? 2 : 3);
 
-interface MenuItemExtended extends MenuItem {
+const MAX_VISIBLE = computed<number>(() =>
+  hasDashboard.value ? 2 : 3
+);
+// const MAX_VISIBLE = computed(() => hasDashboard.value ? 2 : 3);
+
+interface MenuItemExtended extends MenuNodo {
   firstSubmenuCode: string;
 }
 
-const visibleMenuItems = computed((): MenuItemExtended[] =>
-  filteredMenu.value.slice(0, MAX_VISIBLE.value).map(m => ({
-    ...m,
-    firstSubmenuCode: ((m.submenu[0]?.codigo ?? '').split('-')[0]) ?? ''
-  }))
+const visibleMenuItems = computed<MenuItemExtended[]>(() =>
+  filteredMenu.value
+    .slice(0, MAX_VISIBLE.value)
+    .map(menu => ({
+      ...menu,
+      firstSubmenuCode:
+        menu.submenu?.[0]?.codigo || ''
+    }))
 );
 
-const hiddenMenuItems = computed((): MenuItem[] =>
+//Antiguo Codigo
+
+// const visibleMenuItems = computed<MenuItemExtended[]>(() =>
+//   filteredMenu.value
+//     .slice(0, MAX_VISIBLE.value)
+//     .map(menu => ({
+//       ...menu,
+//       firstSubmenuCode:
+//         menu.hijo?.[0]?.codigo
+//           ? getCodigoBase(menu.hijo[0].codigo)
+//           : ''
+//     }))
+// );
+// const visibleMenuItems = computed((): MenuItemExtended[] =>
+//   filteredMenu.value.slice(0, MAX_VISIBLE.value).map(m => ({
+//     ...m,
+//     firstSubmenuCode: m.hijo?.[0]?.codigo?.split('-')[0] ?? ''
+//   }))
+// );
+
+const hiddenMenuItems = computed<MenuNodo[]>(() =>
   filteredMenu.value.slice(MAX_VISIBLE.value)
 );
 
-// Verifica si ALGÚN submenú del menú está activo (no solo el primero)
-const isMenuActive = (item: MenuItemExtended): boolean =>
-  item.submenu.some(s => subMenuSeleccionado.value === s.codigo.split('-')[0]);
+//Antiguo Codigo
 
-const isMoreActive = computed(() =>
-  hiddenMenuItems.value.some(m =>
-    m.submenu.some(s => subMenuSeleccionado.value === s.codigo.split('-')[0])
+// const hiddenMenuItems = computed((): MenuNodo[] =>
+//   filteredMenu.value.slice(MAX_VISIBLE.value)
+// );
+
+// Verifica si ALGÚN submenú del menú está activo (no solo el primero)
+
+
+const isMenuActive = (item: MenuItemExtended): boolean =>
+  item.submenu?.some(
+    submenu =>
+      subMenuSeleccionado.value === submenu.codigo
+  ) ?? false;
+
+  //Antiguo Codigo
+
+// const isMenuActive = (item: MenuItemExtended): boolean =>
+//   item.hijo?.some(
+//     submenu =>
+//       subMenuSeleccionado.value ===
+//       getCodigoBase(submenu.codigo)
+//   ) ?? false;
+
+const isMoreActive = computed<boolean>(() =>
+  hiddenMenuItems.value.some(menu =>
+    menu.submenu?.some(
+      submenu =>
+        subMenuSeleccionado.value === submenu.codigo
+    ) ?? false
   )
 );
+//Antiguo Codigo
+
+// const isMoreActive = computed<boolean>(() =>
+//   hiddenMenuItems.value.some(menu =>
+//     menu.hijo?.some(
+//       submenu =>
+//         subMenuSeleccionado.value ===
+//         getCodigoBase(submenu.codigo)
+//     ) ?? false
+//   )
+// );
+
+// const isMenuActive = (item: MenuItemExtended): boolean =>
+//   item.hijo?.some(s => subMenuSeleccionado.value === s.codigo.split('-')[0]) ?? false;
+
+// const isMoreActive = computed(() =>
+//   hiddenMenuItems.value.some(m =>
+//     m.hijo?.some(s => subMenuSeleccionado.value === s.codigo.split('-')[0]) ?? false
+//   )
+// );
 
 // ─── Perfil ───────────────────────────────────────────────────────────────────
-const userInitial = computed(() =>
+const userInitial = computed<string>(() =>
   authStore.user?.nombre?.charAt(0).toUpperCase() || 'U'
 );
+// const userInitial = computed(() =>
+//   authStore.user?.nombre?.charAt(0).toUpperCase() || 'U'
+// );
 
-const toggleDarkMode = () => {
+const toggleDarkMode = (): void => {
   $q.dark.toggle();
   localStorage.setItem('quasar.dark', String($q.dark.isActive));
 };
+// const toggleDarkMode = () => {
+//   $q.dark.toggle();
+//   localStorage.setItem('quasar.dark', String($q.dark.isActive));
+// };
 
-const handleLogout = async () => {
+const handleLogout = async (): Promise<void> => {
   profileSheet.value = false;
+
   try {
     authStore.logout();
     await router.push('/');
@@ -373,26 +511,63 @@ const handleLogout = async () => {
   }
 };
 
+//Antiguo Codigo
+
+// const handleLogout = async () => {
+//   profileSheet.value = false;
+//   try {
+//     authStore.logout();
+//     await router.push('/');
+//   } catch {
+//     window.location.href = '/';
+//   }
+// };
+
 // ─── Navegación ───────────────────────────────────────────────────────────────
-const isActive = (path: string) =>
-  route.path === `/${path}` || route.path === '/dashboard';
 
-const navigateToDashboard = () => { void router.push('/dashboard'); };
+const isActive = (path: string): boolean =>
+  route.path === `/${path}`;
 
-const openMenuSheet = (item: MenuItemExtended) => {
+const navigateToDashboard = (): void => {
+  void router.push('/dashboard');
+};
+
+const openMenuSheet = (item: MenuItemExtended): void => {
   activeMenu.value = item;
   submenuSheet.value = true;
 };
 
-const selectAndClose = (submenu: SubmenuItem) => {
+const selectAndClose = (submenu: MenuNodo): void => {
   selectSubmenu(submenu);
   submenuSheet.value = false;
 };
 
-const selectAndCloseMore = (submenu: SubmenuItem) => {
+const selectAndCloseMore = (submenu: MenuNodo): void => {
   selectSubmenu(submenu);
   moreSheet.value = false;
 };
+
+//Antiguo Codigo
+
+// const isActive = (path: string) =>
+//   route.path === `/${path}` || route.path === '/dashboard';
+
+// const navigateToDashboard = () => { void router.push('/dashboard'); };
+
+// const openMenuSheet = (item: MenuItemExtended) => {
+//   activeMenu.value = item;
+//   submenuSheet.value = true;
+// };
+
+// const selectAndClose = (submenu: MenuNodo) => {
+//   selectSubmenu(submenu);
+//   submenuSheet.value = false;
+// };
+
+// const selectAndCloseMore = (submenu: MenuNodo) => {
+//   selectSubmenu(submenu);
+//   moreSheet.value = false;
+// };
 </script>
 
 <style scoped>

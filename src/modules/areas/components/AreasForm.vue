@@ -1,6 +1,6 @@
 <template>
   <q-card style="min-width: 50vw;">
-    <q-card-section class="bg-primary row items-center justify-between text-white">
+    <q-card-section class="prueba-form-titulo row items-center justify-between text-white">
       <div class="text-h6">{{ props.esModoEdicion ? $t('areas.form.formEdit') : $t('areas.form.formNew') }}</div>
       <q-btn icon="close" flat round dense v-close-popup />  
     </q-card-section>
@@ -86,3 +86,10 @@ const emitirGuardar = () => {
 };
 
 </script>
+
+<style>
+.prueba-form-titulo{
+  /* background-color: #004d40 !important; */
+  background: linear-gradient(180deg, #004d40 0%, #002e25 70%, #001a12 100%);
+}
+</style>

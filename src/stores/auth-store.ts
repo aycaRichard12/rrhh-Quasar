@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import api_auth from 'src/services/auth';
-import type { UserResponse, LoginPayload, Menu } from 'src/types/auth';
 import axios from 'axios';
+import type { MenuNodo } from 'src/layouts/types/navigation';
+import type { UserResponse, LoginPayload } from 'src/types/auth';
+
 
 export const useAuthStore = defineStore('auth', () => {
   // --- STATE ---
@@ -21,13 +23,37 @@ export const useAuthStore = defineStore('auth', () => {
   // --- GETTERS ---
   const isLogged = computed(() => !!token.value && !!user.value);
 
-  const userMenu = computed((): Menu[] => user.value?.menu || []);
+  const userMenu = computed((): MenuNodo[] => user.value?.menu || []);
 
-  const getSubmenuPermissions = (codigoSubmenu: string) => {
-    return userMenu.value
-      .flatMap(m => m.submenu || [])
-      .find(s => s && s.codigo === codigoSubmenu)?.permiso || '0000';
+  // Búsqueda recursiva de permisos en los 3 niveles
+  const getSubmenuPermissions = (codigoBuscado: string): string => {
+    let permisoEncontrado = '0000';
+    
+    const buscarPermiso = (nodos: MenuNodo[]) => {
+      for (const nodo of nodos) {
+        // Limpiamos el hash del usuario por si viene como "areas-7f39f8..."
+        const baseCode = nodo.codigo.split('-')[0] || '';
+        
+        if (baseCode === codigoBuscado && nodo.permiso) {
+          permisoEncontrado = nodo.permiso;
+          return true; // Detenemos la búsqueda
+        }
+        // Si tiene hijos, buscamos más adentro
+        if (nodo.submenu && nodo.submenu.length > 0) {
+          if (buscarPermiso(nodo.submenu)) return true;
+        }
+      }
+      return false;
+    };
+
+    buscarPermiso(userMenu.value);
+    return permisoEncontrado;
   };
+  // const getSubmenuPermissions = (codigoSubmenu: string) => {
+  //   return userMenu.value
+  //     .flatMap(m => m.submenu || [])
+  //     .find(s => s && s.codigo === codigoSubmenu)?.permiso || '0000';
+  // };
 
   // --- ACTIONS ---
   async function login(credentials: Omit<LoginPayload, 'action' | 'modulo'>) {

@@ -5,11 +5,11 @@ import { useNotificaciones } from 'src/composables/useNotificaciones';
 import { beneficiosService } from '../services/beneficios.service';
 import type { Beneficio } from '../types/beneficios.types';
 
-const listaBeneficios        = ref<Beneficio[]>([]);
-const listaBeneficiosEstandar= ref<Beneficio[]>([]);
-const esVisibleDialogo       = ref<boolean>(false);
-const esModoEdicion          = ref<boolean>(false);
-const esVistaEstandar        = ref<boolean>(false);
+const listaBeneficios         = ref<Beneficio[]>([]);
+const listaBeneficiosEstandar = ref<Beneficio[]>([]);
+const esModoEdicion           = ref<boolean>(false);
+const esVistaEstandar         = ref<boolean>(false);
+const esVisibleDialogo        = ref<boolean>(false);
 
 const beneficioActual        = ref<Beneficio>({
   nombre: '', descripcion: '', tipo: '1', cantidad: '', orden: '', destino: '1'
@@ -18,6 +18,7 @@ const beneficioActual        = ref<Beneficio>({
 export function useBeneficios() {
 
   const { notificarExito, notificarError, notificarAdvertencia, confirmarAccion } = useNotificaciones();
+  const idEmpresa = String(idempresa_md5());
 
   const cargarBeneficios = async () => {
     try {
@@ -47,7 +48,7 @@ export function useBeneficios() {
   };
 
   const prepararEdicionBeneficio = async (id: string) => {
-      try {
+    try {
       const respuesta = await beneficiosService.editarBeneficio(id);
       if (respuesta.estado === 'exito' && respuesta.datos) {
         beneficioActual.value = { ...respuesta.datos };
@@ -64,19 +65,17 @@ export function useBeneficios() {
     try {
       const payload = {
         ver        : esModoEdicion.value ? 'editarbeneficio' : 'registrobeneficio',
-        idempresa  : idempresa_md5(),
+        idempresa  : idEmpresa,
         id         : esModoEdicion.value ? datosGuardar.id : undefined, 
         nombre     : datosGuardar.nombre,
         descripcion: datosGuardar.descripcion,
         tipo       : datosGuardar.tipo,
         cantidad   : datosGuardar.cantidad,
         orden      : datosGuardar.orden,
-        destino    : datosGuardar.destino,
+        destino    : datosGuardar.destino
       };
-
-      const datosformularo = prepararDatosFormulario(payload)
-      const respuesta = await beneficiosService.guardarBeneficio(datosformularo);
-
+      const datosFormulario = prepararDatosFormulario(payload)
+      const respuesta = await beneficiosService.guardarBeneficio(datosFormulario);
       if (respuesta.estado === 'exito') {
         notificarExito(esModoEdicion.value ? 'Registro Actualizado con éxito' : 'Registro creado con éxito');
         esVisibleDialogo.value = false;
@@ -91,27 +90,22 @@ export function useBeneficios() {
   };
 
   const confirmarEliminarBeneficio = (id: string) => {
-    confirmarAccion(
-      '¿Está Seguro?', 
-      'No podrá recuperar este registro.', 
-      async () => {
-        try {
-          const respuesta = await beneficiosService.eliminarBeneficio(id);
-          if (respuesta.estado === 'exito') {
-            notificarExito(respuesta.mensaje);
-            void cargarBeneficios();
-          }
-        } catch (error) {
-          console.error(error);
-          notificarError('Error al eliminar el registro');
+    confirmarAccion('¿Está Seguro?', 'No podrá recuperar este registro.', async () => {
+      try {
+        const respuesta = await beneficiosService.eliminarBeneficio(id);
+        if (respuesta.estado === 'exito') {
+          notificarExito(respuesta.mensaje);
+          void cargarBeneficios();
         }
+      } catch (error) {
+        console.error(error);
+        notificarError('Error al eliminar el registro');
       }
-    );
+    });
   };
 
-const cambiarEstadoRegistro = async (beneficio: Beneficio) => {
+  const cambiarEstadoRegistro = async (beneficio: Beneficio) => {
     if (!beneficio.id) return;
-    
     const nuevoEstado = beneficio.estado == '1' ? '2' : '1'; 
     try {
       await beneficiosService.cambiarEstadoBeneficio(beneficio.id, nuevoEstado);
@@ -128,22 +122,18 @@ const cambiarEstadoRegistro = async (beneficio: Beneficio) => {
       ? 'Esta acción reemplazará todos sus datos actuales por los del catálogo estándar. ¿Desea continuar?'
       : 'Esta acción agregará los datos del catálogo estándar a su tabla actual. ¿Desea continuar?';
 
-    confirmarAccion(
-      'Confirmar Importación', 
-      mensaje, 
-      () => {
-        void procesarImportacion(tipoAccion);
-      }
-    );
+    confirmarAccion('Confirmar Importación', mensaje, () => {
+      void procesarImportacion(tipoAccion);
+    });
   };
 
   const procesarImportacion = async (tipoAccion: 'reemplazar' | 'anadir') => {
     try {
       const payload = {
-        ver: 'remplazarocopiardatosbeneficios',
-        idempresa: idempresa_md5(),
-        datos: JSON.stringify(listaBeneficiosEstandar.value),
-        tipo: tipoAccion === 'reemplazar' ? '1' : '2'
+        ver      : 'remplazarocopiardatosbeneficios',
+        idempresa: idEmpresa,
+        datos    : JSON.stringify(listaBeneficiosEstandar.value),
+        tipo     : tipoAccion === 'reemplazar' ? '1' : '2'
       };
 
       const datosFormulario = prepararDatosFormulario(payload);
@@ -167,7 +157,7 @@ const cambiarEstadoRegistro = async (beneficio: Beneficio) => {
   };
 
   return {
-    listaBeneficios, listaBeneficiosEstandar, esVisibleDialogo, esModoEdicion, beneficioActual, esVistaEstandar, cargarBeneficios,
-    cargarBeneficiosEstandar, prepararNuevoBeneficio, prepararEdicionBeneficio, guardarBeneficio, confirmarEliminarBeneficio, cambiarEstadoRegistro, confirmarImportacion, alternarVistaEstandar
+    listaBeneficios, listaBeneficiosEstandar, esVisibleDialogo, esModoEdicion, beneficioActual, esVistaEstandar,
+    cargarBeneficios,cargarBeneficiosEstandar, prepararNuevoBeneficio, prepararEdicionBeneficio, guardarBeneficio, confirmarEliminarBeneficio, cambiarEstadoRegistro, confirmarImportacion, alternarVistaEstandar
   };
 }

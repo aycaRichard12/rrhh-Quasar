@@ -1,166 +1,90 @@
-<!-- <template>
-  <q-table
-    :rows="props.listaBonosEmpresa"
-    :columns="columnas"
-    row-key="id"
-    :grid="$q.screen.lt.sm"
-    flat
-    bordered
-  >
-    <template v-slot:body-cell-numero="props">
-      <q-td :props="props">{{ props.rowIndex + 1 }}</q-td>
-    </template>
-
-    <template v-slot:body-cell-estado="props">
-      <q-td :props="props">
-        <q-btn
-          round
-          dense
-          :color="String(props.row.estado) === '1' ? 'positive' : 'negative'"
-          :icon="String(props.row.estado) === '1' ? 'thumb_up' : 'thumb_down'"
-          @click="emitirCambiarEstado(props.row.id, props.row.estado)"
-        />
-      </q-td>
-    </template>
-
-    <template v-slot:body-cell-opciones="props">
-      <q-td :props="props" class="q-gutter-sm">
-        <q-btn round dense color="info" icon="edit" @click="emitirEditar(props.row.id)" />
-        <q-btn round dense color="negative" icon="delete" @click="emitirEliminar(props.row.id)" />
-      </q-td>
-    </template>
-  </q-table>
-</template> -->
-
-
 <template>
-  <q-table
-    :rows="props.listaBonosEmpresa"
-    :columns="columnas"
-    row-key="id"
-    :grid="$q.screen.lt.sm"
-    flat
-    bordered
-  >
-    <!-- SLOTS PARA LA VISTA DE TABLA NORMAL (Escritorio) -->
-    <template v-slot:body-cell-numero="props">
-      <q-td :props="props">{{ props.rowIndex + 1 }}</q-td>
-    </template>
+  <q-card>
+    <q-table flat bordered
+      row-key="id"
+      :rows="props.listaBonosEmpresa"
+      :columns="listaColumnas"
+      :grid="$q.screen.lt.sm"
+      table-header-class="bg-primary"
+      :rows-per-page-label="$t('table.recordsPerPage', 'Registros por página:')"
+      :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${$t('table.of', 'de')} ${totalRows}`"
+    >
+      <template v-slot:body-cell-numero="propsCell">
+        <q-td :props="propsCell">{{ propsCell.rowIndex + 1 }}</q-td>
+      </template>
 
-    <template v-slot:body-cell-estado="props">
-      <q-td :props="props">
-        <q-btn
-          round
-          dense
-          :color="String(props.row.estado) === '1' ? 'positive' : 'negative'"
-          :icon="String(props.row.estado) === '1' ? 'thumb_up' : 'thumb_down'"
-          @click="emitirCambiarEstado(props.row.id, props.row.estado)"
-        />
+      <template v-slot:body-cell-tipo="propsCell">
+        <q-td :props="propsCell" class="text-center">
+          <q-chip dense outline color="primary">
+            {{ propsCell.row.tipo === '1' || propsCell.row.tipo === 1 ? 'Porcentaje' : propsCell.row.tipo === '2' || propsCell.row.tipo === 2 ? 'Monto Específico' : 'Fórmula' }}
+          </q-chip>
+        </q-td>
+      </template>
+
+      <template v-slot:body-cell-destino="propsCell">
+        <q-td :props="propsCell" class="text-center">
+          <q-chip dense outline color="primary">
+            {{ propsCell.row.destino === '1' || propsCell.row.destino === 1 ? 'Planilla' : 'Finiquito' }}
+          </q-chip>
+        </q-td>
+      </template>
+
+      <template v-slot:body-cell-estado="propsCell">
+      <q-td :props="propsCell" class="text-center">
+        <q-btn dense round
+          :color="String(propsCell.row.estado) === '1' ? 'positive' : 'negative'"
+          :icon="String(propsCell.row.estado) === '1' ? 'thumb_up' : 'thumb_down'"
+          @click="$emit('cambiarEstadoBonoEmpresa', propsCell.row)"
+        >
+          <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
+            {{ $t('common.actions.active') }}
+          </q-tooltip>
+        </q-btn>
       </q-td>
     </template>
 
-    <template v-slot:body-cell-opciones="props">
-      <q-td :props="props" class="q-gutter-sm">
-        <q-btn round dense color="info" icon="edit" @click="emitirEditar(props.row.id)" />
-        <q-btn round dense color="negative" icon="delete" @click="emitirEliminar(props.row.id)" />
+    <template v-slot:body-cell-opciones="propsCell">
+      <q-td :props="propsCell" class=" text-center q-gutter-sm">
+        <q-btn round dense color="info" icon="edit" @click="emitirEditar(propsCell.row.id)" />
+        <q-btn round dense color="negative" icon="delete" @click="emitirEliminar(propsCell.row.id)" />
       </q-td>
-    </template>
-
-    <!-- SLOT PARA LA VISTA GRID (Móvil) -->
-    <template v-slot:item="props">
-      <div class="q-pa-xs col-12 col-sm-6 col-md-4">
-        <q-card flat bordered>
-          <q-card-section class="q-pa-sm">
-            
-            <!-- Recorremos todas las columnas definidas en tu script -->
-            <div 
-              v-for="col in props.cols" 
-              :key="col.name" 
-              class="row q-py-xs items-center"
-              style="border-bottom: 1px solid #f5f5f5;"
-            >
-              <!-- Columna Izquierda: El Título -->
-              <div class="col-3 text-weight-bold text-left text-black">
-                {{ col.label }}
-              </div>
-
-              <!-- Columna Derecha: El Contenido -->
-              <div class="col-9 text-left">
-                
-                <!-- Replicamos la lógica de los slots personalizados para el grid -->
-                <template v-if="col.name === 'numero'">
-                  {{ props.rowIndex + 1 }}
-                </template>
-
-                <template v-else-if="col.name === 'estado'">
-                  <q-btn
-                    round
-                    dense
-                    size="sm"
-                    :color="String(props.row.estado) === '1' ? 'positive' : 'negative'"
-                    :icon="String(props.row.estado) === '1' ? 'thumb_up' : 'thumb_down'"
-                    @click="emitirCambiarEstado(props.row.id, props.row.estado)"
-                  />
-                </template>
-
-                <template v-else-if="col.name === 'opciones'">
-                  <div class="q-gutter-xs">
-                    <q-btn round dense size="sm" color="info" icon="edit" @click="emitirEditar(props.row.id)" />
-                    <q-btn round dense size="sm" color="negative" icon="delete" @click="emitirEliminar(props.row.id)" />
-                  </div>
-                </template>
-
-                <!-- Comportamiento por defecto para las demás columnas -->
-                <template v-else>
-                  {{ col.value }}
-                </template>
-
-              </div>
-            </div>
-
-          </q-card-section>
-        </q-card>
-      </div>
     </template>
   </q-table>
+  </q-card>
 </template>
 
 <script setup lang="ts">
-import type { QTableColumn } from 'quasar';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import { obtenerColumnasBonosEmpresa } from '../utils/bonosEmpresa.columns';
 import type { BonoEmpresa } from '../types/bonosEmpresa.types';
+
+const { t } = useI18n();
+const $q = useQuasar();
 
 const props = defineProps<{
   listaBonosEmpresa: BonoEmpresa[];
 }>();
 
 const emits = defineEmits<{
-  (e: 'editar', id: string | number): void;
-  (e: 'eliminar', id: string | number): void;
-  (e: 'cambiarEstado', id: string | number, estado: string | number): void;
+  (e: 'editar', id: string): void;
+  (e: 'eliminar', id: string): void;
+  (e: 'cambiarEstadoBonoEmpresa', bonoEmpresa: BonoEmpresa): void;
 }>();
 
-const emitirEditar = (id: string | number) => emits('editar', id);
-const emitirEliminar = (id: string | number) => emits('eliminar', id);
-const emitirCambiarEstado = (id: string | number, estado: string | number) => emits('cambiarEstado', id, estado);
+const emitirEditar = (id: string) => emits('editar', id);
+const emitirEliminar = (id: string) => emits('eliminar', id);
 
-const mapearTipo = (val: string | number) => {
-  const opciones: Record<string, string> = { '1': 'Porcentaje', '2': 'Monto Específico', '3': 'Fórmula' };
-  return opciones[String(val)] || String(val);
-};
+const listaColumnas = computed(() => obtenerColumnasBonosEmpresa(t))
 
-const mapearDestino = (val: string | number) => {
-  return String(val) === '1' ? 'Planilla' : 'Finiquito';
-};
 
-const columnas: QTableColumn<BonoEmpresa>[] = [
-  { name: 'numero', label: 'N°', align: 'left', field: 'id' }, // El field aquí no importa gracias al slot
-  { name: 'nombre', label: 'areas.form.name', align: 'left', field: 'nombre', sortable: true, style: 'white-space: normal'},
-  { name: 'descripcion', label: 'tables.description', align: 'left', field: 'descripcion', style: 'white-space: normal'},
-  { name: 'tipo', label: 'Tipo', align: 'center', field: row => mapearTipo(row.tipo) },
-  { name: 'cantidad', label: 'Cantidad', align: 'right', field: 'cantidad' },
-  { name: 'orden', label: 'Orden', align: 'right', field: 'orden', sortable: true },
-  { name: 'destino', label: 'Destino', align: 'center', field: row => mapearDestino(row.destino) },
-  { name: 'estado', label: 'Estado', align: 'center', field: 'estado' },
-  { name: 'opciones', label: 'Opciones', align: 'center', field: 'id' }
-];
+// const mapearTipo = (val: string | number) => {
+//   const opciones: Record<string, string> = { '1': 'Porcentaje', '2': 'Monto Específico', '3': 'Fórmula' };
+//   return opciones[String(val)] || String(val);
+// };
+
+// const mapearDestino = (val: string | number) => {
+//   return String(val) === '1' ? 'Planilla' : 'Finiquito';
+// };
 </script>

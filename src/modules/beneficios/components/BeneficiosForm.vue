@@ -10,74 +10,53 @@
       <q-card-section class="q-pt-md scroll" style="max-height: 70vh;">
         <div class="row q-col-gutter-md">
           <div class="col-12">
-            <q-input
+            <q-input autofocus dense lazy-rules outlined
               v-model="datosLocales.nombre"
-              :label="$t('beneficios.name', 'Nombre del Beneficio') + ' *'"
-              outlined
-              dense
-              autofocus
-              lazy-rules
+              :label="$t('beneficios.name') + ' *'"
               :rules="[val => !!val || $t('rules.required', 'Obligatorio')]"
             />
           </div>
 
           <div class="col-12">
-            <q-input
+            <q-input autogrow dense lazy-rules outlined
             v-model="datosLocales.descripcion"
-            :label="$t('beneficios.description', 'Descripción') + ' *'"
-            outlined
-            dense
             type="textarea"
-            autogrow
-            lazy-rules
+            :label="$t('beneficios.description', 'Descripción') + ' *'"
             :rules="[val => !!val || $t('rules.required', 'Obligatorio')]"
             />
           </div>
 
-          <div class="col-12">
-            <q-select
+          <div class="col-6">
+            <q-select dense emit-value map-options outlined
               v-model="datosLocales.tipo"
               :options="opcionesTipo"
               :label="$t('beneficios.type', 'Tipo') + ' *'"
-              outlined
-              dense
-              emit-value
-              map-options
             />
           </div>
 
-          <div class="col-12">
-            <q-input
+          <div class="col-6">
+            <q-input dense lazy-rules outlined
               v-model="datosLocales.cantidad"
               :label="$t('beneficios.amount', 'Cantidad') + ' *'"
-              outlined
-              dense
               type="number"
               step="0.01"
-              lazy-rules
               :rules="[val => (val !== null && val !== '') || $t('rules.required', 'Obligatorio')]"
             />
           </div>
 
           <div class="col-6">
-            <q-input
+            <q-input dense outlined
               v-model="datosLocales.orden"
               :label="$t('beneficios.order', 'Orden')"
-              outlined
-              dense
               type="number"
             />
           </div>
 
           <div class="col-6">
-            <q-select
+            <q-select dense emit-value map-options outlined
               v-model="datosLocales.destino"
               :options="opcionesDestino"
               :label="$t('beneficios.destination', 'Destino')"
-              outlined
-              dense
-              emit-value
-              map-options
             />
           </div>
         </div>
@@ -100,18 +79,13 @@ const props = defineProps<{
   esModoEdicion: boolean;
 }>();
 
-const emits = defineEmits<{
-  (e: 'guardar', datos: Beneficio): void;
-}>();
+const emits = defineEmits<{( e: 'guardar', datos: Beneficio): void }>();
 
 const datosLocales = ref<Beneficio>({ ...props.beneficio });
 
-watch(() => props.beneficio, (nuevosDatos) => {
-  datosLocales.value = { ...nuevosDatos };
-}, { deep: true });
-const emitirGuardar = () => {
-  emits('guardar', datosLocales.value);
-};
+watch(() => props.beneficio, (nuevosDatos) => { datosLocales.value = { ...nuevosDatos } }, { deep: true });
+
+const emitirGuardar = () => { emits('guardar', datosLocales.value) };
 
 const opcionesTipo = [
   { label: 'Porcentaje', value: '1' },

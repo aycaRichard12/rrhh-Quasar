@@ -40,8 +40,11 @@
 
         <q-space />
 
+
+        <!-- //Antiguo Codigo    ya no es necesario -->
         <!-- Dropdown de reportes -->
-        <q-btn-dropdown
+
+        <!-- <q-btn-dropdown
           v-if="activeTabsReportes.length > 0"
           flat no-caps
           :label="$q.screen.lt.sm ? '' : $t('common.labels.reports')"
@@ -68,11 +71,13 @@
               </q-item-section>
             </q-item>
           </q-list>
-        </q-btn-dropdown>
+        </q-btn-dropdown> -->
 
       </q-tabs>
     </div>
   </transition>
+  <!-- Línea dorada de acento abajo de tabs -->
+    <div class="header-accent-line" />
 </template>
 
 <script setup lang="ts">
@@ -84,10 +89,19 @@ defineProps<{
   tabsVisible: boolean;
   currentTab: string;
   activeTabs: TabItem[];
-  activeTabsReportes: TabItem[];
+
+  //Antiguo Codigo
+
+  // activeTabsReportes: TabItem[];
+}>();
+defineEmits<{
+  (e: 'update:currentTab', value: string): void;
+  (e: 'navigate', tab: TabItem): void;
 }>();
 
-defineEmits(['update:currentTab', 'navigate']);
+//Antiguo Codigo
+
+// defineEmits(['update:currentTab', 'navigate']);
 
 const $q  = useQuasar();
 const { t } = useI18n();
@@ -108,7 +122,8 @@ const resolveLabel = (tab: TabItem): string => {
 }
 
 .tabs-wrapper--light {
-  background: #f8fafc;
+  background: #d4ebd7;
+  /* background: #f8fafc; */
   border-bottom: 1px solid rgba(0,0,0,0.07);
   box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }

@@ -1,11 +1,11 @@
 <template>
   <q-drawer
-    :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
-    show-if-above
-    :width="264"
-    :bordered="false"
     class="main-drawer"
+    show-if-above
+    :bordered="false"
+    :model-value="modelValue"
+    :width="306"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
     <div class="full-height column drawer-inner">
 
@@ -39,17 +39,15 @@
             <q-item-section avatar class="drawer-icon-section">
               <q-icon name="grid_view" size="19px" />
             </q-item-section>
+
             <q-item-section class="drawer-item-label">
               {{ $t('navigation.dashboard') }}
             </q-item-section>
           </q-item>
 
-          <!-- Section label -->
-          <div class="section-label q-px-sm q-mt-lg q-mb-xs">
-            {{ $t('common.labels.mainMenu') }}
-          </div>
+
           <!-- Menús expandibles -->
-           <!-- Color de Menus en header-class -->
+            <!-- Color de Menus en header-class  -->
           <q-expansion-item
             v-for="menu in filteredMenu"
             :key="menu.codigo"
@@ -61,18 +59,20 @@
             expand-icon-class="text-white opacity-40"
           >
             <q-list class="submenu-list q-py-xs">
+
               <q-item
                 v-for="submenu in menu.submenu"
                 :key="submenu.codigo"
                 clickable v-ripple
                 @click="$emit('select-submenu', submenu)"
-                :active="subMenuSeleccionado === submenu.codigo.split('-')[0]"
+                :active="subMenuSeleccionado === submenu.codigo"
                 active-class="drawer-subitem--active"
                 class="drawer-subitem"
               >
-                <!-- Indicador lateral dorado -->
+                <!--  Indicador lateral dorado -->
+                 <!-- v-if="subMenuSeleccionado === submenu.codigo.split('-')[0]" -->
                 <div
-                  v-if="subMenuSeleccionado === submenu.codigo.split('-')[0]"
+                  v-if="subMenuSeleccionado === submenu.codigo"
                   class="active-bar"
                 />
                 <q-item-section avatar class="drawer-subicon-section">
@@ -82,10 +82,12 @@
                 <q-item-section class="drawer-item-label text-white">
                   {{ translateTitle(submenu.codigo, submenu.titulo) }}
                 </q-item-section>
-
               </q-item>
             </q-list>
           </q-expansion-item>
+
+
+
 
         </q-list>
       </q-scroll-area>
@@ -107,7 +109,7 @@
 import { computed } from 'vue';
 import { useAuthStore } from 'src/stores/auth-store';
 import { getIconoMenu } from 'src/stores/paginas';
-import type { MenuItem } from 'src/layouts/types/navigation';
+import type { MenuNodo } from 'src/layouts/types/navigation';
 import { useAppNavigation } from '../composables/useAppNavigation';
 
 defineProps<{
@@ -115,28 +117,131 @@ defineProps<{
   subMenuSeleccionado: string;
 }>();
 
-defineEmits(['update:modelValue', 'select-submenu']);
+defineEmits<{
+  (e: 'update:modelValue', value: boolean): void;
+  (e: 'select-submenu', submenu: MenuNodo): void;
+}>();
+
+//Antiguo Codigo
+// defineEmits([
+//   'update:modelValue', 'select-submenu']);
+
 
 const authStore = useAuthStore();
-const { hasValidTabsForSubmenu, translateTitle } = useAppNavigation();
 
-const hasDashboard = computed(() =>
-  (authStore.user?.menu || []).some(m =>
-    m.codigo === 'dashboard' ||
-    (m.submenu && m.submenu.some(s => s.codigo?.includes('dashboard')))
+
+const { translateTitle } = useAppNavigation();
+
+const hasDashboard = computed<boolean>(() =>
+  
+  (authStore.user?.menu || []).some(
+    menu => menu.codigo === 'dashboard'
   )
+  
 );
 
-const filteredMenu = computed((): MenuItem[] => {
-  const rawMenu = (authStore.user?.menu || []) as MenuItem[];
-  return rawMenu
-    .filter(m => m.codigo !== 'opcionesocultas')
-    .map(menu => ({
-      ...menu,
-      submenu: (menu.submenu || []).filter(s => hasValidTabsForSubmenu(s)),
-    }))
-    .filter(menu => menu.submenu.length > 0);
+const filteredMenu = computed<MenuNodo[]>(() => {
+  return (
+    authStore.user?.menu || []
+  ).filter(
+    menu =>
+      menu.codigo !== 'dashboard'
+  );
+
 });
+
+// const filteredMenu = computed<MenuNodo[]>(() => {
+//   return authStore.user?.menu || [];
+// });
+
+console.log(
+  'AUTH MENU',
+  authStore.user?.menu
+);
+
+console.log(
+  'FILTERED MENU',
+  filteredMenu.value
+);
+
+
+
+
+
+
+
+/**
+ * Menús principales
+ *
+ * Excluye dashboard del árbol principal
+ */
+// const filteredMenu = computed<MenuNodo[]>(() => {
+// console.table(filteredMenu.value);
+
+//   return (authStore.user?.menu || []).filter(
+//     menu => menu.codigo !== 'dashboard'
+//   );
+// });
+
+
+
+// const filteredMenu = computed<MenuNodo[]>(() => {
+//   const rawMenu = authStore.user?.menu || [];
+
+//   return rawMenu.filter(menu =>
+//     menu.codigo !== 'dashboard'
+//   );
+// }); 
+
+
+// const filteredMenu = computed<MenuNodo[]>(() => {
+//   const rawMenu = authStore.user?.menu || [];
+
+//   return rawMenu
+//     .filter(menu => menu.codigo !== 'dashboard')
+//     .map(menu => ({
+//       ...menu,
+//       submenu: (menu.hijo || []).filter(submenu =>
+//         hasValidTabsForSubmenu(submenu)
+//       )
+//     }))
+//     .filter(menu => (menu.submenu?.length || 0) > 0);
+// });
+
+//Antiguo Codigo
+
+// const filteredMenu = computed<MenuNodo[]>(() => {
+//   const rawMenu = authStore.user?.menu || [];
+
+//   return rawMenu
+//     .filter(menu => getCodigoBase(menu.codigo) !== 'opcionesocultas')
+//     .map(menu => ({
+//       ...menu,
+//       hijo: (menu.hijo || []).filter(submenu =>
+//         hasValidTabsForSubmenu(submenu)
+//       )
+//     }))
+//     .filter(menu => (menu.hijo?.length || 0) > 0);
+// });
+
+// const filteredMenu = computed((): MenuNodo[] => {
+//   const rawMenu = (authStore.user?.menu || []) as MenuNodo[];
+//   return rawMenu
+//     .filter(m => m.codigo !== 'opcionesocultas')
+//     .map(menu => ({
+//       ...menu,
+//       hijo: (menu.hijo || []).filter(s => hasValidTabsForSubmenu(s)),
+//     }))
+//     .filter(menu => menu.hijo.length > 0);
+// });
+// console.log(
+//   JSON.parse(
+//     JSON.stringify(authStore.user?.menu)
+//   )
+//)
+
+
+
 </script>
 
 <style scoped>

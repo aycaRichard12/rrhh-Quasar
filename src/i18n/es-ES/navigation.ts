@@ -1,11 +1,18 @@
 export default {
   // Módulos Principales
-  configuraciones: 'Configuraciónes',
-  reclutamiento: 'Reclutamiento',
-  personal: 'Personal',
-  actividades: 'Entrenamiento & Capacitación',
-  planillas: 'Planillas',
-  boletasdepago: 'Boletas de Pago',
+  // configuraciones: 'Configuraciónes',
+  // reclutamiento: 'Reclutamiento',
+  // personal: 'Personal',
+  // actividades: 'Entrenamiento & Capacitación',
+  // planillas: 'Planillas',
+  // boletasdepago: 'Boletas de Pago',
+
+//MENU PRINCIPAL
+  configuraciones: 'Configuraciones',
+  gestiondereclutamiento: 'Gestión de Reclutamiento',
+  trabajador: 'Trabajador',
+  gestiondecapacitacion: 'Gestion de Capacitación',
+  gestionsalarial: 'Gestión Salarial',
 
 
   areas: 'Areas',

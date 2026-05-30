@@ -9,6 +9,7 @@ const listaAreas      = ref<Area[]>([]);
 const listaSucursales = ref<Sucursal[]>([]);
 const esVisibleDialogo= ref<boolean>(false);
 const esModoEdicion   = ref<boolean>(false);
+const filtroBusqueda = ref<string>('');
 
 const areaActual      = ref<Area>({
   nombre: '', descripcion: '', idsucursal: ''
@@ -97,6 +98,7 @@ export function useAreas() {
 
   return {
     listaAreas, listaSucursales, esVisibleDialogo, esModoEdicion, areaActual,
+    filtroBusqueda,
     cargarAreasSucursales, prepararNuevaArea, prepararEdicionArea, guardarArea, confirmarEliminarArea
   };
 }

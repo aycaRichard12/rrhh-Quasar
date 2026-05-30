@@ -1,12 +1,10 @@
 <template>
-  <q-table
-   :rows="props.rows"
-   :columns="listaColumnas"
-   row-key="id"
-   :rows-per-page-label="$t('table.recordsPerPage', 'Registros por página:')"
-   :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${$t('table.of', 'de')} ${totalRows}`"
-   flat
-   bordered
+  <q-table bordered flat
+    row-key="id"
+    :rows="props.rows"
+    :columns="listaColumnas"
+    :rows-per-page-label="$t('table.recordsPerPage', 'Registros por página:')"
+    :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${$t('table.of', 'de')} ${totalRows}`"
   >   
    <template v-slot:body-cell-numero="propsCell">
     <q-td :props="propsCell">{{ propsCell.rowIndex + 1 }}</q-td>
@@ -40,5 +38,5 @@ const { t } = useI18n();
 
 const props = defineProps<{ rows: Beneficio[] }>();
 
-const listaColumnas = computed(() => obtenerColumnasBeneficiosEstandar(t));
+const listaColumnas = computed(() => obtenerColumnasBeneficiosEstandar(t))
 </script>

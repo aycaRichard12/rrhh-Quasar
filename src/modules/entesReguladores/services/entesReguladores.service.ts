@@ -17,17 +17,17 @@ export const entesReguladoresService = {
     return data;
   },
 
-  async cambiarEstadoEnteRegulador(id: string | number, estado: string | number): Promise<RespuestaApi> {
+  async cambiarEstadoEnteRegulador(id: string, estado: string): Promise<RespuestaApi> {
     const { data } = await api.get<RespuestaApi>(`editarEstadoEntesreguladores/${id}/${estado}`);
     return data;
   },
 
-  async actualizarEnteRegulador(id: string | number): Promise<RespuestaApi<EnteRegulador>> {
+  async editarEnteRegulador(id: string): Promise<RespuestaApi<EnteRegulador>> {
     const { data } = await api.get<RespuestaApi<EnteRegulador>>(`verificarIDentesreguladores/${id}`);
     return data;
   },
 
-  async eliminarEnteRegulador(id: string | number): Promise<RespuestaApi> {
+  async eliminarEnteRegulador(id: string): Promise<RespuestaApi> {
     const { data } = await api.get<RespuestaApi>(`eliminarEntesreguladores/${id}`);
     return data;
   },

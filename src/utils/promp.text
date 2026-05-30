@@ -1,0 +1,274 @@
+Actúa como mi Desarrollador Senior Fullstack y Tutor experto en Quasar Framework, Vue 3 (Composition API) y TypeScript Estricto. Vamos a crear un nuevo módulo para el sistema de RRHH siguiendo exactamente la arquitectura limpia y modular que ya estandarizamos en los módulos anteriores (Áreas, Beneficios, Bonos Empresa y Entes Reguladores).
+
+Por ahora, nos enfocaremos prioritariamente en el correcto funcionamiento en la versión de ESCRITORIO (Desktop). Dejaremos el diseño móvil detallado para más adelante.
+
+---
+
+### 🗂️ DATOS DEL NUEVO MÓDULO
+- **Nombre del Módulo (camelCase):** [Ej: tipoContrato]
+- **Nombre del Módulo (PascalCase):** [Ej: TipoContrato]
+- **Campos del Objeto Principal:** [Ej: id (string), nombre (string), descripcion (string), estado (string)]
+- **¿Tiene Catálogo Estándar para Importar?:** [Sí / No]
+
+### 🌐 ENDPOINTS DE LA API (AXIOS)
+- Listar registros: `[Pega aquí el endpoint o ej: listaTiposContrato/${ID_EMPRESA}]`
+- Guardar/Editar (POST): `[Pega aquí el endpoint o ej: / (usa payload con FormData)]`
+- Verificar ID por edición: `[Pega aquí el endpoint o ej: verificarIDtipoContrato/${id}]`
+- Cambiar Estado: `[Pega aquí el endpoint o ej: editarEstadoTipoContrato/${id}/${estado}]`
+- Eliminar registro: `[Pega aquí el endpoint o ej: eliminarTipoContrato/${id}]`
+- Listar Estándar (Si aplica): `[Pega aquí el endpoint de administración o N/A]`
+
+---
+
+### ⚠️ REGLAS DE OBLIGATORIO CUMPLIMIENTO (ESTÁNDAR EXPERTO)
+
+1. 🚫 **Prohibición Absoluta de `any`:** Todo debe estar estrictamente tipado usando interfaces de TypeScript.
+2. 📦 **Estructura Arquitectónica en 6 Archivos:** Genera el código completo de forma independiente para:
+   - `[modulo].types.ts` -> Interfaces puras.
+   - `[modulo].service.ts` -> Llamadas a la API usando `src/boot/axios`. El `idempresa_md5()` se maneja mediante constantes.
+   - `use[Modulo].ts` -> Composable con la lógica reactiva. Debe incluir e inicializar `useI18n()` adentro para traducir textos de alertas/confirmaciones, y usar `useNotificaciones()`.
+   - `[modulo].columns.ts` -> Archivo TS puro que exporta la función limpia `(t: (key: string) => string): QTableColumn<T>[]`.
+   - `[Modulo]Page.vue` -> Orquestador de la página.
+   - `[Modulo]Table.vue` -> Renderizado de la tabla desktop.
+   - `[Modulo]Form.vue` -> Diálogo con el formulario.
+   - `[Modulo]Standar.vue` -> (Solo si aplica importación).
+
+3. 🏷️ **Regla de Nomenclatura Estricta (Código Autodocumentado):**
+   - **Sustantivos en español para variables de estado:** `lista[Modulo]`, `lista[Modulo]Estandar`, `esModoEdicion`, `esVisibleDialogo`, `[modulo]Actual`, `datosLocales`.
+   - **Verbos en español para funciones de acción:** `cargar[Modulo]`, `prepararNuevo[Modulo]`, `prepararEdicion[Modulo]`, `guardar[Modulo]`, `confirmarEliminar[Modulo]`, `cambiarEstado[Modulo]`, `confirmarImportacion`, `alternarVistaEstandar`.
+
+4. 🔍 **Buscador/Filtro Global Obligatorio:**
+   - El composable debe exponer la variable reactiva `filtroBusqueda = ref<string>('')`.
+   - La `Page.vue` debe renderizar un `<q-input v-model="filtroBusqueda">` en el lado izquierdo de la sección de acciones superiores, con las clases responsivas básicas (`col-12 col-sm-4`).
+   - La `Table.vue` debe recibir el prop `filtro: string` y pasárselo directamente a la propiedad `:filter` de la `<q-table>` de Quasar para que ejecute el filtro nativo automático en todas las columnas.
+
+5. 🛡️ **Guardias de ESLint & TypeScript Estricto:**
+   - Usa el operador `void` antes de cualquier promesa flotante no esperada (como en `onMounted(() => { void cargarDatos() })` o dentro de los callbacks `.onOk()` de Quasar).
+   - En los bloques `catch (error)`, incluye siempre `console.error(error);` para evitar la advertencia de variable declarada y no usada.
+   - Las propiedades `props` y `emits` en los componentes `.vue` deben declararse con macros de TypeScript con tipos genéricos estrictos (`defineProps<{...}>()` y `defineEmits<{...}>()`). Está prohibido usar arrays de strings sueltos.
+   - Para las columnas visuales que no representan datos directos (como "numero" u "opciones"), usa `field: () => ''` en la configuración de la columna para cumplir con TypeScript de forma limpia.
+
+6. 📝 **Manejo Correcto de Formularios y Datos:**
+   - El formulario en `Form.vue` debe trabajar sobre un clon reactivo `const datosLocales = ref({...props.[modulo]})` con un `watch(..., { deep: true })` para sincronizar los cambios de entrada y jamás mutar el prop directamente.
+   - Las validaciones (`:rules`) en campos obligatorios deben usar la estructura `val => (val !== null && val !== '') || ...` para evitar fallos de renderizado y soportar números en cero de manera correcta.
+   - Se debe utilizar la utilidad global `prepararDatosFormulario(payload)` de `src/utils/formUtils` para crear y empaquetar el `FormData` antes de enviarlo al Service. Los campos del payload deben ser tipos planos (`string`), nunca sub-objetos anidados.
+
+7. 🎨 **Estilo de Tabla Declarativo (Slots en lugar de Funciones de Mapeo):**
+   - No crees funciones manuales como `mapearTipo` en los scripts de los componentes.
+   - Usa exclusivamente los slots de Quasar (`v-slot:body-cell-[columna]`) en el `<template>` junto con operadores ternarios o etiquetas `<q-chip>` para formatear los estados de manera declarativa y elegante.
+
+---
+
+### 💾 CÓDIGO ANTIGUO EN JAVASCRIPT A REFACTORIZAR:
+[Pega aquí todo tu archivo antiguo de código .js, HTML o la lógica previa para que yo la analice y extraiga las reglas de negocio]
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Actúa como mi Desarrollador Senior Fullstack y Tutor experto en Quasar Framework, Vue 3 (Composition API) y TypeScript Estricto. Vamos a crear un nuevo módulo para el sistema de RRHH siguiendo exactamente la arquitectura limpia y modular que ya estandarizamos en los módulos anteriores (Áreas, Beneficios, Bonos Empresa y Entes Reguladores).
+
+Por ahora, nos enfocaremos prioritariamente en el correcto funcionamiento en la versión de ESCRITORIO (Desktop). Dejaremos el diseño móvil detallado para más adelante.
+
+---
+
+### 🗂️ DATOS DEL NUEVO MÓDULO
+- **Nombre del Módulo (camelCase):** [cargos]
+- **Nombre del Módulo (PascalCase):** [Ej: Cargos]
+- **Campos del Objeto Principal:** Area[
+  [{
+    "id": "213",
+    "nombre": "Gerencia Comercial",
+    "descripcion": "Sección de alta coordianción de actividad comercial.",
+    "sucursal": {
+      "idsucursal": "27",
+      "nombre": "Central",
+      "region": "Bolivia",
+      "idregion": "4"
+    }
+   }]
+] y Cargo[
+  {
+    "id": "215",
+    "cargo": "Tesorero",
+    "salario": "2000",
+    "descripcion": "Persona responsable del cuidado del dinero.",
+    "area": "Contabilidad",
+    "idarea": "17"
+  }]
+- **¿Tiene Catálogo Estándar para Importar?:** [No]
+
+### 🌐 ENDPOINTS DE LA API (AXIOS)
+- Listar areas: `[https://vivasoft.link/app/rrhh/api/listaAreas/d09bf41544a3365a46c9077ebb5e35c3]`
+- Listar cargos: `[https://vivasoft.link/app/rrhh/api/listaCargos/d09bf41544a3365a46c9077ebb5e35c3]`
+- Guardar/Editar (POST): `[https://vivasoft.link/app/rrhh/api/ - ver registroCargo
+cargo hola q
+salario 2000
+descripcion mundo
+area 17]`
+- Verificar ID por edición: `[https://vivasoft.link/app/rrhh/api/verificarIDcargo/276 - {estado: "exito", mensaje: "ID encontrado",…}
+datos
+: 
+{id: "276", cargo: "hola q", salario: "2000", descripcion: "mundo", idarea: "17"}
+cargo
+: 
+"hola q"
+descripcion
+: 
+"mundo"
+id
+: 
+"276"
+idarea
+: 
+"17"
+salario
+: 
+"2000"
+estado
+: 
+"exito"
+mensaje
+: 
+"ID encontrado"]`
+- Eliminar registro: `[https://vivasoft.link/app/rrhh/api/eliminarCargo/276]`
+
+---
+
+### ⚠️ REGLAS DE OBLIGATORIO CUMPLIMIENTO (ESTÁNDAR EXPERTO)
+
+1. 🚫 **Prohibición Absoluta de `any`:** Todo debe estar estrictamente tipado usando interfaces de TypeScript.
+2. 📦 **Estructura Arquitectónica en 6 Archivos:** Genera el código completo de forma independiente para:
+   - `cargos.types.ts` -> Interfaces puras.
+   - `cargos.service.ts` -> Llamadas a la API usando `src/boot/axios`. El `idempresa_md5()` se maneja mediante constantes.
+   - `useCargos.ts` -> Composable con la lógica reactiva. Debe incluir e inicializar `useI18n()` adentro para traducir textos de alertas/confirmaciones, y usar `useNotificaciones()`.
+   - `cargos.columns.ts` -> Archivo TS puro que exporta la función limpia `(t: (key: string) => string): QTableColumn<T>[]`.
+   - `CargosPage.vue` -> Orquestador de la página.
+   - `CargosTable.vue` -> Renderizado de la tabla desktop.
+   - `CargosForm.vue` -> Diálogo con el formulario.
+
+3. 🏷️ **Regla de Nomenclatura Estricta (Código Autodocumentado):**
+   - **Sustantivos en español para variables de estado:** `lista[Modulo]`, `lista[Modulo]Estandar`, `esModoEdicion`, `esVisibleDialogo`, `[modulo]Actual`, `datosLocales`.
+   - **Verbos en español para funciones de acción:** `cargar[Modulo]`, `prepararNuevo[Modulo]`, `prepararEdicion[Modulo]`, `guardar[Modulo]`, `confirmarEliminar[Modulo]`, `cambiarEstado[Modulo]`, `confirmarImportacion`, `alternarVistaEstandar`.
+
+4. 🔍 **Buscador/Filtro Global Obligatorio:**
+   - El composable debe exponer la variable reactiva `filtroBusqueda = ref<string>('')`.
+   - La `Page.vue` debe renderizar un `<q-input v-model="filtroBusqueda">` en el lado izquierdo de la sección de acciones superiores, con las clases responsivas básicas (`col-12 col-sm-4`).
+   - La `Table.vue` debe recibir el prop `filtro: string` y pasárselo directamente a la propiedad `:filter` de la `<q-table>` de Quasar para que ejecute el filtro nativo automático en todas las columnas.
+
+5. 🛡️ **Guardias de ESLint & TypeScript Estricto:**
+   - Usa el operador `void` antes de cualquier promesa flotante no esperada (como en `onMounted(() => { void cargarDatos() })` o dentro de los callbacks `.onOk()` de Quasar).
+   - En los bloques `catch (error)`, incluye siempre `console.error(error);` para evitar la advertencia de variable declarada y no usada.
+   - Las propiedades `props` y `emits` en los componentes `.vue` deben declararse con macros de TypeScript con tipos genéricos estrictos (`defineProps<{...}>()` y `defineEmits<{...}>()`). Está prohibido usar arrays de strings sueltos.
+   - Para las columnas visuales que no representan datos directos (como "numero" u "opciones"), usa `field: () => ''` en la configuración de la columna para cumplir con TypeScript de forma limpia.
+
+6. 📝 **Manejo Correcto de Formularios y Datos:**
+   - El formulario en `Form.vue` debe trabajar sobre un clon reactivo `const datosLocales = ref({...props.[modulo]})` con un `watch(..., { deep: true })` para sincronizar los cambios de entrada y jamás mutar el prop directamente.
+   - Las validaciones (`:rules`) en campos obligatorios deben usar la estructura `val => (val !== null && val !== '') || ...` para evitar fallos de renderizado y soportar números en cero de manera correcta.
+   - Se debe utilizar la utilidad global `prepararDatosFormulario(payload)` de `src/utils/formUtils` para crear y empaquetar el `FormData` antes de enviarlo al Service. Los campos del payload deben ser tipos planos (`string`), nunca sub-objetos anidados.
+
+7. 🎨 **Estilo de Tabla Declarativo (Slots en lugar de Funciones de Mapeo):**
+   - No crees funciones manuales como `mapearTipo` en los scripts de los componentes.
+   - Usa exclusivamente los slots de Quasar (`v-slot:body-cell-[columna]`) en el `<template>` junto con operadores ternarios o etiquetas `<q-chip>` para formatear los estados de manera declarativa y elegante.
+
+---
+
+### 💾 CÓDIGO ANTIGUO EN JAVASCRIPT A REFACTORIZAR:
+[Pega aquí todo tu archivo antiguo de código .js, HTML o la lógica previa para que yo la analice y extraiga las reglas de negocio]
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Actúa como mi Desarrollador Senior Fullstack y Tutor experto en Quasar Framework, Vue 3 (Composition API) y TypeScript Estricto. Vamos a crear un nuevo módulo para el sistema de RRHH siguiendo exactamente la arquitectura limpia y modular que ya estandarizamos en los módulos anteriores (Áreas, Beneficios, Bonos Empresa y Entes Reguladores).
+
+Por ahora, nos enfocaremos prioritariamente en el correcto funcionamiento en la versión de ESCRITORIO (Desktop). Dejaremos el diseño móvil detallado para más adelante.
+
+---
+
+### 🗂️ DATOS DEL NUEVO MÓDULO
+- **Nombre del Módulo (camelCase):** [Ej: prerrequisitosCargo]
+- **Nombre del Módulo (PascalCase):** [Ej: PrerrequisitosCargo]
+- **Campos del Objeto Principal:** [Ej: id (string), nombre (string), descripcion (string), idcargo (string), cargo (string)]
+- **¿Tiene Catálogo Estándar para Importar?:** [No]
+
+### 🌐 ENDPOINTS DE LA API (AXIOS)
+- Listar registros: `[https://vivasoft.link/app/rrhh/api/listaPrerrequisito/d09bf41544a3365a46c9077ebb5e35c3], "{
+    "id": "16",
+    "nombre": "Mayor de 25 años",
+    "descripcion": "preferentemente.",
+    "idcargo": "115",
+    "cargo": "Auxilar contable"
+  }"`
+- Guardar/Editar (POST): `[https://vivasoft.link/app/rrhh/api/
+/payload: ver
+registroPrerrequisito
+idempresa
+d09bf41544a3365a46c9077ebb5e35c3
+nombre
+antiguo
+descripcion
+hola mundo
+idcargo
+215]`
+- Verificar ID por edición: `[https://vivasoft.link/app/rrhh/api/verificarIDPrerrequisito/17  . "response:{
+    "estado": "exito",
+    "mensaje": "ID encontrado",
+    "datos": {
+        "id": "17",
+        "nombre": "antiguo",
+        "descripcion": "hola mundo",
+        "idcargo": "215"
+    }
+}"]`
+- Eliminar registro: `[https://vivasoft.link/app/rrhh/api/eliminarPrerrequisito/17 . "preview:{estado: "exito", mensaje: "Eliminación exitosa"}
+estado
+: 
+"exito"
+mensaje
+: 
+"Eliminación exitosa""]`
+
+---
+
+### ⚠️ REGLAS DE OBLIGATORIO CUMPLIMIENTO (ESTÁNDAR EXPERTO)
+
+1. 🚫 **Prohibición Absoluta de `any`:** Todo debe estar estrictamente tipado usando interfaces de TypeScript.
+2. 📦 **Estructura Arquitectónica en 6 Archivos:** Genera el código completo de forma independiente para:
+   - `[prerrequisitosCargo].types.ts` -> Interfaces puras.
+   - `[prerrequisitosCargo].service.ts` -> Llamadas a la API usando `src/boot/axios`. El `idempresa_md5()` se maneja mediante constantes.
+   - `use[PrerrequisitosCargo].ts` -> Composable con la lógica reactiva. Debe incluir e inicializar `useI18n()` adentro para traducir textos de alertas/confirmaciones, y usar `useNotificaciones()`.
+   - `[prerrequisitosCargo].columns.ts` -> Archivo TS puro que exporta la función limpia `(t: (key: string) => string): QTableColumn<T>[]`.
+   - `[PrerrequisitosCargo]Page.vue` -> Orquestador de la página.
+   - `[PrerrequisitosCargo]Table.vue` -> Renderizado de la tabla desktop.
+   - `[PrerrequisitosCargo]Form.vue` -> Diálogo con el formulario.
+
+3. 🏷️ **Regla de Nomenclatura Estricta (Código Autodocumentado):**
+   - **Sustantivos en español para variables de estado:** `lista[Modulo]`, `lista[Modulo]Estandar`, `esModoEdicion`, `esVisibleDialogo`, `[modulo]Actual`, `datosLocales`.
+   - **Verbos en español para funciones de acción:** `cargar[Modulo]`, `prepararNuevo[Modulo]`, `prepararEdicion[Modulo]`, `guardar[Modulo]`, `confirmarEliminar[Modulo]`, `cambiarEstado[Modulo]`, `confirmarImportacion`, `alternarVistaEstandar`.
+
+4. 🔍 **Buscador/Filtro Global Obligatorio:**
+   - El composable debe exponer la variable reactiva `filtroBusqueda = ref<string>('')`.
+   - La `Page.vue` debe renderizar un `<q-input v-model="filtroBusqueda">` en el lado izquierdo de la sección de acciones superiores, con las clases responsivas básicas (`col-12 col-sm-4`).
+   - La `Table.vue` debe recibir el prop `filtro: string` y pasárselo directamente a la propiedad `:filter` de la `<q-table>` de Quasar para que ejecute el filtro nativo automático en todas las columnas.
+
+5. 🛡️ **Guardias de ESLint & TypeScript Estricto:**
+   - Usa el operador `void` antes de cualquier promesa flotante no esperada (como en `onMounted(() => { void cargarDatos() })` o dentro de los callbacks `.onOk()` de Quasar).
+   - En los bloques `catch (error)`, incluye siempre `console.error(error);` para evitar la advertencia de variable declarada y no usada.
+   - Las propiedades `props` y `emits` en los componentes `.vue` deben declararse con macros de TypeScript con tipos genéricos estrictos (`defineProps<{...}>()` y `defineEmits<{...}>()`). Está prohibido usar arrays de strings sueltos.
+   - Para las columnas visuales que no representan datos directos (como "numero" u "opciones"), usa `field: () => ''` en la configuración de la columna para cumplir con TypeScript de forma limpia.
+
+6. 📝 **Manejo Correcto de Formularios y Datos:**
+   - El formulario en `Form.vue` debe trabajar sobre un clon reactivo `const datosLocales = ref({...props.[modulo]})` con un `watch(..., { deep: true })` para sincronizar los cambios de entrada y jamás mutar el prop directamente.
+   - Las validaciones (`:rules`) en campos obligatorios deben usar la estructura `val => (val !== null && val !== '') || ...` para evitar fallos de renderizado y soportar números en cero de manera correcta.
+   - Se debe utilizar la utilidad global `prepararDatosFormulario(payload)` de `src/utils/formUtils` para crear y empaquetar el `FormData` antes de enviarlo al Service. Los campos del payload deben ser tipos planos (`string`), nunca sub-objetos anidados.
+
+7. 🎨 **Estilo de Tabla Declarativo (Slots en lugar de Funciones de Mapeo):**
+   - No crees funciones manuales como `mapearTipo` en los scripts de los componentes.
+   - Usa exclusivamente los slots de Quasar (`v-slot:body-cell-[columna]`) en el `<template>` junto con operadores ternarios o etiquetas `<q-chip>` para formatear los estados de manera declarativa y elegante.
+
+Tambien debe tener el select cargos para cambiar la tabla donde la primera ocpion debe ser "todos" igual que en el modulo cargos
+---
+
+### 💾 CÓDIGO ANTIGUO EN JAVASCRIPT A REFACTORIZAR:
+[Pega aquí todo tu archivo antiguo de código .js, HTML o la lógica previa para que yo la analice y extraiga las reglas de negocio]
