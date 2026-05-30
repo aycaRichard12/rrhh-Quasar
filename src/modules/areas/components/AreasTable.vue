@@ -4,7 +4,7 @@
       :rows="props.listaAreas"
       :columns="listaColumnas"
       row-key="id"
-      :grid="$q.screen.lt.sm"
+
       table-header-class="bg-primary"
       :filter="props.filtro"
       :rows-per-page-label="t('common.report.recordsPerPage')"
@@ -106,13 +106,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useQuasar } from 'quasar'
 import { obtenerColumnasAreas } from '../utils/areas.columns'
 import type { Area } from '../types/areas.types'
 
 
 const { t } = useI18n()
-const $q = useQuasar()
+
 
 const props = defineProps<{
   listaAreas: Area[];

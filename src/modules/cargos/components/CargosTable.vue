@@ -5,7 +5,7 @@
       :rows="props.listaCargos"
       :columns="listaColumnas"
       :filter="props.filtro"
-      :grid="$q.screen.lt.sm"
+
       table-header-class="bg-primary"
       :rows-per-page-label="$t('table.recordsPerPage', 'Registros por página:')"
       :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${$t('table.of', 'de')} ${totalRows}`"

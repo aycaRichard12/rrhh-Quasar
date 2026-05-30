@@ -45,6 +45,14 @@ const toggleLeftDrawer = () => {
 
 onMounted(() => {
   paginasStore.initStore();
-  restaurarSubmenu();
+
+  if (paginasStore.cargado) {
+    restaurarSubmenu();
+  }
 });
+// onMounted(() => {
+//   paginasStore.initStore();
+//   restaurarSubmenu();
+
+// });
 </script>

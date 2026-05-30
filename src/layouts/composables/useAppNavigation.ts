@@ -1,7 +1,6 @@
 import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-
 import { usePaginas } from 'src/stores/permitidos';
 import { getIconoMenu } from 'src/stores/paginas';
 
@@ -93,16 +92,13 @@ export function useAppNavigation() {
   /**
    * Carga las tabs del submenú seleccionado
    * Ahora las tabs vienen directamente desde:
-   * submenu.submenu
+   * submenu.hijo
    */
-  const loadTabsForSubmenu = (
-    submenu: MenuNodo
-  ): void => {
+  const loadTabsForSubmenu = (submenu: MenuNodo): void => {
     if (!submenu.submenu || submenu.submenu.length === 0) {
       activeTabs.value = [];
       return;
     }
-
     activeTabs.value = submenu.submenu.map(mapNodoToTab);
   };
 
@@ -160,6 +156,10 @@ export function useAppNavigation() {
   // ─────────────────────────────────────────────
 
   const restaurarSubmenu = (): void => {
+    console.log(
+  'MENUS RESTAURAR',
+  paginasStore.obtenerMenuPrincipal()
+);
     const currentPath =
       route.path.replace(/^\//, '');
 
@@ -176,7 +176,9 @@ export function useAppNavigation() {
       paginasStore.obtenerMenuPrincipal();
 
     for (const menu of menus) {
+      // Nivel 2
       for (const submenu of menu.submenu ?? []) {
+        // Nivel 3 (tabs/páginas)
         const tienePagina = submenu.submenu?.some(
           (pagina) => {
             const codigoBase =
@@ -210,15 +212,29 @@ export function useAppNavigation() {
   // WATCH ROUTE
   // ─────────────────────────────────────────────
 
+
+
   watch(
-    () => route.path,
-    () => {
-      restaurarSubmenu();
-    },
-    {
-      immediate: true
+  () => route.path,
+  () => {
+    if (!paginasStore.cargado) {
+      return;
     }
-  );
+
+    restaurarSubmenu();
+  }
+);
+
+  // watch(
+  //   () => route.path,
+  //   () => {
+  //     restaurarSubmenu();
+  //   },
+  //   {
+  //     immediate: true
+  //   }
+  // );
+
 
   return {
     currentTab, subMenuSeleccionado, tabsVisible, activeTabs,

@@ -98,7 +98,7 @@ export const usePaginas = defineStore('permitidos', () => {
 });
 
 
-///Antiguo Codigo
+// /Antiguo Codigo
 
 // import { defineStore } from 'pinia'
 

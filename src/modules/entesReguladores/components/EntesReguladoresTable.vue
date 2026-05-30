@@ -4,7 +4,7 @@
       :rows="props.listaEntesReguladores"
       :columns="listaColumnas"
       row-key="id"
-      :grid="$q.screen.lt.sm"
+
       :rows-per-page-label="t('common.report.recordsPerPage')"
       :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${t('common.report.of')} ${totalRows}`"
     >
@@ -57,12 +57,10 @@
 <script setup lang="ts">
 import { computed} from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useQuasar } from 'quasar';
 import { obtenerColumnasEntesReguladores } from '../utils/entesReguladores.columns';
 import type { EnteRegulador } from '../types/entesReguladores.types';
 
 const { t } = useI18n();
-const $q = useQuasar();
 
 const props = defineProps<{ listaEntesReguladores: EnteRegulador[] }>();
 

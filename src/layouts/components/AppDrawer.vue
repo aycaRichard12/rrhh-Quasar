@@ -44,8 +44,10 @@
               {{ $t('navigation.dashboard') }}
             </q-item-section>
           </q-item>
+
+
           <!-- Menús expandibles -->
-           <!-- Color de Menus en header-class -->
+            <!-- Color de Menus en header-class  -->
           <q-expansion-item
             v-for="menu in filteredMenu"
             :key="menu.codigo"
@@ -57,7 +59,7 @@
             expand-icon-class="text-white opacity-40"
           >
             <q-list class="submenu-list q-py-xs">
-                <!-- :active="subMenuSeleccionado === submenu.codigo.split('-')[0]"   -->
+
               <q-item
                 v-for="submenu in menu.submenu"
                 :key="submenu.codigo"
@@ -67,7 +69,7 @@
                 active-class="drawer-subitem--active"
                 class="drawer-subitem"
               >
-                <!-- Indicador lateral dorado -->
+                <!--  Indicador lateral dorado -->
                  <!-- v-if="subMenuSeleccionado === submenu.codigo.split('-')[0]" -->
                 <div
                   v-if="subMenuSeleccionado === submenu.codigo"
@@ -80,10 +82,12 @@
                 <q-item-section class="drawer-item-label text-white">
                   {{ translateTitle(submenu.codigo, submenu.titulo) }}
                 </q-item-section>
-
               </q-item>
             </q-list>
           </q-expansion-item>
+
+
+
 
         </q-list>
       </q-scroll-area>
@@ -119,47 +123,90 @@ defineEmits<{
 }>();
 
 //Antiguo Codigo
-
 // defineEmits([
 //   'update:modelValue', 'select-submenu']);
 
 
 const authStore = useAuthStore();
-const { hasValidTabsForSubmenu, translateTitle } = useAppNavigation();
+
+
+const { translateTitle } = useAppNavigation();
 
 const hasDashboard = computed<boolean>(() =>
+  
   (authStore.user?.menu || []).some(
     menu => menu.codigo === 'dashboard'
   )
+  
 );
 
-//Antiguo Codigo
-
-// const hasDashboard = computed<boolean>(() =>
-//   (authStore.user?.menu || []).some(menu =>
-//     getCodigoBase(menu.codigo) === 'dashboard'
-//   )
-// );
-// const hasDashboard = computed(() =>
-//   (authStore.user?.menu || []).some(m =>
-//     m.codigo === 'dashboard' ||
-//     (m.hijo && m.hijo.some(s => s.codigo?.includes('dashboard')))
-//   )
-// );
-
 const filteredMenu = computed<MenuNodo[]>(() => {
-  const rawMenu = authStore.user?.menu || [];
+  return (
+    authStore.user?.menu || []
+  ).filter(
+    menu =>
+      menu.codigo !== 'dashboard'
+  );
 
-  return rawMenu
-    .filter(menu => menu.codigo !== 'dashboard')
-    .map(menu => ({
-      ...menu,
-      submenu: (menu.submenu || []).filter(submenu =>
-        hasValidTabsForSubmenu(submenu)
-      )
-    }))
-    .filter(menu => (menu.submenu?.length || 0) > 0);
 });
+
+// const filteredMenu = computed<MenuNodo[]>(() => {
+//   return authStore.user?.menu || [];
+// });
+
+console.log(
+  'AUTH MENU',
+  authStore.user?.menu
+);
+
+console.log(
+  'FILTERED MENU',
+  filteredMenu.value
+);
+
+
+
+
+
+
+
+/**
+ * Menús principales
+ *
+ * Excluye dashboard del árbol principal
+ */
+// const filteredMenu = computed<MenuNodo[]>(() => {
+// console.table(filteredMenu.value);
+
+//   return (authStore.user?.menu || []).filter(
+//     menu => menu.codigo !== 'dashboard'
+//   );
+// });
+
+
+
+// const filteredMenu = computed<MenuNodo[]>(() => {
+//   const rawMenu = authStore.user?.menu || [];
+
+//   return rawMenu.filter(menu =>
+//     menu.codigo !== 'dashboard'
+//   );
+// }); 
+
+
+// const filteredMenu = computed<MenuNodo[]>(() => {
+//   const rawMenu = authStore.user?.menu || [];
+
+//   return rawMenu
+//     .filter(menu => menu.codigo !== 'dashboard')
+//     .map(menu => ({
+//       ...menu,
+//       submenu: (menu.hijo || []).filter(submenu =>
+//         hasValidTabsForSubmenu(submenu)
+//       )
+//     }))
+//     .filter(menu => (menu.submenu?.length || 0) > 0);
+// });
 
 //Antiguo Codigo
 
@@ -187,11 +234,12 @@ const filteredMenu = computed<MenuNodo[]>(() => {
 //     }))
 //     .filter(menu => menu.hijo.length > 0);
 // });
-console.log(
-  JSON.parse(
-    JSON.stringify(authStore.user?.menu)
-  )
-);
+// console.log(
+//   JSON.parse(
+//     JSON.stringify(authStore.user?.menu)
+//   )
+//)
+
 
 
 </script>

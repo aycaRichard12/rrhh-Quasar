@@ -1,5 +1,3 @@
-// src/router/index.ts
-
 import { defineRouter } from '#q-app/wrappers';
 import {
   createMemoryHistory,

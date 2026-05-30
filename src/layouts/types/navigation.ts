@@ -1,14 +1,21 @@
 export interface MenuNodo {
-  idmenu: string;
-  modulo: string;
   titulo: string;
   codigo: string;
-  idp?: string;       // ID del padre (opcional por seguridad)
-  posp?: string;
-  posi?: string;
   permiso?: string;   // Permisos de lectura/escritura (ej: "1111")
   submenu?: MenuNodo[];  // Array recursivo: Aquí vienen los submenús y los tabs
 }
+
+// export interface MenuNodo {
+//   idmenu: string;
+//   modulo: string;
+//   titulo: string;
+//   codigo: string;
+//   idp?: string;       // ID del padre (opcional por seguridad)
+//   posp?: string;
+//   posi?: string;
+//   permiso?: string;   // Permisos de lectura/escritura (ej: "1111")
+//   hijo?: MenuNodo[];  // Array recursivo: Aquí vienen los submenús y los tabs
+// }
 
 // Interfaz plana para las pestañas de la vista (Tabs del Nivel 3)
 export interface TabItem {

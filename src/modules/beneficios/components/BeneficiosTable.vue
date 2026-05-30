@@ -4,7 +4,7 @@
       row-key="id"
       :rows="props.listaBeneficios"
       :columns="listaColumnas"
-      :grid="$q.screen.lt.sm"
+
       table-header-class="bg-primary"
       :rows-per-page-label="$t('table.recordsPerPage', 'Registros por página:')"
       :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${$t('table.of', 'de')} ${totalRows}`"
@@ -63,12 +63,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useQuasar } from 'quasar';
 import { obtenerColumnasBeneficios } from '../utils/beneficios.columns'
 import type { Beneficio } from '../types/beneficios.types';
 
 const { t } = useI18n();
-const $q = useQuasar();
+
 
 const props = defineProps<{
   listaBeneficios: Beneficio[]
