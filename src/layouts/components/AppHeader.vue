@@ -3,11 +3,10 @@
     <q-toolbar class="q-px-sm q-px-md-md header-toolbar">
 
       <!-- ── HAMBURGER ──────────────────────────────────────────────────── -->
-      <q-btn
-        flat dense round
+      <q-btn flat dense round
         icon="menu"
+        :class="['menu-btn', $q.dark.isActive ? 'text-grey-4' : 'text-grey-4']"
         @click="$emit('toggle-left-drawer')"
-        :class="['menu-btn', $q.dark.isActive ? 'text-grey-4' : 'text-grey-7']"
       />
 
       <!-- ── BREADCRUMBS ─────────────────────────────────────────────────── -->
@@ -31,9 +30,8 @@
       <div class="row items-center no-wrap q-gutter-xs">
 
         <!-- PWA: Instalar -->
-        <q-btn
+        <q-btn dense flat no-caps rounded 
           v-if="showInstall"
-          flat dense rounded no-caps
           icon="download"
           label="Instalar App"
           :class="['pwa-btn q-px-sm', $q.dark.isActive ? 'text-amber-4' : 'text-primary']"
@@ -43,9 +41,8 @@
         </q-btn>
 
         <!-- PWA: Actualizar -->
-        <q-btn
+        <q-btn dense no-caps rounded unelevated
           v-if="showUpdate"
-          unelevated dense rounded no-caps
           color="warning"
           text-color="dark"
           icon="system_update"
@@ -59,14 +56,13 @@
         <!-- Idioma -->
         <LanguageSelector
           type="menu"
-          :btn-class="$q.dark.isActive ? 'text-grey-4' : 'text-grey-6'"
+          :btn-class="$q.dark.isActive ? 'text-grey-4' : 'text-grey-4'"
         />
 
         <!-- Dark/Light mode -->
-        <q-btn
-          flat round
+        <q-btn flat round
           :icon="$q.dark.isActive ? 'light_mode' : 'dark_mode'"
-          :class="['mode-btn', $q.dark.isActive ? 'text-amber-4' : 'text-grey-6']"
+          :class="['mode-btn', $q.dark.isActive ? 'text-amber-4' : 'text-grey-4']"
           :size="$q.screen.lt.sm ? 'sm' : 'md'"
           @click="toggleDarkMode"
         >
@@ -74,12 +70,12 @@
         </q-btn>
 
         <!-- Notificaciones -->
-        <q-btn
-          flat round icon="notifications"
-          :class="[$q.dark.isActive ? 'text-grey-4' : 'text-grey-6']"
+        <q-btn flat round
+          icon="notifications"
+          :class="[$q.dark.isActive ? 'text-grey-4' : 'text-grey-4']"
           :size="$q.screen.lt.sm ? 'sm' : 'md'"
         >
-          <q-badge floating color="negative" rounded padding="2px 5px" style="font-size: 9px">
+          <q-badge floating color="negative" rounded padding="2px 5px" style="font-size:9px">
             3
           </q-badge>
           <q-tooltip>Notificaciones</q-tooltip>
@@ -101,7 +97,7 @@
 
             <div v-if="$q.screen.gt.xs" class="column items-start text-left q-ml-xs">
               <span
-                :class="['text-caption text-weight-bold', $q.dark.isActive ? 'text-grey-2' : 'text-grey-8']"
+                :class="['text-caption text-weight-bold', $q.dark.isActive ? 'text-grey-2' : 'text-grey-4']"
                 style="line-height: 1.2"
               >
                 {{ authStore.user?.nombre ?? 'Usuario' }}
@@ -172,7 +168,7 @@
     </q-toolbar>
 
     <!-- Línea dorada de acento al fondo del header -->
-    <div class="header-accent-line" />
+    <!-- <div class="header-accent-line" /> -->
   </q-header>
 </template>
 
@@ -246,13 +242,16 @@ const handleLogout = async (): Promise<void> => {
 }
 
 .app-header--light {
-  background-color: #ffffff !important;
-  color: #374151 !important;
+  background-color: #004d40 !important;
+  /* background-color: #ffffff !important; */
+  color: #f3f4f6 !important;
+  /* color: #374151 !important; */
   box-shadow: 0 1px 0 rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04) !important;
 }
 
 .app-header--dark {
-  background-color: #1a202c !important;
+  background-color: #004d40 !important;
+  /* background-color: #1a202c !important; */
   color: #f3f4f6 !important;
   box-shadow: 0 1px 0 rgba(255,255,255,0.05) !important;
 }
@@ -263,7 +262,8 @@ const handleLogout = async (): Promise<void> => {
 
 /* ── BREADCRUMBS ─────────────────────────────────────────────────────────── */
 .crumb-active {
-  color: #004d40 !important;
+  color: #f2c037 !important;
+  /* color: #004d40 !important; */
 }
 .body--dark .crumb-active {
   color: #f2c037 !important;
@@ -305,7 +305,7 @@ const handleLogout = async (): Promise<void> => {
   background: rgba(0, 77, 64, 0.06) !important;
 }
 .body--dark .profile-btn:hover {
-  background: rgba(255,255,255,0.06) !important;
+  background: rgba(206, 196, 196, 0.06) !important;
 }
 
 /* ── MODE BTN ────────────────────────────────────────────────────────────── */
@@ -346,7 +346,7 @@ const handleLogout = async (): Promise<void> => {
 
 /* ── LÍNEA DE ACENTO ─────────────────────────────────────────────────────── */
 .header-accent-line {
-  height: 2px;
+  height: 3px;
   background: linear-gradient(
     90deg,
     transparent 0%,

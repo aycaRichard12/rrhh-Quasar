@@ -11,7 +11,7 @@ export default {
   configuraciones: 'Configuraciones',
   gestiondereclutamiento: 'Gestión de Reclutamiento',
   trabajador: 'Trabajador',
-  gestiondecapacitacion: 'Gestion De Capacitación',
+  gestiondecapacitacion: 'Gestion de Capacitación',
   gestionsalarial: 'Gestión Salarial',
 
 

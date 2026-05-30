@@ -245,7 +245,7 @@
                 <q-icon name="translate" size="22px" class="profile-icon" />
               </q-item-section>
               <q-item-section>
-                <q-item-label>Idioma</q-item-label>
+                <q-item-label>Idiomas</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <LanguageSelector type="menu" btn-class="profile-lang-btn" />

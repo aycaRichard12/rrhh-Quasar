@@ -1,11 +1,11 @@
 <template>
   <q-drawer
-    :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
-    show-if-above
-    :width="264"
-    :bordered="false"
     class="main-drawer"
+    show-if-above
+    :bordered="false"
+    :model-value="modelValue"
+    :width="306"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
     <div class="full-height column drawer-inner">
 

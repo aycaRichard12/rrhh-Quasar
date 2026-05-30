@@ -76,6 +76,8 @@
       </q-tabs>
     </div>
   </transition>
+  <!-- Línea dorada de acento abajo de tabs -->
+    <div class="header-accent-line" />
 </template>
 
 <script setup lang="ts">
@@ -120,7 +122,8 @@ const resolveLabel = (tab: TabItem): string => {
 }
 
 .tabs-wrapper--light {
-  background: #f8fafc;
+  background: #d4ebd7;
+  /* background: #f8fafc; */
   border-bottom: 1px solid rgba(0,0,0,0.07);
   box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }

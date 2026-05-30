@@ -3,7 +3,7 @@
     <div class="row justify-between items-center">
 
       <div class="q-gutter-sm q-mb-md">
-        <q-btn icon="add" color="primary" label="Nueva Area" @click="prepararNuevaArea" />
+        <q-btn class="prueba-boton" text-color="white" icon="add" label="Nueva Area" @click="prepararNuevaArea" />
       </div>
       <div class="col-6 col-sm-3 q-mb-sm-none q-mb-md">
         <q-input clearable dense outlined 
@@ -48,3 +48,10 @@ onMounted(() => {
   void cargarAreasSucursales();
 })
 </script>
+
+<style>
+.prueba-boton{
+  /* background-color: #004d40 !important; */
+  background: linear-gradient(180deg, #004d40 0%, #002e25 70%, #001a12 100%);
+}
+</style>

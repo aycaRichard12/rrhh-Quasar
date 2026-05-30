@@ -1,6 +1,6 @@
 <template>
   <q-card style="min-width: 50vw;">
-    <q-card-section class="bg-primary row items-center justify-between text-white">
+    <q-card-section class="prueba-form-titulo2 row items-center justify-between text-white">
       <div class="text-h6">{{ esModoEdicion ? $t('cargos.form.edit', 'Editar Cargo') : $t('cargos.form.new', 'Nuevo Registro') }}</div>
       <q-btn icon="close" flat round dense v-close-popup />
     </q-card-section>
@@ -83,3 +83,9 @@ const emitirGuardar = () => {
   emits('guardar', datosLocales.value); 
 };
 </script>
+
+<style>
+.prueba-form-titulo2{
+  background-color: #004d40 !important;
+}
+</style>

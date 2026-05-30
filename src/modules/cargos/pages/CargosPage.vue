@@ -12,7 +12,7 @@
     <div class="row q-col-gutter-md items-center q-mb-md">
       
       <div class="col-12 col-md-4 text-left">
-        <q-btn icon="add" color="primary" :label="$t('cargos.form.new', 'Nuevo Registro')" @click="prepararNuevoCargo" />
+        <q-btn icon="add" text-color="white" class="prueba-boton2" :label="$t('cargos.form.new', 'Nuevo Registro')" @click="prepararNuevoCargo" />
       </div>
 
       <div class="col-6 col-md-4">
@@ -89,3 +89,9 @@ onMounted(() => {
   void cargarCargosYAreas();
 });
 </script>
+
+<style>
+.prueba-boton2{
+  background-color: #004d40 !important;
+}
+</style>

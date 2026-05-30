@@ -5,8 +5,7 @@
       :rows="props.listaCargos"
       :columns="listaColumnas"
       :filter="props.filtro"
-
-      table-header-class="bg-primary"
+      class="prueba-tabla-titulo"
       :rows-per-page-label="$t('table.recordsPerPage', 'Registros por página:')"
       :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${$t('table.of', 'de')} ${totalRows}`"
     >
@@ -63,3 +62,9 @@ const emitirEliminar = (id: string) => emits('eliminar', id);
 
 const listaColumnas = computed(() => obtenerColumnasCargos(t));
 </script>
+
+<style>
+.prueba-tabla-titulo th{
+  background-color: #004d40 !important;
+}
+</style>

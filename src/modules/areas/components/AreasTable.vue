@@ -4,8 +4,7 @@
       :rows="props.listaAreas"
       :columns="listaColumnas"
       row-key="id"
-
-      table-header-class="bg-primary"
+      class="prueba-tabla"
       :filter="props.filtro"
       :rows-per-page-label="t('common.report.recordsPerPage')"
       :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${t('common.report.of')} ${totalRows}`"
@@ -21,7 +20,7 @@
         </q-td>
       </template>
 
-      <template v-slot:item="propsGrid">
+      <!-- <template v-slot:item="propsGrid">
         <div class="q-pa-xs col-xs-12 col-sm-6">
           <q-card flat bordered class="q-pa-md">
             
@@ -97,7 +96,7 @@
 
           </q-card>
         </div>
-      </template>
+      </template> -->
 
     </q-table>
   </q-card>
@@ -129,3 +128,10 @@ const emitirEliminar = (id: string) => emits('eliminar', id)
 // Inyectamos la función "t" nativa del setup a nuestra utilidad limpia externa
 const listaColumnas = computed(() => obtenerColumnasAreas(t))
 </script>
+
+<style>
+.prueba-tabla th{
+  /* background-color: #004d40 !important; */
+  background: linear-gradient(180deg, #004d40 0%, #002e25 70%, #001a12 100%);
+}
+</style>
