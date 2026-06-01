@@ -272,3 +272,95 @@ Tambien debe tener el select cargos para cambiar la tabla donde la primera ocpio
 
 ### 💾 CÓDIGO ANTIGUO EN JAVASCRIPT A REFACTORIZAR:
 [Pega aquí todo tu archivo antiguo de código .js, HTML o la lógica previa para que yo la analice y extraiga las reglas de negocio]
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+Actúa como mi Desarrollador Senior Fullstack y Tutor experto en Quasar Framework, Vue 3 (Composition API) y TypeScript Estricto. Vamos a crear un nuevo módulo para el sistema de RRHH siguiendo exactamente la arquitectura limpia y modular que ya estandarizamos en los módulos anteriores (Áreas, Beneficios, Bonos Empresa y Entes Reguladores).
+
+Por ahora, nos enfocaremos prioritariamente en el correcto funcionamiento en la versión de ESCRITORIO (Desktop). Dejaremos el diseño móvil detallado para más adelante.
+
+---
+
+### 🗂️ DATOS DEL NUEVO MÓDULO
+- **Nombre del Módulo (camelCase):** [Ej: tiposDeContratos]
+- **Nombre del Módulo (PascalCase):** [Ej: TiposDeContratos]
+- **Campos del Objeto Principal:** [Ej: id (string), nombre (string), observacion (string), naturaleza (string)]
+- **¿Tiene Catálogo Estándar para Importar?:** [Sí]
+
+### 🌐 ENDPOINTS DE LA API (AXIOS)
+- Listar registros: `[https://vivasoft.link/app/rrhh/api/listaTipocontrato/d09bf41544a3365a46c9077ebb5e35c3 - [
+    {
+        "id": "12",
+        "nombre": "Contrato a Plazo Indefinido",
+        "observacion": "Contrataciones por tiempo indefinido y bajo dependencia y con control de horarios Etc.",
+        "naturaleza": "Contrataciones por tiempo indefinido y bajo dependencia y con control de horarios Etc. cuando el trabajador no se sabe cuando se retirar\u00e1 de la Empresa."
+    }]]`
+- Guardar/Editar (POST): `[https://vivasoft.link/app/rrhh/api/ - ver
+registroTipocontrato
+idempresa
+d09bf41544a3365a46c9077ebb5e35c3
+nombre
+antiguo
+observacion
+sadsafasff
+naturaleza
+safsafsaagg]`
+- Verificar ID por edición: `[https://vivasoft.link/app/rrhh/api/verificarIDtipocontrato/63 - {
+    "estado": "exito",
+    "mensaje": "ID encontrado",
+    "datos": {
+        "id": "63",
+        "nombre": "antiguo",
+        "observacion": "sadsafasff",
+        "naturaleza": "safsafsaagg"
+    }
+}]`
+- Eliminar registro: `[https://vivasoft.link/app/rrhh/api/eliminarTipocontrato/63 - {"estado":"exito","mensaje":"Eliminaci\u00f3n exitosa"}]`
+- Listar Estándar (Si aplica): `[https://vivasoft.link/app/rrhh/api/app/ad/api/listatipocontrato]`
+
+---
+
+### ⚠️ REGLAS DE OBLIGATORIO CUMPLIMIENTO (ESTÁNDAR EXPERTO)
+
+1. 🚫 **Prohibición Absoluta de `any`:** Todo debe estar estrictamente tipado usando interfaces de TypeScript.
+2. 📦 **Estructura Arquitectónica en 6 Archivos:** Genera el código completo de forma independiente para:
+   - `[tiposDeContratos].types.ts` -> Interfaces puras.
+   - `[tiposDeContratos].service.ts` -> Llamadas a la API usando `src/boot/axios`. El `idempresa_md5()` se maneja mediante constantes.
+   - `use[TiposDeContratos].ts` -> Composable con la lógica reactiva. Debe incluir e inicializar `useI18n()` adentro para traducir textos de alertas/confirmaciones, y usar `useNotificaciones()`.
+   - `[tiposDeContratos].columns.ts` -> Archivo TS puro que exporta la función limpia `(t: (key: string) => string): QTableColumn<T>[]`.
+   - `[TiposDeContratos]Page.vue` -> Orquestador de la página.
+   - `[TiposDeContratos]Table.vue` -> Renderizado de la tabla desktop.
+   - `[TiposDeContratos]Form.vue` -> Diálogo con el formulario.
+   - `[TiposDeContratos]Standar.vue` -> (Solo si aplica importación).
+
+3. 🏷️ **Regla de Nomenclatura Estricta (Código Autodocumentado):**
+   - **Sustantivos en español para variables de estado:** `lista[Modulo]`, `lista[Modulo]Estandar`, `esModoEdicion`, `esVisibleDialogo`, `[modulo]Actual`, `datosLocales`.
+   - **Verbos en español para funciones de acción:** `cargar[Modulo]`, `prepararNuevo[Modulo]`, `prepararEdicion[Modulo]`, `guardar[Modulo]`, `confirmarEliminar[Modulo]`, `cambiarEstado[Modulo]`, `confirmarImportacion`, `alternarVistaEstandar`.
+
+4. 🔍 **Buscador/Filtro Global Obligatorio:**
+   - El composable debe exponer la variable reactiva `filtroBusqueda = ref<string>('')`.
+   - La `Page.vue` debe renderizar un `<q-input v-model="filtroBusqueda">` en el lado izquierdo de la sección de acciones superiores, con las clases responsivas básicas (`col-12 col-sm-4`).
+   - La `Table.vue` debe recibir el prop `filtro: string` y pasárselo directamente a la propiedad `:filter` de la `<q-table>` de Quasar para que ejecute el filtro nativo automático en todas las columnas.
+
+5. 🛡️ **Guardias de ESLint & TypeScript Estricto:**
+   - Usa el operador `void` antes de cualquier promesa flotante no esperada (como en `onMounted(() => { void cargarDatos() })` o dentro de los callbacks `.onOk()` de Quasar).
+   - En los bloques `catch (error)`, incluye siempre `console.error(error);` para evitar la advertencia de variable declarada y no usada.
+   - Las propiedades `props` y `emits` en los componentes `.vue` deben declararse con macros de TypeScript con tipos genéricos estrictos (`defineProps<{...}>()` y `defineEmits<{...}>()`). Está prohibido usar arrays de strings sueltos.
+   - Para las columnas visuales que no representan datos directos (como "numero" u "opciones"), usa `field: () => ''` en la configuración de la columna para cumplir con TypeScript de forma limpia.
+
+6. 📝 **Manejo Correcto de Formularios y Datos:**
+   - El formulario en `Form.vue` debe trabajar sobre un clon reactivo `const datosLocales = ref({...props.[modulo]})` con un `watch(..., { deep: true })` para sincronizar los cambios de entrada y jamás mutar el prop directamente.
+   - Las validaciones (`:rules`) en campos obligatorios deben usar la estructura `val => (val !== null && val !== '') || ...` para evitar fallos de renderizado y soportar números en cero de manera correcta.
+   - Se debe utilizar la utilidad global `prepararDatosFormulario(payload)` de `src/utils/formUtils` para crear y empaquetar el `FormData` antes de enviarlo al Service. Los campos del payload deben ser tipos planos (`string`), nunca sub-objetos anidados.
+
+7. 🎨 **Estilo de Tabla Declarativo (Slots en lugar de Funciones de Mapeo):**
+   - No crees funciones manuales como `mapearTipo` en los scripts de los componentes.
+   - Usa exclusivamente los slots de Quasar (`v-slot:body-cell-[columna]`) en el `<template>` junto con operadores ternarios o etiquetas `<q-chip>` para formatear los estados de manera declarativa y elegante.
+
+---
+
+### 💾 CÓDIGO ANTIGUO EN JAVASCRIPT A REFACTORIZAR:
+[Pega aquí todo tu archivo antiguo de código .js, HTML o la lógica previa para que yo la analice y extraiga las reglas de negocio]

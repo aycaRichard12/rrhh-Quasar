@@ -9,49 +9,39 @@ const routes: RouteRecordRaw[] = [
     children: [
       { path: 'dashboard', component: () => import('pages/IndexPage.vue') },
       { path: 'welcome', component: () => import('pages/WelcomePage.vue') },
-
-//____________________________ CONFIGURACION ___________________________________________________________________________
-
-// Organizacion
-      { path: 'areas', component: () => import('src/modules/areas/pages/AreasPage.vue') },
-      { path: 'cargos', component: () => import('src/modules/cargos/pages/CargosPage.vue') },
-      { path: 'prerrequisitosdecargo', component: () => import('src/modules/prerrequisitosCargo/pages/PrerrequisitosCargoPage.vue') },
-// Beneficios Sociales
-      { path: 'entesreguladores',component: () => import('src/modules/entesReguladores/pages/EntesReguladoresPage.vue') },
-      { path: 'beneficios', component: () => import('src/modules/beneficios/pages/BeneficiosPage.vue') },
-// Valoración
-      { path: 'metodosdeevaluacion', component: () => import('src/modules/metodosdeevaluacion/pages/MetodosDeEvaluacionPage.vue') },
-// Sanciones
-      { path: 'niveles', component: () => import('src/modules/niveles/pages/NivelesPage.vue') },
-// Remuneración
-      { path: 'metodosdepago', component: () => import('src/modules/metodosdepago/pages/MetodosDePagoPage.vue') },
-      { path: 'bonosEmpresa', component: () => import('src/modules/bonosEmpresa/pages/BonosEmpresaPage.vue') },
-
-//____________________________ GESTIÓN RECLUTAMIENTO ___________________________________________________________________
-
+//____________| CONFIGURACION |_________________________________________________________________________________________
+//Organizacion
+      { path: 'areas'                , component: () => import('./modules/areas/pages/AreasPage.vue') },
+      { path: 'cargos'               , component: () => import('./modules/cargos/pages/CargosPage.vue') },
+      { path: 'prerrequisitosdecargo', component: () => import('./modules/prerrequisitoscargo/pages/PrerrequisitosCargoPage.vue') },
+      { path: 'tiposdecargo'         , component: () => import('./modules/tiposdecargo/pages/TiposDeCargoPage.vue') },
+//Beneficios Sociales
+      { path: 'entesreguladores'     , component: () => import('./modules/entesreguladores/pages/EntesReguladoresPage.vue') },
+      { path: 'beneficios'           , component: () => import('./modules/beneficios/pages/BeneficiosPage.vue') },
+//Valoración
+      { path: 'metodosdeevaluacion'  , component: () => import('./modules/metodosdeevaluacion/pages/MetodosDeEvaluacionPage.vue') },
+//Sanciones
+      { path: 'niveles'              , component: () => import('./modules/niveles/pages/NivelesPage.vue') },
+//Remuneración
+      { path: 'metodosdepago'        , component: () => import('./modules/metodosdepago/pages/MetodosDePagoPage.vue') },
+      { path: 'bonosEmpresa'         , component: () => import('./modules/bonosempresa/pages/BonosEmpresaPage.vue') },
+//____________| GESTIÓN RECLUTAMIENTO |_________________________________________________________________________________
 // Admisión
-      { path: 'convocatorias', component: () => import('src/modules/convocatorias/pages/convocatoriasPage.vue') },
-
-//____________________________ TRABAJADOR ______________________________________________________________________________
-
+      { path: 'convocatorias'        , component: () => import('./modules/convocatorias/pages/convocatoriasPage.vue') },
+//____________| TRABAJADOR |____________________________________________________________________________________________
 // Personal
-      { path: 'trabajadores', component: () => import('src/modules/trabajadores/pages/TrabajadoresPage.vue') },
+      { path: 'trabajadores'         , component: () => import('./modules/trabajadores/pages/TrabajadoresPage.vue') },
 // Novedades
-      { path: 'permisos', component: () => import('src/modules/permisos/pages/PermisosPage.vue') },
+      { path: 'permisos'             , component: () => import('./modules/permisos/pages/PermisosPage.vue') },
 // Procesos Laborales
-      { path: 'sanciones', component: () => import('src/modules/sanciones/pages/SancionesPage.vue') },
-
-//____________________________ GESTIÓN DE CAPACITACIÓN _________________________________________________________________
-
+      { path: 'sanciones'            , component: () => import('./modules/sanciones/pages/SancionesPage.vue') },
+//____________| GESTIÓN DE CAPACITACIÓN |_______________________________________________________________________________
 //Evento
-
-//____________________________ GESTIÓN SALARIAL ________________________________________________________________________
-
-
+//____________| GESTIÓN SALARIAL |______________________________________________________________________________________
 //Planillas
-      { path: 'sueldosysalarios', component: () => import('src/modules/sueldosysalarios/pages/SueldosYSalariosPage.vue') },
+      { path: 'sueldosysalarios'     , component: () => import('./modules/sueldosysalarios/pages/SueldosYSalariosPage.vue') },
 //Boletas
-      { path: 'salarios', component: () => import('src/modules/salarios/pages/SalariosPage.vue') },
+      { path: 'salarios'             , component: () => import('./modules/salarios/pages/SalariosPage.vue') },
     ],
   },
 
