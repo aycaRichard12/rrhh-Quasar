@@ -1,14 +1,12 @@
 <template>
   <transition name="tabs-fade">
     <div v-show="tabsVisible" :class="['submenu-tabs-wrapper', $q.dark.isActive ? 'tabs-wrapper--dark' : 'tabs-wrapper--light']">
-      <q-tabs
+      <q-tabs dense no-caps
         align="left"
         :model-value="currentTab"
-        @update:model-value="$emit('update:currentTab', $event)"
         indicator-color="transparent"
         class="tabs-row q-px-md"
-        dense
-        no-caps
+        @update:model-value="$emit('update:currentTab', $event)"
       >
         <!-- Tab principal -->
         <q-tab
@@ -16,9 +14,7 @@
           :key="tab.codigo"
           :name="tab.codigo"
           @click="$emit('navigate', tab)"
-          :class="[
-            'pill-tab q-mx-xs',
-            currentTab === tab.codigo
+          :class="['pill-tab q-mx-xs', currentTab === tab.codigo
               ? ($q.dark.isActive ? 'pill-tab--active-dark' : 'pill-tab--active-light')
               : ($q.dark.isActive ? 'pill-tab--idle-dark'   : 'pill-tab--idle-light')
           ]"
@@ -36,6 +32,11 @@
           <q-tooltip v-if="$q.screen.lt.sm" anchor="bottom middle" self="top middle" :offset="[0, 6]">
             {{ resolveLabel(tab) }}
           </q-tooltip>
+
+          <div 
+            v-if="currentTab === tab.codigo" 
+            :class="['header-accent-line', $q.dark.isActive ? 'accent-line--dark' : 'accent-line--light']"
+          ></div>
         </q-tab>
 
         <q-space />
@@ -77,7 +78,7 @@
     </div>
   </transition>
   <!-- Línea dorada de acento abajo de tabs -->
-    <div class="header-accent-line" />
+    <!-- <div class="header-accent-line" /> -->
 </template>
 
 <script setup lang="ts">
@@ -140,13 +141,15 @@ const resolveLabel = (tab: TabItem): string => {
 /* ── PÍLDORA BASE ────────────────────────────────────────────────────────── */
 .pill-tab {
   min-height: 32px !important;
-  border-radius: 8px !important;
+  border-radius: 15px 15px 0 0 !important;
   padding: 0 !important;
   transition: background 0.18s ease, color 0.18s ease, transform 0.15s ease !important;
+  /* NUEVO: Permite que la línea de acento brille hacia afuera */
+  overflow: visible !important; 
 }
 
 .pill-tab:hover {
-  transform: translateY(-1px);
+  transform: translateY(-0.7px);
 }
 
 .pill-inner {
@@ -172,7 +175,7 @@ const resolveLabel = (tab: TabItem): string => {
   background: rgba(0, 77, 64, 0.1) !important;
   color: #004d40 !important;
   font-weight: 700 !important;
-  box-shadow: inset 0 0 0 1px rgba(0, 77, 64, 0.2);
+  box-shadow: inset 0 1px 0 1px rgba(0, 77, 64, 0.2);
 }
 
 /* ── ACTIVO DARK ─────────────────────────────────────────────────────────── */
@@ -180,7 +183,7 @@ const resolveLabel = (tab: TabItem): string => {
   background: rgba(242, 192, 55, 0.14) !important;
   color: #f2c037 !important;
   font-weight: 700 !important;
-  box-shadow: inset 0 0 0 1px rgba(242, 192, 55, 0.25);
+  box-shadow: inset 0 1px 0 1px rgba(242, 192, 55, 0.25);
 }
 
 /* ── IDLE LIGHT ──────────────────────────────────────────────────────────── */
@@ -199,6 +202,27 @@ const resolveLabel = (tab: TabItem): string => {
 .pill-tab--idle-dark:hover {
   background: rgba(255,255,255,0.06) !important;
   color: rgba(255,255,255,0.8) !important;
+}
+
+/* ── LÍNEA DE ACENTO BASE ────────────────────────────────────────────────── */
+.header-accent-line {
+  position: absolute;
+  bottom: 0;
+  left: -90px;
+  right: -90px; /* Se extiende a todo el ancho disponible del tab */
+  height: 2px;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Estado Light: Gradiente basado en tu color Verde #004d40 */
+.accent-line--light {
+  background: linear-gradient( 90deg, transparent 0%,#004d40 40%,#004d40 60%, transparent 100% );
+}
+
+/* Estado Dark: Gradiente basado en tu color Amarillo #f2c037 */
+.accent-line--dark {
+  background: linear-gradient( 90deg, transparent 0%,#f2c037 40%,#f2c037 60%, transparent 100% );
 }
 
 /* ── BOTÓN REPORTES ──────────────────────────────────────────────────────── */

@@ -345,7 +345,7 @@ const handleLogout = async (): Promise<void> => {
 }
 
 /* ── LÍNEA DE ACENTO ─────────────────────────────────────────────────────── */
-.header-accent-line {
+/* .header-accent-line {
   height: 3px;
   background: linear-gradient(
     90deg,
@@ -355,7 +355,7 @@ const handleLogout = async (): Promise<void> => {
     transparent 100%
   );
   opacity: 0.6;
-}
+} */
 
 /* Legacy helpers */
 .opacity-10 { opacity: 0.1; }
