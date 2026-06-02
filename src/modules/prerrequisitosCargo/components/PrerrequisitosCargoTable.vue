@@ -16,7 +16,9 @@
 
       <template v-slot:body-cell-cargo="propsCell">
         <q-td :props="propsCell" class="text-center font-weight-bold text-primary">
-          {{ propsCell.row.cargo }}
+          <q-chip dense outline color="positive">
+            {{ propsCell.row.cargo }}
+          </q-chip>
         </q-td>
       </template>
 

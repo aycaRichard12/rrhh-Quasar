@@ -24,8 +24,7 @@ export function useNotificaciones() {
   const confirmarAccion = (
     titulo: string, 
     mensaje: string, 
-    accionConfirmar: () => void | Promise<void>
-  ) => {
+    accionConfirmar: () => void | Promise<void> ) => {
     $q.dialog({
       title: titulo,
       message: mensaje,
@@ -38,9 +37,6 @@ export function useNotificaciones() {
   };
 
   return {
-    notificarExito,
-    notificarError,
-    notificarAdvertencia,
-    confirmarAccion
+    notificarExito, notificarError, notificarAdvertencia, confirmarAccion
   };
 }
