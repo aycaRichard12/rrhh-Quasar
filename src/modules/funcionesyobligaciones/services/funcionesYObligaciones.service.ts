@@ -1,17 +1,20 @@
 import { api } from 'src/boot/axios';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
-import type { 
-  FuncionYObligacion, 
-  Cargo, 
-  RespuestaApi 
-} from '../types/funcionesYObligaciones.types';
+import type { FuncionYObligacion, Cargo, RespuestaApi } from '../types/funcionesYObligaciones.types';
 
 const ID_EMPRESA = idempresa_md5();
 
 export const funcionesYObligacionesService = {
   async obtenerFuncionesYObligaciones(): Promise<FuncionYObligacion[]> {
-    const { data } = await api.get<FuncionYObligacion[]>(`/listaFunYoblig/${ID_EMPRESA}`);
-    return Array.isArray(data) ? data : [];
+    var { data } = await api.get(`/listaFunYoblig/${ID_EMPRESA}`);
+    
+    return Array.isArray(data) ? data.map((item,index)=>{
+        return{
+            ...item,
+            total: Number(item.total),
+            index:index +1
+        }
+    }) : [];
   },
 
   async obtenerCargos(): Promise<Cargo[]> {

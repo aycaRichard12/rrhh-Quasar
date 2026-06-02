@@ -17,7 +17,8 @@ export const obtenerColumnasFuncionesYObligaciones = (
       label: t('Función u Obligación'),
       align: 'left',
       field: row => row.nombre,
-      sortable: true
+      sortable: true,
+      style: 'white-space: normal; width: 175px;'
     },
     {
       name: 'descripcion',
