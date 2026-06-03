@@ -6,8 +6,8 @@ const ID_EMPRESA = idempresa_md5();
 
 export const funcionesYObligacionesService = {
   async obtenerFuncionesYObligaciones(): Promise<FuncionYObligacion[]> {
-    var { data } = await api.get(`/listaFunYoblig/${ID_EMPRESA}`);
-    
+    const { data } = await api.get(`/listaFunYoblig/${ID_EMPRESA}`);
+
     return Array.isArray(data) ? data.map((item,index)=>{
         return{
             ...item,
