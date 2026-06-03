@@ -1,58 +1,42 @@
 <template>
-  <q-page padding>
-    <div class="col q-mb-md">
+  <q-page>
+    <div class="lt-sm">
       <div class="row justify-left">
-        <h4 class="q-my-none text-primary">{{ $t('prerrequisitos.title', 'Prerrequisitos de Cargo') }}</h4>
+        <h4 class="q-my-none text-primary">{{ $t('prerrequisitos.title') }}</h4>
       </div>
       <div class="row justify-left">
-        <p class="text-grey-7">{{ $t('prerrequisitos.subtitle', 'Gestión de condiciones o requisitos indispensables por cargo.') }}</p>
+        <p class="text-grey-7">{{ $t('prerrequisitos.subtitle') }}</p>
       </div>
     </div>
 
-    <div class="row q-col-gutter-md items-center q-mb-md">
+    <div class="row justify-between items-center">
       
-      <div class="col-12 col-md-4 text-left">
-        <q-btn icon="add" color="primary" :label="$t('prerrequisitos.form.new', 'Nuevo Registro')" @click="prepararNuevoPrerrequisito" />
+      <div class="q-gutter-sm q-mb-md">
+        <q-btn
+          class="global-btn-page"
+          icon="sym_o_add_notes" size="15px" :label="$q.screen.lt.sm ? '' : $t('prerrequisitos.new')" 
+          :round="$q.screen.lt.sm"
+          @click="prepararNuevoPrerrequisito" />
       </div>
 
-      <div class="col-12 col-md-4">
-        <q-select
-          dense
-          outlined
-          emit-value
-          map-options
-          v-model="idCargoSeleccionado"
-          :options="opcionesCargosFiltro"
-          option-value="id"
-          option-label="cargo"
-          :label="$t('prerrequisitos.filter.cargoLabel', 'Filtrar por Cargo')"
-        />
-      </div>
-
-      <div class="col-12 col-md-4">
-        <q-input 
+      <div class="q-mb-md">
+        <q-input clearable dense outlined 
           v-model="filtroBusqueda" 
-          dense 
-          outlined 
-          clearable 
-          :placeholder="$t('common.search', 'Buscar cualquier palabra...')"
+          :placeholder="$t('common.actions.search')"
         >
           <template v-slot:append>
-            <q-icon name="search" />
+            <q-icon name="manage_search" />
           </template>
         </q-input>
       </div>
-
     </div>
 
-    <div>
-      <PrerrequisitosCargoTable
-        :lista-prerrequisitos="listaPrerrequisitosFiltrados"
-        :filtro="filtroBusqueda"
-        @editar="prepararEdicionPrerrequisito"
-        @eliminar="confirmarEliminarPrerrequisito"
-      />
-    </div>
+    <PrerrequisitosCargoTable
+      :lista-prerrequisitos="listaPrerrequisitosFiltrados"
+      :filtro="filtroBusqueda"
+      @editar="prepararEdicionPrerrequisito"
+      @eliminar="confirmarEliminarPrerrequisito"
+    />
 
     <q-dialog v-model="esVisibleDialogo">
       <PrerrequisitosCargoForm
@@ -66,27 +50,17 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { onMounted } from 'vue';
 import { usePrerrequisitosCargo } from '../composables/usePrerrequisitosCargo';
 import PrerrequisitosCargoTable from '../components/PrerrequisitosCargoTable.vue';
 import PrerrequisitosCargoForm from '../components/PrerrequisitosCargoForm.vue';
 
-const { t } = useI18n();
-
 const {
-  listaPrerrequisitosFiltrados, listaCargos, esVisibleDialogo, esModoEdicion, prerrequisitoActual, filtroBusqueda, idCargoSeleccionado,
+  listaPrerrequisitosFiltrados, listaCargos, esVisibleDialogo, esModoEdicion, prerrequisitoActual, filtroBusqueda,
   cargarDatos, prepararNuevoPrerrequisito, prepararEdicionPrerrequisito, guardarPrerrequisito, confirmarEliminarPrerrequisito
 } = usePrerrequisitosCargo();
 
-// Inyectamos dinámicamente "Todos" al select del filtro
-const opcionesCargosFiltro = computed(() => [
-  { id: '_todos_', cargo: t('common.all', 'Todos') },
-  ...listaCargos.value
-]);
-
 onMounted(() => {
-  idCargoSeleccionado.value = '_todos_';
   void cargarDatos();
 });
 </script>

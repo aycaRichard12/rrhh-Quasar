@@ -15,7 +15,7 @@ export default {
   gestionsalarial: 'Gestión Salarial',
 
 
-  areas: 'Areas',
+  areas: 'Áreas',
   cargos: 'Cargos',
   prerrequisitosdecargo: 'Prerrequisitos de cargo',
   tiposdecontratos: 'Tipos de Contratos',

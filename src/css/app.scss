@@ -30,7 +30,7 @@ body {
 
 // ─── Cards con Diseño Profesional ──────────────────────────────────────────
 .q-card {
-  border-radius: 12px;
+  border-radius: 15px;
   box-shadow: var(--hr-shadow-card) !important;
   border: 1px solid var(--me-gray-200);
   background: #ffffff;
@@ -101,6 +101,31 @@ body.body--dark .q-table thead tr {
 
 body.body--dark .q-table thead th {
   color: #f3f4f6;
+}
+
+// ─── TABLAS GLOBALES ────────────────────────────────────────────────────────
+// Esta clase se aplicará a los encabezados de todas tus tablas
+.global-table-header th {
+  background: linear-gradient(180deg, #004d40 0%, #002e25 70%, #001a12 100%) !important;
+  color: #ffffff !important; // Texto blanco para que resalte
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  letter-spacing: 0.05em;
+  text-transform: uppercase; // Estándar para tablas profesionales
+}
+
+// ─── FORMULARIOS (DIÁLOGOS) GLOBALES ────────────────────────────────────────
+// Para usar en el <q-card-section> superior de tus modales
+.global-form-header {
+  background: linear-gradient(180deg, #004d40 0%, #002e25 70%, #001a12 100%) !important;
+  color: #ffffff !important;
+}
+
+// ─── BOTONES GLOBALES ───────────────────────────────────────────────────────
+// Si quieres que un botón tenga el tema "Gold", le pasas esta clase
+.global-btn-page {
+  background: linear-gradient(180deg, #004d40 0%, #002e25 70%, #001a12 100%) !important;
+  color: #ffffff !important;
 }
 
 // ─── Header ──────────────────────────────────────────────────────────────────
@@ -340,5 +365,6 @@ body.body--dark .skeleton-overlay {
     left: 0 !important;
     right: 0 !important;
     width: 100% !important;
+    height: 57px !important;
   }
 }

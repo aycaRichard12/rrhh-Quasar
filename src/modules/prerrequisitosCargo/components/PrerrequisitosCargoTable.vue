@@ -2,37 +2,24 @@
   <q-card>
     <q-table flat bordered
       row-key="id"
+      class="global-table-header"
       :rows="props.listaPrerrequisitos"
       :columns="listaColumnas"
       :filter="props.filtro"
-
-      table-header-class="bg-primary"
-      :rows-per-page-label="$t('table.recordsPerPage', 'Registros por página:')"
-      :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${$t('table.of', 'de')} ${totalRows}`"
+      :rows-per-page-label="t('common.report.recordsPerPage')"
+      :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${t('common.report.of')} ${totalRows}`"
     >
       <template v-slot:body-cell-numero="propsCell">
         <q-td :props="propsCell">{{ propsCell.rowIndex + 1 }}</q-td>
       </template>
 
-      <template v-slot:body-cell-cargo="propsCell">
-        <q-td :props="propsCell" class="text-center font-weight-bold text-primary">
-          <q-chip dense outline color="positive">
-            {{ propsCell.row.cargo }}
-          </q-chip>
-        </q-td>
-      </template>
-
       <template v-slot:body-cell-opciones="propsCell">
         <q-td :props="propsCell" class="text-center q-gutter-xs">
-          <q-btn dense round icon="edit" color="info" @click="emitirEditar(propsCell.row.id)">
-            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-              {{ $t('common.actions.edit', 'Editar') }}
-            </q-tooltip>
+          <q-btn dense round icon="sym_o_edit_square" class="global-btn-page" @click="emitirEditar(propsCell.row.id)">
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.edit') }}</q-tooltip>
           </q-btn>
           <q-btn dense round icon="delete" color="negative" @click="emitirEliminar(propsCell.row.id)">
-            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-              {{ $t('common.actions.delete', 'Eliminar') }}
-            </q-tooltip>
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.delete') }}</q-tooltip>
           </q-btn>
         </q-td>
       </template>
@@ -41,25 +28,25 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { obtenerColumnasPrerrequisitos } from '../utils/prerrequisitosCargo.columns';
-import type { PrerrequisitoCargo } from '../types/prerrequisitosCargo.types';
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { obtenerColumnasPrerrequisitosCargo } from '../utils/prerrequisitosCargo.columns'
+import type { PrerrequisitoCargo } from '../types/prerrequisitosCargo.types'
 
 const { t } = useI18n();
 
 const props = defineProps<{
-  listaPrerrequisitos: PrerrequisitoCargo[];
-  filtro: string;
-}>();
+  listaPrerrequisitos: PrerrequisitoCargo[]
+  filtro: string
+}>()
 
 const emits = defineEmits<{
-  (e: 'editar', id: string): void;
-  (e: 'eliminar', id: string): void;
-}>();
+  (e: 'editar', id: string): void
+  (e: 'eliminar', id: string): void
+}>()
 
-const emitirEditar = (id: string) => emits('editar', id);
-const emitirEliminar = (id: string) => emits('eliminar', id);
+const emitirEditar = (id: string) => emits('editar', id)
+const emitirEliminar = (id: string) => emits('eliminar', id)
 
-const listaColumnas = computed(() => obtenerColumnasPrerrequisitos(t));
+const listaColumnas = computed(() => obtenerColumnasPrerrequisitosCargo(t));
 </script>

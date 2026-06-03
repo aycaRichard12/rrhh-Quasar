@@ -12,7 +12,7 @@ export default {
       saveChanges: 'Guardar Cambios',
       register: 'Registrar',
       reload: 'Recargar',
-      search: 'Buscar',
+      search: 'Buscar cualquier palabra...',
       apply: 'Aplicar',
       clear: 'Limpiar',
       download: 'Descargar',
@@ -104,14 +104,26 @@ export default {
   areas: {
     title: 'Áreas',
     subtitle: 'Gestión de áreas y sucursales de la empresa.',
-    form: {
-      formNew: 'Nueva Area',
-      formEdit: 'Editar Area',
-      buttonRegister: 'Nueva Area',
-      name: 'Area',
-      branch: 'Sucursal',
-      noBranch: 'Sin sucursal',
-    }
+    name: 'Área',
+    new: 'Nueva Área',
+    edit: 'Editar Área',
+    branch: 'Sucursal',
+    noBranch: 'Sin sucursal',
+  },
+  cargos: {
+    title: 'Cargos',
+    subtitle: 'Gestión de cargos, salarios y vinculación con áreas de la empresa.',
+    name: 'Cargo',
+    new: 'Nuevo Cargo',
+    edit: 'Editar Cargo',
+    salary: 'Salario',
+  },
+  prerrequisitos: {
+    title: 'Prerrequisitos de Cargo',
+    subtitle: 'Gestión de condiciones o requisitos indispensables por cargo.',
+    name: 'Prerrequisito',
+    new: 'Nuevo Prerrequisito',
+    edit: 'Editar Prerrequisito',
   },
   entity:{
     title: 'Entes Reguladores',

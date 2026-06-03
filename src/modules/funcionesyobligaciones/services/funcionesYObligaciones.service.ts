@@ -6,16 +6,19 @@ const ID_EMPRESA = idempresa_md5();
 
 export const funcionesYObligacionesService = {
   async obtenerFuncionesYObligaciones(): Promise<FuncionYObligacion[]> {
-    var { data } = await api.get(`/listaFunYoblig/${ID_EMPRESA}`);
-    
-    return Array.isArray(data) ? data.map((item,index)=>{
-        return{
-            ...item,
-            total: Number(item.total),
-            index:index +1
-        }
-    }) : [];
+    const { data } = await api.get(`/listaFunYoblig/${ID_EMPRESA}`);
+    return Array.isArray(data) ? data : [];
   },
+  //async obtenerFuncionesYObligaciones(): Promise<FuncionYObligacion[]> {
+    //var { data } = await api.get(`/listaFunYoblig/${ID_EMPRESA}`); 
+    // return Array.isArray(data) ? data.map((item,index)=>{
+    //     return{
+    //         ...item,
+    //         total: Number(item.total),
+    //         index:index +1
+    //     }
+    // }) : [];
+    //},
 
   async obtenerCargos(): Promise<Cargo[]> {
     const { data } = await api.get<Cargo[]>(`/listaCargos/${ID_EMPRESA}`);

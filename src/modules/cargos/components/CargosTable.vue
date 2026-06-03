@@ -2,37 +2,24 @@
   <q-card>
     <q-table flat bordered
       row-key="id"
+      class="global-table-header"
       :rows="props.listaCargos"
       :columns="listaColumnas"
       :filter="props.filtro"
-      class="prueba-tabla-titulo"
-      :rows-per-page-label="$t('table.recordsPerPage', 'Registros por página:')"
-      :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${$t('table.of', 'de')} ${totalRows}`"
+      :rows-per-page-label="t('common.report.recordsPerPage')"
+      :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${t('common.report.of')} ${totalRows}`"
     >
       <template v-slot:body-cell-numero="propsCell">
         <q-td :props="propsCell">{{ propsCell.rowIndex + 1 }}</q-td>
       </template>
 
-      <template v-slot:body-cell-salario="propsCell">
-        <q-td :props="propsCell" class="text-right font-weight-bold">
-          <q-chip dense outline
-          :color="$q.dark.isActive ? 'warning' : 'primary'">
-             {{ propsCell.row.salario }} Bs. 
-          </q-chip>
-        </q-td>
-      </template>
-
       <template v-slot:body-cell-opciones="propsCell">
         <q-td :props="propsCell" class="text-center q-gutter-xs">
-          <q-btn dense round icon="edit" color="info" @click="emitirEditar(propsCell.row.id)">
-            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-              {{ $t('common.actions.edit', 'Editar') }}
-            </q-tooltip>
+          <q-btn dense round icon="sym_o_edit_square" class="global-btn-page" @click="emitirEditar(propsCell.row.id)">
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.edit') }}</q-tooltip>
           </q-btn>
           <q-btn dense round icon="delete" color="negative" @click="emitirEliminar(propsCell.row.id)">
-            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-              {{ $t('common.actions.delete', 'Eliminar') }}
-            </q-tooltip>
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.delete') }}</q-tooltip>
           </q-btn>
         </q-td>
       </template>
@@ -41,84 +28,25 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { obtenerColumnasCargos } from '../utils/cargos.columns';
-import type { Cargo } from '../types/cargos.types';
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { obtenerColumnasCargos } from '../utils/cargos.columns'
+import type { Cargo } from '../types/cargos.types'
 
-const { t } = useI18n();
+const { t } = useI18n()
 
 const props = defineProps<{
-  listaCargos: Cargo[];
-  filtro: string;
-}>();
+  listaCargos: Cargo[]
+  filtro: string
+}>()
 
 const emits = defineEmits<{
-  (e: 'editar', id: string): void;
-  (e: 'eliminar', id: string): void;
-}>();
+  (e: 'editar', id: string): void
+  (e: 'eliminar', id: string): void
+}>()
 
-const emitirEditar = (id: string) => emits('editar', id);
-const emitirEliminar = (id: string) => emits('eliminar', id);
+const emitirEditar = (id: string) => emits('editar', id)
+const emitirEliminar = (id: string) => emits('eliminar', id)
 
-const listaColumnas = computed(() => obtenerColumnasCargos(t));
+const listaColumnas = computed(() => obtenerColumnasCargos(t))
 </script>
-
-<style>
-.prueba-tabla-titulo th {
-  background-color: #004d40 !important;
-}
-
-/* 1. Preparamos el contenedor del ícono de Quasar */
-.prueba-tabla-titulo .q-table__sort-icon {
-  opacity: 1 !important;
-  transition: color 0.3s ease;
-  position: relative; /* Nos permite posicionar el nuevo ícono encima de forma exacta */
-  display: inline-block;
-  width: 24px;   /* Forzamos un ancho fijo para que nunca cambie el tamaño de la columna */
-  height: 24px;  /* Forzamos un alto fijo */
-  text-align: center;
-  vertical-align: middle;
-}
-
-/* ================================================================= */
-/* ESTADO 1: Neutral (La columna NO está ordenada)                  */
-/* ================================================================= */
-.prueba-tabla-titulo th.sortable:not(.sorted) .q-table__sort-icon {
-  /* color: #9e9e9e !important; */
-    color: #9e9e9eb7 !important;
-
-}
-
-/* Hacemos invisible la flecha nativa pero DEJAMOS que ocupe su espacio físico */
-.prueba-tabla-titulo th.sortable:not(.sorted) .q-table__sort-icon {
-  visibility: hidden; 
-}
-
-/* Inyectamos tu ícono personalizado flotando exactamente en el mismo lugar */
-.prueba-tabla-titulo th.sortable:not(.sorted) .q-table__sort-icon::before {
-  content: 'format_line_spacing';
-  font-family: 'Material Symbols Outlined'; /* Ajustar si usas Rounded/Sharp */
-  font-size: 20px;
-  visibility: visible; /* Hacemos que este sí se vea */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* Centrado matemático perfecto */
-  width: 100%;
-}
-
-/* ================================================================= */
-/* ESTADO 2 y 3: Ordenado (Ya sea Ascendente o Descendente)          */
-/* ================================================================= */
-.prueba-tabla-titulo th.sorted .q-table__sort-icon {
-  color: var(--q-warning, #f2c037) !important;
-  visibility: visible; /* Volvemos a mostrar la flecha nativa de Quasar */
-  font-size: 20px;
-}
-
-/* Quitamos por completo el ícono personalizado cuando esté ordenado */
-.prueba-tabla-titulo th.sorted .q-table__sort-icon::before {
-  content: none !important;
-}
-</style>
