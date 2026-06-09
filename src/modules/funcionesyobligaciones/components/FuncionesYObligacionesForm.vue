@@ -49,7 +49,8 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import type { FuncionYObligacion, Cargo } from '../types/funcionesYObligaciones.types';
+import type { FuncionYObligacion } from '../types/funcionesYObligaciones.types';
+import type { Cargo } from 'src/modules/cargos/types/cargos.types';
 
 const props = defineProps<{
   funcionYObligacion: FuncionYObligacion;

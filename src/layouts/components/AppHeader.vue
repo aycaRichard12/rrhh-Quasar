@@ -104,7 +104,7 @@
               :size="$q.screen.lt.sm ? '28px' : '30px'"
               class="user-avatar"
             >
-              <span class="avatar-initial">{{ userInitial }}</span>
+              <span class="avatar-initial">{{ companyInitial }}</span>
             </q-avatar>
 
             <div v-if="$q.screen.gt.xs" class="column items-start text-left q-ml-xs">
@@ -243,9 +243,9 @@ const authStore   = useAuthStore();
 const { breadcrumbs } = useBreadcrumbs();
 const { showInstall, showUpdate, installApp, updateApp } = usePwa();
 
-const userInitial = computed<string>(() =>
-  authStore.user?.nombre?.charAt(0).toUpperCase() || 'U'
-);
+// const userInitial = computed<string>(() =>
+//   authStore.user?.nombre?.charAt(0).toUpperCase() || 'U'
+// );
 
 const companyInitial = computed<string>(() =>
   authStore.user?.empresa?.nombre?.charAt(0).toUpperCase() || 'E'

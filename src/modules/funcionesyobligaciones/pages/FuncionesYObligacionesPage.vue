@@ -4,9 +4,9 @@
       
       <div class="col-12 col-sm-4">
         <q-btn
-          color="primary"
+          class="global-btn-page"
           icon="add"
-          :label="t('common.nuevoRegistro')"
+          :label="t('nuevo Registro')"
           @click="prepararNuevaFuncionYObligacion"
         />
       </div>

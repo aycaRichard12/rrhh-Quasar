@@ -2,98 +2,189 @@
   <q-icon
     name="filter_alt"
     size="1.2em"
-    class="q-ml-sm cursor-pointer text-grey-5 transition-colors"
-    :class="{ 'text-primary': tieneFiltroActivo }"
+    class="q-ml-sm cursor-pointer transition-colors"
+    :class="tieneFiltroActivo ? 'text-primary text-weight-bold' : 'text-grey-6 hover:text-grey-8'"
     @click.stop
   >
+    <q-badge v-if="tieneFiltroActivo" color="primary" floating rounded size="xs" />
+
     <q-menu anchor="bottom right" self="top right" transition-show="scale" transition-hide="scale">
-      <q-list style="min-width: 300px" class="q-pb-sm">
-        
-        <q-item clickable v-close-popup @click="$emit('ordenar', 'asc')">
-          <q-item-section avatar><q-icon name="arrow_upward" size="sm" /></q-item-section>
-          <q-item-section class="text-body2">Ordenar de Menor a Mayor</q-item-section>
-        </q-item>
-        
-        <q-item clickable v-close-popup @click="$emit('ordenar', 'desc')">
-          <q-item-section avatar><q-icon name="arrow_downward" size="sm" /></q-item-section>
-          <q-item-section class="text-body2">Ordenar de Mayor a Menor</q-item-section>
-        </q-item>
+      <q-list style="min-width: 320px" class="filter-menu">
 
-        <q-item v-if="columnaOrdenada" clickable v-close-popup @click="$emit('ordenar', 'none')">
-          <q-item-section avatar><q-icon name="sort" size="sm" color="negative"/></q-item-section>
-          <q-item-section class="text-body2 text-negative">Quitar Orden</q-item-section>
-        </q-item>
-        
-        <q-separator class="q-my-xs" />
+        <!-- Sección de Ordenamiento -->
+        <div class="q-px-md q-pt-md q-pb-sm">
+          <div class="text-caption text-weight-bold text-grey-7 q-mb-sm">ORDENAMIENTO</div>
+          <div class="row q-gutter-sm">
+            <q-btn
+              flat
+              dense
+              size="sm"
+              icon="arrow_upward"
+              label="Menor a Mayor"
+              v-close-popup
+              @click="$emit('ordenar', 'asc')"
+              class="col-grow"
+              padding="xs sm"
+            />
+            <q-btn
+              flat
+              dense
+              size="sm"
+              icon="arrow_downward"
+              label="Mayor a Menor"
+              v-close-popup
+              @click="$emit('ordenar', 'desc')"
+              class="col-grow"
+              padding="xs sm"
+            />
+          </div>
+          <q-btn
+            v-if="columnaOrdenada"
+            flat
+            dense
+            size="sm"
+            icon="sort"
+            label="Quitar Orden"
+            color="negative"
+            v-close-popup
+            @click="$emit('ordenar', 'none')"
+            class="full-width q-mt-xs"
+            padding="xs sm"
+          />
+        </div>
 
+        <q-separator class="q-my-sm" />
+
+        <!-- Sección de Filtrado -->
         <q-tabs
           v-model="tabActual"
           dense
-          class="text-grey-7"
+          class="text-grey-7 q-px-md"
           active-color="primary"
           indicator-color="primary"
           align="justify"
           narrow-indicator
         >
-          <q-tab name="valores" label="Valores" v-if="!props.ocultarValores" />
+          <q-tab name="valores" label="Valores" v-if="!props.ocultarValores" no-caps />
           <q-tab name="condiciones" label="Condiciones" no-caps />
         </q-tabs>
 
-        <q-separator />
+        <q-separator class="q-my-sm" />
 
-        <q-tab-panels v-model="tabActual" animated>
-          
-          <q-tab-panel name="valores" class="q-pa-sm">
-            <q-input dense outlined v-model="buscadorMenu" placeholder="Buscar en lista..." class="q-mb-sm">
-              <template v-slot:append><q-icon name="search" size="xs" /></template>
+        <!-- Contenido de Tabs -->
+        <q-tab-panels v-model="tabActual" animated class="bg-white">
+
+          <q-tab-panel name="valores" class="q-pa-md">
+            <q-input
+              dense
+              outlined
+              v-model="buscadorMenu"
+              placeholder="Buscar valores..."
+              class="q-mb-md"
+              clearable
+            >
+              <template v-slot:prepend><q-icon name="search" size="sm" /></template>
             </q-input>
-            
-            <q-scroll-area style="height: 160px; border: 1px solid #eee; border-radius: 4px;" class="q-pa-xs">
-               <q-checkbox 
-                 v-model="seleccionarTodo" 
-                 label="(Seleccionar Todo)" 
-                 size="sm" 
-                 class="full-width text-weight-bold" 
-                 @update:model-value="alternarTodo"
-               />
-               <q-checkbox 
-                 v-for="item in valoresFiltrados" 
-                 :key="item.etiqueta"
-                 v-model="valoresSeleccionados" 
-                 :val="item.valorOriginal"
-                 :label="`${item.etiqueta} (${item.cantidad})`" 
-                 size="sm" 
-                 class="full-width text-body2" 
-               />
-               <div v-if="valoresFiltrados.length === 0" class="text-center text-caption text-grey q-mt-sm">
-                 No hay resultados
-               </div>
+
+            <div class="q-mb-sm">
+              <q-checkbox
+                v-model="seleccionarTodo"
+                label="Seleccionar Todo"
+                size="sm"
+                class="full-width text-weight-medium text-primary"
+                @update:model-value="alternarTodo"
+              />
+            </div>
+
+            <q-scroll-area style="height: 200px" class="border-subtle">
+              <div class="q-pa-sm">
+                <q-checkbox
+                  v-for="item in valoresFiltrados"
+                  :key="item.etiqueta"
+                  v-model="valoresSeleccionados"
+                  :val="item.valorOriginal"
+                  :label="`${item.etiqueta} (${item.cantidad})`"
+                  size="sm"
+                  class="full-width q-mb-xs text-body2"
+                />
+                <div v-if="valoresFiltrados.length === 0" class="text-center text-caption text-grey-5 q-mt-md">
+                  <q-icon name="search_off" size="sm" class="q-mr-xs" />
+                  No hay resultados
+                </div>
+              </div>
             </q-scroll-area>
           </q-tab-panel>
 
-          <q-tab-panel name="condiciones" class="q-pa-sm">
-             <div class="text-caption q-mb-xs text-weight-medium">Mostrar filas donde:</div>
-             <q-select 
-               dense outlined 
-               v-model="operadorCondicion" 
-               :options="opcionesOperador" 
-               label="Operador" 
-               class="q-mb-sm text-body2"
-               options-dense
-             />
-             <q-input dense outlined v-model="textoCondicion" label="Texto" class="q-mb-sm text-body2" />
-             <q-checkbox v-model="activarCondicion" label="Activar Condición" size="sm" class="text-body2" />
+          <q-tab-panel name="condiciones" class="q-pa-md">
+            <div class="text-caption text-weight-bold text-grey-7 q-mb-sm">Mostrar filas donde:</div>
+
+            <q-select
+              dense
+              outlined
+              v-model="operadorCondicion"
+              :options="opcionesOperador"
+              label="Operador"
+              class="q-mb-md text-body2"
+              options-dense
+              emit-value
+              map-options
+            />
+
+            <q-input
+              dense
+              outlined
+              v-model="textoCondicion"
+              label="Valor"
+              class="q-mb-md text-body2"
+              clearable
+            />
+
+            <q-toggle
+              v-model="activarCondicion"
+              label="Activar esta condición"
+              color="primary"
+              size="sm"
+              class="text-body2"
+            />
           </q-tab-panel>
 
         </q-tab-panels>
 
-        <q-separator />
+        <q-separator class="q-my-sm" />
 
-        <q-card-actions align="right" class="q-pa-sm bg-grey-1 q-mt-xs">
-          <q-btn flat label="Limpiar" color="negative" size="sm" no-caps v-close-popup @click="limpiarFiltro" />
-          <q-btn flat label="Cancelar" color="grey-8" size="sm" no-caps v-close-popup />
-          <q-btn label="Aplicar" color="primary" size="sm" no-caps v-close-popup @click="aplicarFiltro" />
-        </q-card-actions>
+        <!-- Acciones -->
+        <div class="q-px-md q-pb-md q-pt-sm flex gap-sm justify-end">
+          <q-btn
+            flat
+            label="Limpiar"
+            color="negative"
+            size="sm"
+            no-caps
+            v-close-popup
+            @click="limpiarFiltro"
+            padding="xs md"
+          />
+          <q-btn
+            flat
+            label="Cancelar"
+            color="grey-8"
+            size="sm"
+            no-caps
+            v-close-popup
+            padding="xs md"
+          />
+          <q-btn
+            unelevated
+            label="Aplicar"
+            color="primary"
+            size="sm"
+            no-caps
+            v-close-popup
+            @click="aplicarFiltro"
+            padding="xs md"
+            class="text-weight-medium"
+          />
+        </div>
 
       </q-list>
     </q-menu>
@@ -220,5 +311,27 @@ const limpiarFiltro = () => {
 </script>
 
 <style scoped>
-.transition-colors { transition: color 0.3s ease; }
+.transition-colors {
+  transition: color 0.3s ease;
+}
+
+.filter-menu {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.border-subtle {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.gap-sm {
+  gap: 0.5rem;
+}
+
+:deep(.q-item__label--caption) {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
 </style>

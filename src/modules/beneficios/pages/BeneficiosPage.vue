@@ -43,8 +43,9 @@
 
         <q-btn outline
           color="negative"
-          icon="arrow_back"
-          :label="$t('forms.back')"
+          icon="arrow_back" size="15px"
+          :label="$q.screen.lt.sm ? '' : $t('forms.back')"
+          :round="$q.screen.lt.sm"
           @click="alternarVistaEstandar"
         />
 
@@ -52,21 +53,22 @@
 
           <q-btn
             color="warning"
-            icon="autorenew"
-            :label="$t('forms.replace')"
+            icon="autorenew" size="15px"
+            :label="$q.screen.lt.sm ? '' : $t('forms.replace')"
+            :round="$q.screen.lt.sm"
             @click="confirmarImportacion('reemplazar')"
           />
 
           <q-btn
             color="positive"
-            icon="add"
-            :label="$t('forms.add')"
+            icon="add" size="15px"
+            :label="$q.screen.lt.sm ? '' : $t('forms.add')"
+            :round="$q.screen.lt.sm"
             @click="confirmarImportacion('agregar')"
           />
         </div>
       </template>
     </q-card-section>
-
     <div v-if="!esVistaEstandar">
       <BeneficiosTable
         :lista-beneficios="listaBeneficios"

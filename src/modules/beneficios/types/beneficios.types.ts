@@ -4,7 +4,7 @@ export interface Beneficio {
   descripcion: string;
   tipo       : number;
   cantidad   : number;
-  estado     : number;
   orden      : number;
   destino    : number;
+  estado     : number;
 }

@@ -1,11 +1,13 @@
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
-import { funcionesYObligacionesService } from '../services/funcionesYObligaciones.service';
-import type { FuncionYObligacion, Cargo } from '../types/funcionesYObligaciones.types';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
+import { funcionesYObligacionesService } from '../services/funcionesYObligaciones.service';
+import { cargosService } from 'src/modules/cargos/services/cargos.service';
+import type { FuncionYObligacion } from '../types/funcionesYObligaciones.types';
+import type { Cargo } from 'src/modules/cargos/types/cargos.types';
 
 export function useFuncionesYObligaciones() {
   const { t } = useI18n();
@@ -47,7 +49,7 @@ export function useFuncionesYObligaciones() {
   // Funciones de acción (Verbos)
   const cargarCargos = async () => {
     try {
-      listaCargos.value = await funcionesYObligacionesService.obtenerCargos();
+      listaCargos.value = await cargosService.listarCargos();
     } catch (error) {
       console.error(error);
       notificarError(t('common.errorCargarDatos'));
