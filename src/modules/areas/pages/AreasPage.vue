@@ -9,27 +9,23 @@
       </div>
     </div>
 
-    <div class="row justify-between items-center">
-
-      <div class="q-gutter-sm q-mb-md">
+    <q-card-section class="row justify-between items-center">
         <q-btn
           class="global-btn-page"
-          icon="sym_o_add_notes" size="15px" :label="$q.screen.lt.sm ? '' : $t('areas.new')"
+          icon="sym_o_add_notes" size="15px"
+          :label="$q.screen.lt.sm ? '' : $t('areas.new')"
           :round="$q.screen.lt.sm"
-          @click="prepararNuevaArea" />
-      </div>
-
-      <div class="q-mb-md">
+          @click="prepararNuevaArea"
+        />
         <q-input clearable dense outlined 
           v-model="filtroBusqueda" 
           :placeholder="$t('common.actions.search')"
         >
           <template v-slot:append>
-            <q-icon name="manage_search" />
+            <q-icon name="manage_search"/>
           </template>
         </q-input>
-      </div>
-    </div> 
+    </q-card-section>
 
     <AreasTable
       :lista-areas="listaAreas"

@@ -96,10 +96,20 @@ export default {
     subtitle: 'Selecciona una opción del menú lateral para gestionar el talento humano.',
   },
   ///////////////////////////////////////////////////////////////////////////////////
+  forms:{
+    standar: 'Importar Estándar',
+    add: 'Agregar',
+    back: 'Volver',
+    replace: 'Reemplazar',
+  },
   tables:{
     description: 'Descripción',
+    order: 'Orden',
     status: 'Estado',
-    options: 'Opciones'
+    options: 'Opciones',
+    amount: 'Cantidad',
+    destination: 'Destino',
+    type: 'Tipo'
   },
   areas: {
     title: 'Áreas',
@@ -124,6 +134,24 @@ export default {
     name: 'Prerrequisito',
     new: 'Nuevo Prerrequisito',
     edit: 'Editar Prerrequisito',
+  },
+  tiposdecontratos:{
+    title: 'Tipos de Contrato',
+    subtitle: 'Gestión de contrataciones',
+    name: 'Tipo de Contrato',
+    new: 'Nuevo Tipo de Contrato',
+    edit: 'Editar Tipo de Contrato',
+    nature:'Naturaleza',
+    observation:'Obervación'
+  },
+  beneficios:{
+    title: 'Beneficios',
+    subtitle: 'Gestión de beneficios e indemnizaciones del personal.',
+    name: 'Beneficios',
+    new: 'Nuevo Beneficio',
+    edit: 'Editar Beneficio',
+    nature:'Naturaleza',
+    observation:'Obervación'
   },
   entity:{
     title: 'Entes Reguladores',

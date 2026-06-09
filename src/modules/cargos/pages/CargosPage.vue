@@ -9,28 +9,22 @@
       </div>
     </div>
 
-    <div class="row justify-between items-center">
-      
-      <div class="q-gutter-sm q-mb-md">
-        <q-btn
-          class="global-btn-page"
-          icon="sym_o_add_notes" size="15px" :label="$q.screen.lt.sm ? '' : $t('cargos.new')"
-          :round="$q.screen.lt.sm"
-          @click="prepararNuevoCargo" />
-      </div>
-
-      <div class=" q-mb-md">
-        <q-input clearable dense outlined 
-          v-model="filtroBusqueda"
-          :placeholder="$t('common.actions.search')"
-        >
-          <template v-slot:append>
-            <q-icon name="manage_search" />
+    <q-card-section class="row justify-between items-center">
+      <q-btn
+        class="global-btn-page"
+        icon="sym_o_add_notes" size="15px" :label="$q.screen.lt.sm ? '' : $t('cargos.new')"
+        :round="$q.screen.lt.sm"
+        @click="prepararNuevoCargo"
+      />
+      <q-input clearable dense outlined 
+        v-model="filtroBusqueda"
+        :placeholder="$t('common.actions.search')"
+      >
+        <template v-slot:append>
+          <q-icon name="manage_search"/>
           </template>
-        </q-input>
-      </div>
-
-    </div>
+      </q-input>
+    </q-card-section>
 
     <CargosTable
       :lista-cargos="listaCargosFiltrados"

@@ -53,6 +53,18 @@
           <q-tooltip>Nueva versión disponible</q-tooltip>
         </q-btn>
 
+
+        <q-btn flat round
+          icon= 'filter_alt'
+          color="'primary' : ($q.dark.isActive ? 'grey-4' : 'grey-7')"
+          :size="$q.screen.lt.sm ? 'sm' : 'md'"
+        >
+          <q-tooltip>{{ 'Activar Filtros Avanzados' }}</q-tooltip>
+        </q-btn>
+
+
+
+
         <!-- Idioma -->
         <LanguageSelector
           type="menu"
@@ -113,17 +125,17 @@
           </div>
 
           <!-- Dropdown de perfil -->
-          <q-menu
+          <!-- <q-menu
             anchor="bottom right"
             self="top right"
             transition-show="jump-down"
             transition-hide="jump-up"
             :class="['profile-menu', $q.dark.isActive ? 'profile-menu--dark' : '']"
           >
-            <div class="q-pa-md" style="min-width: 220px">
+            <div class="q-pa-md" style="min-width: 220px"> -->
 
               <!-- Cabecera del menú -->
-              <div class="row items-center q-mb-md q-pb-sm profile-menu-header">
+              <!-- <div class="row items-center q-mb-md q-pb-sm profile-menu-header">
                 <q-avatar size="46px" class="menu-avatar">
                   <span class="avatar-initial">{{ userInitial }}</span>
                 </q-avatar>
@@ -137,9 +149,9 @@
                     Administrador
                   </div>
                 </div>               
-              </div>
+              </div> -->
               <!-- Prueba de empresa debajo el nombre de usuario -->
-              <div :class="['text-weight-bold text-subtitle2', $q.dark.isActive ? 'text-yellow' : 'text-grey-9']">
+              <!-- <div :class="['text-weight-bold text-subtitle2', $q.dark.isActive ? 'text-yellow' : 'text-grey-9']">
                     {{ authStore.user?.empresa.nombre }}
               </div>
 
@@ -159,6 +171,45 @@
                   </q-item-section>
                 </q-item>
               </q-list>
+
+            </div>
+          </q-menu> -->
+          <q-menu anchor="bottom right" self="top right" transition-show="jump-down" transition-hide="jump-up" :class="['profile-menu', $q.dark.isActive ? 'profile-menu--dark' : '']">
+            <div class="row no-wrap q-pa-md" style="width: 350px;">
+              
+              <div class="col-7 column justify-center items-start q-pr-sm">
+                <div :class="['text-subtitle1 text-weight-bolder', $q.dark.isActive ? 'text-grey-2' : 'text-grey-9']" style="line-height: 1.2;">
+                  {{ authStore.user?.nombre }}
+                </div>
+                <div class="text-caption text-primary q-mt-xs text-weight-medium">
+                  Administrador
+                </div>
+                <div :class="['text-caption q-mt-sm', $q.dark.isActive ? 'text-grey-4' : 'text-grey-7']" style="font-size: 11px;">
+                  Empresa:
+                </div>
+                <div :class="['text-body2 text-weight-bold text-wrap', $q.dark.isActive ? 'text-amber-4' : 'text-grey-9']" style="line-height: 1.2;">
+                  {{ authStore.user?.empresa?.nombre }}
+                </div>
+              </div>
+
+              <q-separator vertical class="q-mx-sm opacity-20" :dark="$q.dark.isActive" />
+
+              <div class="col-4 column items-center justify-between q-pl-sm">
+                <q-avatar size="75px" class="menu-avatar bg-primary text-white q-mb-sm shadow-2">
+                  <span class="text-h4 text-weight-bold">{{ companyInitial }}</span>
+                </q-avatar>
+                
+                <q-btn
+                  dense outline rounded
+                  color="negative"
+                  icon="logout"
+                  label="Salir"
+                  class="full-width q-mt-sm text-weight-bold"
+                  size="sm"
+                  @click="handleLogout"
+                  v-close-popup
+                />
+              </div>
 
             </div>
           </q-menu>
@@ -194,6 +245,10 @@ const { showInstall, showUpdate, installApp, updateApp } = usePwa();
 
 const userInitial = computed<string>(() =>
   authStore.user?.nombre?.charAt(0).toUpperCase() || 'U'
+);
+
+const companyInitial = computed<string>(() =>
+  authStore.user?.empresa?.nombre?.charAt(0).toUpperCase() || 'E'
 );
 
 //Antiguo Codigo

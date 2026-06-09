@@ -1,76 +1,80 @@
 <template>
-  <q-page padding>
-    
-    <div class="col q-mb-md">
+  <q-page>
+    <div class="lt-sm">
       <div class="row justify-left">
-        <h4 class="q-my-none text-primary">{{ $t('Beneficios') }}</h4>
+        <h4 class="q-my-none text-primary">{{ $t('beneficios.title') }}</h4>
       </div>
       <div class="row justify-left">
-        <p class="text-grey-7">{{ $t('beneficios.description', 'Gestión de beneficios e indemnizaciones del personal.') }}</p>
+        <p class="text-grey-7">{{ $t('beneficios.subtitle') }}</p>
       </div>
     </div>
 
-    <div class="row justify-between items-center q-mb-md">
+    <q-card-section class="row justify-between items-center">
   <!-- VISTA NORMAL -->
       <template v-if="!esVistaEstandar">
 
         <q-btn
-          color="secondary"
-          icon="cloud_download"
-          :label="$t('formBtn.import', 'Importar Estándar')"
-          outline
-          @click="cargarBeneficiosEstandar"
-        />
-
-        <q-btn
-          icon="add"
-          color="primary"
-          :label="$t('formBtn.new', 'Nuevo Registro')"
+          class="global-btn-page"
+          icon="sym_o_add_notes" size="15px"
+          :label="$q.screen.lt.sm ? '' : $t('beneficios.new')"
+          :round="$q.screen.lt.sm"
           @click="prepararNuevoBeneficio"
         />
-
+        <div class="row q-gutter-sm">
+          <q-btn outline
+            color="secondary"
+            icon="cloud_download" size="15px"
+            :label="$q.screen.lt.sm ? '' : $t('forms.standar')"
+            :round="$q.screen.lt.sm"
+            @click="cargarBeneficiosEstandar"
+          />
+          <q-input clearable dense outlined
+              v-model="filtroBusqueda"
+              :placeholder="$t('common.actions.search')"
+            >
+              <template v-slot:append>
+                <q-icon name="manage_search"/>
+              </template>
+          </q-input>
+        </div>
       </template>
-
       <!-- VISTA IMPORTACIÓN -->
       <template v-else>
 
-        <q-btn
-          icon="arrow_back"
-          :label="$t('formBtn.back', 'Volver')"
+        <q-btn outline
           color="negative"
-          outline
+          icon="arrow_back"
+          :label="$t('forms.back')"
           @click="alternarVistaEstandar"
         />
 
         <div class="q-gutter-sm">
 
           <q-btn
-            icon="autorenew"
-            :label="$t('formBtn.replace', 'Reemplazar')"
             color="warning"
+            icon="autorenew"
+            :label="$t('forms.replace')"
             @click="confirmarImportacion('reemplazar')"
           />
 
           <q-btn
-            icon="add"
-            :label="$t('formBtn.add', 'Añadir')"
             color="positive"
-            @click="confirmarImportacion('anadir')"
+            icon="add"
+            :label="$t('forms.add')"
+            @click="confirmarImportacion('agregar')"
           />
-
         </div>
-
       </template>
-
-    </div>
+    </q-card-section>
 
     <div v-if="!esVistaEstandar">
       <BeneficiosTable
         :lista-beneficios="listaBeneficios"
-        @import="alternarVistaEstandar"
+        :filtro="filtroBusqueda"
         @editar="prepararEdicionBeneficio"
         @eliminar="confirmarEliminarBeneficio"
         @cambiar-estado-registro="cambiarEstadoRegistro"
+        @import="alternarVistaEstandar"
       />
     </div>
 
@@ -94,13 +98,17 @@
 import { onMounted } from 'vue';
 import { useBeneficios } from '../composables/useBeneficios';
 import BeneficiosTable from '../components/BeneficiosTable.vue';
-import BeneficiosStandar from '../components/BeneficiosStandar.vue';
 import BeneficiosForm from '../components/BeneficiosForm.vue';
-
+import BeneficiosStandar from '../components/BeneficiosStandar.vue';
 
 const { 
-  listaBeneficios, listaBeneficiosEstandar, esVisibleDialogo, esModoEdicion, beneficioActual, esVistaEstandar,
-  cargarBeneficios, cargarBeneficiosEstandar, prepararNuevoBeneficio, prepararEdicionBeneficio, guardarBeneficio, confirmarEliminarBeneficio, cambiarEstadoRegistro, alternarVistaEstandar, confirmarImportacion
+  listaBeneficios, beneficioActual, esModoEdicion, esVisibleDialogo,
+  filtroBusqueda,
+  listaBeneficiosEstandar, esVistaEstandar,
+  cargarBeneficios, prepararNuevoBeneficio, guardarBeneficio,
+  prepararEdicionBeneficio, confirmarEliminarBeneficio,
+  cargarBeneficiosEstandar, alternarVistaEstandar, confirmarImportacion,
+  cambiarEstadoRegistro,
 } = useBeneficios();
 
 onMounted(() => {

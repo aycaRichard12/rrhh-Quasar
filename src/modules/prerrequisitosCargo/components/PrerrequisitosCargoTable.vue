@@ -1,6 +1,6 @@
 <template>
   <q-card>
-    <q-table flat bordered
+    <q-table bordered flat
       row-key="id"
       class="global-table-header"
       :rows="props.listaPrerrequisitos"
@@ -15,10 +15,18 @@
 
       <template v-slot:body-cell-opciones="propsCell">
         <q-td :props="propsCell" class="text-center q-gutter-xs">
-          <q-btn dense round icon="sym_o_edit_square" class="global-btn-page" @click="emitirEditar(propsCell.row.id)">
+          <q-btn dense round
+            class="global-btn-page"
+            icon="sym_o_edit_square"
+            @click="emitirEditar(propsCell.row.id)"
+          >
             <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.edit') }}</q-tooltip>
           </q-btn>
-          <q-btn dense round icon="delete" color="negative" @click="emitirEliminar(propsCell.row.id)">
+          <q-btn dense round
+          color="negative"
+          icon="delete_forever"
+          @click="emitirEliminar(propsCell.row.id)"
+          >
             <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.delete') }}</q-tooltip>
           </q-btn>
         </q-td>

@@ -1,78 +1,92 @@
 <template>
-  <q-page padding>
-    <q-card flat bordered>
-      <q-card-section class="row q-col-gutter-sm items-center">
-        <div class="col-12 col-sm-4 text-left">
-          <q-input 
-            v-if="!esVisibleEstandar"
-            v-model="filtroBusqueda" 
-            dense 
-            outlined 
-            clearable 
-            placeholder="Buscar en contratos..."
+  <q-page>
+    <div class="lt-sm">
+      <div class="row justify-left">
+        <h4 class="q-my-none text-positive">{{ $t('tiposdecontratos.title') }}</h4>
+      </div>
+      <div class="row justify-left">
+        <p class="text-grey-7">{{ $t('tiposdecontratos.subtitle') }}</p>
+      </div>
+    </div>
+
+    <q-card-section class="row justify-between items-center">
+      <template v-if="!esVistaEstandar">
+        <q-btn
+          class="global-btn-page"
+          icon="sym_o_add_notes" size="15px"
+          :label="$q.screen.lt.sm ? '' : $t('tiposdecontratos.new')"
+          :round="$q.screen.lt.sm"
+          @click="prepararNuevoTipoDeContrato"
+        />
+      
+        <div class="row q-gutter-sm">
+          <q-btn outline
+            color="secondary" 
+            icon="cloud_download" size="15px"
+            :label="$q.screen.lt.sm ? '' : $t('forms.standar')"
+            :round="$q.screen.lt.sm"
+            @click="cargarTiposDeContratosEstandar"
+          />
+
+          <q-input clearable dense outlined
+            v-model="filtroBusqueda"
+            :placeholder="$t('common.actions.search')"
           >
             <template v-slot:append>
-              <q-icon name="search" />
+              <q-icon name="manage_search"/>
             </template>
           </q-input>
-          <q-btn 
-            v-else
-            color="primary" 
-            icon="arrow_back" 
-            label="Volver" 
-            @click="alternarVistaEstandar(false)"
-          />
         </div>
+      </template>
 
-        <div class="col-12 col-sm-4 text-center">
-          <div class="text-h6 text-primary text-weight-bold">
-            {{ esVisibleEstandar ? 'Catálogo Estándar de Contratos' : 'Tipos de Contratos' }}
+      <template v-else>
+
+        <q-btn outline
+          color="negative" 
+          icon="arrow_back" 
+          :label="$t('forms.back')"
+          @click="alternarVistaEstandar"
+        />
+
+        <div class="row q-gutter-sm">
+          <q-btn
+              color="warning"
+              icon="autorenew"
+              :label="$t('forms.replace')"
+              @click="confirmarImportacion('reemplazar')"
+            />
+
+            <q-btn
+              color="positive"
+              icon="add"
+              :label="$t('forms.add')"
+              @click="confirmarImportacion('agregar')"
+            />
           </div>
-        </div>
+      </template>
+    </q-card-section>
 
-        <div class="col-12 col-sm-4 text-right">
-          <template v-if="!esVisibleEstandar">
-            <q-btn 
-              color="primary" 
-              icon="add" 
-              label="Nuevo Registro" 
-              @click="prepararNuevoTipoDeContrato"
-              class="q-mr-sm"
-            />
-            <q-btn 
-              color="secondary" 
-              icon="download" 
-              label="Importar Estándar" 
-              @click="alternarVistaEstandar(true)"
-            />
-          </template>
-        </div>
-      </q-card-section>
+    <div v-if="!esVistaEstandar">
+      <TiposDeContratosTable 
+        :lista-tipos-de-contratos="listaTiposDeContratos"
+        :filtro="filtroBusqueda"
+        @editar="prepararEdicionTipoDeContrato"
+        @eliminar="confirmarEliminarTipoDeContrato"
+        @import="alternarVistaEstandar"
+      />
+    </div>
 
-      <q-separator />
+    <div v-else>
+      <TiposDeContratosStandar 
+        :rows="listaTiposDeContratosEstandar"
+      />
+    </div>
 
-      <q-card-section>
-        <TiposDeContratosStandar 
-          v-if="esVisibleEstandar"
-          :listaEstandar="listaTiposDeContratosEstandar"
-          @importar="confirmarImportacion"
-        />
-        <TiposDeContratosTable 
-          v-else
-          :listaTiposDeContratos="listaTiposDeContratos"
-          :filtro="filtroBusqueda"
-          @editar="prepararEdicionTipoDeContrato"
-          @eliminar="confirmarEliminarTipoDeContrato"
-        />
-      </q-card-section>
-    </q-card>
-
-    <q-dialog v-model="esVisibleDialogo" persistent>
+    <q-dialog v-model="esVisibleDialogo">
       <TiposDeContratosForm 
-        :tipoDeContrato="tipoDeContratoActual"
-        :esEdicion="esModoEdicion"
+        :tipo-de-contrato="tipoDeContratoActual"
+        :es-modo-edicion="esModoEdicion"
         @guardar="guardarTipoDeContrato"
-        @cancelar="esVisibleDialogo = false"
       />
     </q-dialog>
   </q-page>
@@ -86,20 +100,12 @@ import TiposDeContratosForm from '../components/TiposDeContratosForm.vue';
 import TiposDeContratosStandar from '../components/TiposDeContratosStandar.vue';
 
 const {
-  listaTiposDeContratos,
-  listaTiposDeContratosEstandar,
-  esModoEdicion,
-  esVisibleDialogo,
-  esVisibleEstandar,
-  tipoDeContratoActual,
+  listaTiposDeContratos, tipoDeContratoActual, esModoEdicion, esVisibleDialogo,
   filtroBusqueda,
-  cargarTiposDeContratos,
-  prepararNuevoTipoDeContrato,
-  prepararEdicionTipoDeContrato,
-  guardarTipoDeContrato,
-  confirmarEliminarTipoDeContrato,
-  alternarVistaEstandar,
-  confirmarImportacion
+  listaTiposDeContratosEstandar, esVistaEstandar,
+  cargarTiposDeContratos, prepararNuevoTipoDeContrato, guardarTipoDeContrato, 
+  prepararEdicionTipoDeContrato, confirmarEliminarTipoDeContrato,
+  cargarTiposDeContratosEstandar, alternarVistaEstandar, confirmarImportacion
 } = useTiposDeContratos();
 
 onMounted(() => {

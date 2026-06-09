@@ -1,43 +1,44 @@
 <template>
-  <q-card style="min-width: 400px; max-width: 600px;">
-    <q-card-section class="bg-primary text-white">
-      <div class="text-h6">
-        {{ props.esEdicion ? 'Editar Registro' : 'Nuevo Registro' }}
-      </div>
+  <q-card style="width: 100vh">
+
+    <q-card-section class="global-form-header row justify-between">
+      <div class="text-h6">{{ esModoEdicion ? $t('tiposdecontratos.edit') : $t('tiposdecontratos.new') }}</div>
+      <q-btn icon="close" flat round dense v-close-popup />
     </q-card-section>
 
-    <q-form @submit="onSubmit">
-      <q-card-section class="q-col-gutter-md">
-        <q-input
-          v-model="datosLocales.nombre"
-          label="Tipo de contrato *"
-          outlined
-          dense
-          :rules="[val => (val !== null && val !== '') || 'El nombre es obligatorio']"
-        />
-
-        <q-input
-          v-model="datosLocales.observacion"
-          label="Observación *"
-          type="textarea"
-          outlined
-          dense
-          :rules="[val => (val !== null && val !== '') || 'La observación es obligatoria']"
-        />
-
-        <q-input
-          v-model="datosLocales.naturaleza"
-          label="Naturaleza *"
-          type="textarea"
-          outlined
-          dense
-          :rules="[val => (val !== null && val !== '') || 'La naturaleza es obligatoria']"
-        />
+    <q-form @submit="emitirGuardar">
+      <q-card-section>
+        <div class="row q-col-gutter-md">
+          
+          <div class="col-6">
+            <q-input autofocus dense outlined
+              v-model="datosLocales.nombre"
+              :label="$t('tiposdecontratos.name') + ' *'"
+              :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
+            />
+          </div>
+          <div class="col-6">
+            <q-input dense outlined
+              v-model="datosLocales.naturaleza"
+              :label="$t('tiposdecontratos.nature') + ' *'"
+              :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
+            />
+          </div>
+          
+          <div class="col-12">
+            <q-input dense lazy-rules outlined
+              v-model="datosLocales.observacion"
+              type="textarea"
+              :label="$t('tiposdecontratos.observation') + ' *'"
+              :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
+            />
+          </div>
+        </div>
       </q-card-section>
 
-      <q-card-actions align="right" class="bg-grey-2">
-        <q-btn flat label="Cancelar" color="negative" @click="emits('cancelar')" />
-        <q-btn type="submit" label="Registrar" color="primary" />
+      <q-card-actions align="right" class="q-pb-md q-pr-md">
+        <q-btn flat :label="$t('common.actions.cancel')" color="negative" v-close-popup />
+        <q-btn type="submit" icon="save" :label="$t('common.actions.save')" class="global-btn-page" />
       </q-card-actions>
     </q-form>
   </q-card>
@@ -49,26 +50,21 @@ import type { TipoDeContrato } from '../types/tiposDeContratos.types';
 
 const props = defineProps<{
   tipoDeContrato: TipoDeContrato;
-  esEdicion: boolean;
+  esModoEdicion: boolean;
 }>();
 
 const emits = defineEmits<{
   (e: 'guardar', datos: TipoDeContrato): void;
-  (e: 'cancelar'): void;
 }>();
 
-// Clon reactivo profundo
 const datosLocales = ref<TipoDeContrato>({ ...props.tipoDeContrato });
 
-watch(
-  () => props.tipoDeContrato,
-  (nuevoValor) => {
-    datosLocales.value = { ...nuevoValor };
-  },
-  { deep: true }
+watch(() => props.tipoDeContrato,(nuevosDatos) => {
+    datosLocales.value = { ...nuevosDatos };
+  }, { deep: true }
 );
 
-const onSubmit = (): void => {
+const emitirGuardar = () => {
   emits('guardar', datosLocales.value);
 };
 </script>
