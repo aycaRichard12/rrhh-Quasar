@@ -5,11 +5,9 @@ import { useNotificaciones } from 'src/composables/useNotificaciones';
 import { beneficiosService } from '../services/beneficios.service';
 import type { Beneficio } from '../types/beneficios.types';
 
-
-
 export function useBeneficios() {
-  
   const listaBeneficios = ref<Beneficio[]>([]);
+  const cargando = ref<boolean>(false);
   const idEmpresa = String(idempresa_md5());
   const esModoEdicion = ref<boolean>(false);
   const esVisibleDialogo = ref<boolean>(false);
@@ -28,15 +26,19 @@ export function useBeneficios() {
   });
 
   const { 
-    notificarAdvertencia, notificarErrorAccion, notificarExitoAccion, confirmarEliminacionPredefinida, confirmarImportacionPredefinida
+    notificarAdvertencia, notificarErrorAccion, notificarExitoAccion,
+    confirmarEliminacionPredefinida, confirmarImportacionPredefinida
   } = useNotificaciones();
 
   const cargarBeneficios = async () => {
+    cargando.value = true;
     try {
       listaBeneficios.value = await beneficiosService.listarBeneficios();
     } catch (error) {
       console.error(error);
       notificarErrorAccion('cargar');
+    } finally {
+      cargando.value = false;
     }
   };
 
@@ -64,7 +66,6 @@ export function useBeneficios() {
     try {
       const respuesta = await beneficiosService.editarBeneficio(id);
       if (respuesta.estado === 'exito' && respuesta.datos) {
-        // Directo y sin mapeos porque el service ya te lo entrega limpio
         beneficioActual.value = { ...respuesta.datos };
         esModoEdicion.value = true;
         esVisibleDialogo.value = true;
@@ -117,12 +118,15 @@ export function useBeneficios() {
   };
 
   const cargarBeneficiosEstandar = async () => {
+    cargando.value = true;
     try {
       listaBeneficiosEstandar.value = await beneficiosService.listarBeneficiosEstandar();
       esVistaEstandar.value = true;
     } catch (error) {
       console.error(error);
       notificarErrorAccion('cargar');
+    } finally {
+      cargando.value = false;
     }
   };
 
@@ -175,7 +179,7 @@ export function useBeneficios() {
   };
 
   return {
-    listaBeneficios, beneficioActual, esModoEdicion, filtroBusqueda,
+    listaBeneficios, beneficioActual, esModoEdicion, filtroBusqueda, cargando,
     esVisibleDialogo, listaBeneficiosEstandar, esVistaEstandar,
     cargarBeneficios, prepararNuevoBeneficio, guardarBeneficio,
     prepararEdicionBeneficio, confirmarEliminarBeneficio,

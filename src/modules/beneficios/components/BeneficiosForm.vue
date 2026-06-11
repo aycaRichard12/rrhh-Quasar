@@ -84,13 +84,11 @@ const emits = defineEmits<{(
   e: 'guardar', datos: Beneficio): void
 }>();
 
-const datosLocales = ref<Beneficio>({
-  ...props.beneficio
-});
+const datosLocales = ref<Beneficio>({...props.beneficio});
 
 watch(() => props.beneficio, (nuevosDatos) => {
-  datosLocales.value = { ...nuevosDatos } }, { deep: true
-});
+  datosLocales.value = { ...nuevosDatos }
+}, { deep: true});
 
 const emitirGuardar = () => {
   emits('guardar', datosLocales.value)

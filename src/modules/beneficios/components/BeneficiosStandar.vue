@@ -8,18 +8,6 @@
       :rows-per-page-label="$t('table.recordsPerPage', 'Registros por página:')"
       :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${$t('table.of', 'de')} ${totalRows}`"
     >
-    <!-- <template v-slot:body-cell-tipo="propsCell">
-          <q-td :props="propsCell">
-              {{ propsCell.row.tipo === 1 || propsCell.row.tipo === 1 ? 'Porcentaje' : 'Monto' }}
-          </q-td>
-        </template>
-
-        <template v-slot:body-cell-destino="propsCell">
-          <q-td :props="propsCell">
-              {{ propsCell.row.destino === 1 || propsCell.row.destino === 1 ? 'Planilla' : 'Finiquito' }}
-          </q-td>
-        </template> -->
-
     <template v-slot:body-cell-numero="propsCell">
       <q-td :props="propsCell">{{ propsCell.rowIndex + 1 }}</q-td>
     </template>

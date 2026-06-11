@@ -13,7 +13,7 @@
       <div class="logo-area q-px-lg q-pt-lg q-pb-md">
         <div class="row items-center q-gutter-sm">
           <div class="logo-badge">
-            <q-img src="favicon.ico" width="26px" height="26px" />
+            <q-img src="favicon.ico" width="50px" height="50px" />
           </div>
           <div class="column">
             <div class="logo-name">MisterSofts</div>
