@@ -3,8 +3,6 @@ import { idempresa_md5, urlApiAdministracion } from 'src/composables/funcionesGe
 import type { RespuestaApi } from 'src/types/api.types';
 import type { Beneficio } from '../types/beneficios.types';
 
-const ID_EMPRESA = idempresa_md5();
-
 const sanearCantidad = (valor: unknown): number => {
   if (valor === null || valor === undefined || valor === '') return 0;
   if (typeof valor === 'number') return isNaN(valor) ? 0 : valor;
@@ -19,7 +17,7 @@ const sanearCantidad = (valor: unknown): number => {
 
 export const beneficiosService = {
   async listarBeneficios(): Promise<Beneficio[]> {
-    const { data } = await api.get(`listabeneficio/${ID_EMPRESA}`);
+    const { data } = await api.get(`listabeneficio/${idempresa_md5()}`);
     return Array.isArray(data) ? data.map((item: Record<string, unknown>) => ({
         ...item,
         id: Number(item.id),
@@ -57,8 +55,7 @@ export const beneficiosService = {
   },
 
   async listarBeneficiosEstandar(): Promise<Beneficio[]> {
-    const urlAd = urlApiAdministracion();
-    const { data } = await api.get(`${urlAd}api/listabeneficios`);
+    const { data } = await api.get(`${urlApiAdministracion()}api/listabeneficios`);
     return Array.isArray(data) ? data.map((item: Record<string, unknown>) => ({
         ...item,
         id: Number(item.id),

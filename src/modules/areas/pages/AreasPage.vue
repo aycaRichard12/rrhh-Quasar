@@ -30,6 +30,7 @@
     <AreasTable
       :lista-areas="listaAreas"
       :filtro="filtroBusqueda"
+      :cargando="listaAreas.length === 0"
       @editar="prepararEdicionArea"
       @eliminar="confirmarEliminarArea"
     />
@@ -53,10 +54,10 @@ import AreasTable from '../components/AreasTable.vue';
 
 const {
   listaAreas, listaSucursales, esVisibleDialogo, esModoEdicion, areaActual, filtroBusqueda,
-  cargarAreasSucursales, prepararNuevaArea, prepararEdicionArea, guardarArea, confirmarEliminarArea
+  cargarAreas, prepararNuevaArea, prepararEdicionArea, guardarArea, confirmarEliminarArea
 } = useAreas();
 
 onMounted(() => { 
-  void cargarAreasSucursales();
+  void cargarAreas();
 })
 </script>

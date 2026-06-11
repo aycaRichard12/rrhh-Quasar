@@ -5,16 +5,17 @@ import { useNotificaciones } from 'src/composables/useNotificaciones';
 import { beneficiosService } from '../services/beneficios.service';
 import type { Beneficio } from '../types/beneficios.types';
 
-const listaBeneficios           = ref<Beneficio[]>([]);
-const idEmpresa                 = String(idempresa_md5());
+
 
 export function useBeneficios() {
-
-  const esModoEdicion           = ref<boolean>(false);
-  const esVisibleDialogo        = ref<boolean>(false);
-  const filtroBusqueda          = ref<string>('');
+  
+  const listaBeneficios = ref<Beneficio[]>([]);
+  const idEmpresa = String(idempresa_md5());
+  const esModoEdicion = ref<boolean>(false);
+  const esVisibleDialogo = ref<boolean>(false);
+  const filtroBusqueda = ref<string>('');
   const listaBeneficiosEstandar = ref<Beneficio[]>([]);
-  const esVistaEstandar         = ref<boolean>(false);
+  const esVistaEstandar = ref<boolean>(false);
 
   const beneficioActual = ref<Beneficio>({
     nombre: '',
@@ -77,8 +78,8 @@ export function useBeneficios() {
   const guardarBeneficio = async (datosGuardar: Beneficio) => {
     try {
       const payload = {
-        ver        : esModoEdicion.value ? 'editarbeneficio' : 'registrobeneficio',
-        idempresa  : idEmpresa,
+        ver : esModoEdicion.value ? 'editarbeneficio' : 'registrobeneficio',
+        idempresa : idEmpresa,
         ...datosGuardar
       };
       
@@ -134,10 +135,10 @@ export function useBeneficios() {
   const procesarImportacion = async (tipoAccion: 'reemplazar' | 'agregar') => {
     try {
       const payload = {
-        ver      : 'remplazarocopiardatosbeneficios',
-        idempresa: idEmpresa,
-        datos    : JSON.stringify(listaBeneficiosEstandar.value),
-        tipo     : tipoAccion === 'reemplazar' ? '1' : '2'
+        ver : 'remplazarocopiardatosbeneficios',
+        idempresa : idEmpresa,
+        datos : JSON.stringify(listaBeneficiosEstandar.value),
+        tipo : tipoAccion === 'reemplazar' ? '1' : '2'
       };
 
       const datosFormulario = prepararDatosFormulario(payload);

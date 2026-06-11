@@ -8,12 +8,12 @@
   >
     <q-badge v-if="tieneFiltroActivo" color="primary" floating rounded size="xs" />
 
-    <q-menu anchor="bottom right" self="top right" transition-show="scale" transition-hide="scale">
-      <q-list style="min-width: 320px" class="filter-menu">
+    <q-menu anchor="bottom right" self="top right" transition-show="scale" transition-hide="scale" :dark="$q.dark.isActive">
+      <q-list style="min-width: 320px" class="filter-menu" :dark="$q.dark.isActive">
 
         <!-- Sección de Ordenamiento -->
         <div class="q-px-md q-pt-md q-pb-sm">
-          <div class="text-caption text-weight-bold text-grey-7 q-mb-sm">ORDENAMIENTO</div>
+          <div class="text-caption text-weight-bold q-mb-sm" :class="$q.dark.isActive ? 'text-grey-4' : 'text-grey-7'">ORDENAMIENTO</div>
           <div class="row q-gutter-sm">
             <q-btn
               flat
@@ -53,13 +53,13 @@
           />
         </div>
 
-        <q-separator class="q-my-sm" />
+        <q-separator class="q-my-sm" :dark="$q.dark.isActive" />
 
         <!-- Sección de Filtrado -->
         <q-tabs
           v-model="tabActual"
           dense
-          class="text-grey-7 q-px-md"
+          :class="[$q.dark.isActive ? 'text-grey-4' : 'text-grey-7', 'q-px-md']"
           active-color="primary"
           indicator-color="primary"
           align="justify"
@@ -69,10 +69,10 @@
           <q-tab name="condiciones" label="Condiciones" no-caps />
         </q-tabs>
 
-        <q-separator class="q-my-sm" />
+        <q-separator class="q-my-sm" :dark="$q.dark.isActive" />
 
         <!-- Contenido de Tabs -->
-        <q-tab-panels v-model="tabActual" animated class="bg-white">
+        <q-tab-panels v-model="tabActual" animated :class="$q.dark.isActive ? 'bg-dark' : 'bg-white'">
 
           <q-tab-panel name="valores" class="q-pa-md">
             <q-input
@@ -82,6 +82,7 @@
               placeholder="Buscar valores..."
               class="q-mb-md"
               clearable
+              :dark="$q.dark.isActive"
             >
               <template v-slot:prepend><q-icon name="search" size="sm" /></template>
             </q-input>
@@ -93,6 +94,7 @@
                 size="sm"
                 class="full-width text-weight-medium text-primary"
                 @update:model-value="alternarTodo"
+                :dark="$q.dark.isActive"
               />
             </div>
 
@@ -106,6 +108,7 @@
                   :label="`${item.etiqueta} (${item.cantidad})`"
                   size="sm"
                   class="full-width q-mb-xs text-body2"
+                  :dark="$q.dark.isActive"
                 />
                 <div v-if="valoresFiltrados.length === 0" class="text-center text-caption text-grey-5 q-mt-md">
                   <q-icon name="search_off" size="sm" class="q-mr-xs" />
@@ -116,7 +119,7 @@
           </q-tab-panel>
 
           <q-tab-panel name="condiciones" class="q-pa-md">
-            <div class="text-caption text-weight-bold text-grey-7 q-mb-sm">Mostrar filas donde:</div>
+            <div class="text-caption text-weight-bold q-mb-sm" :class="$q.dark.isActive ? 'text-grey-4' : 'text-grey-7'">Mostrar filas donde:</div>
 
             <q-select
               dense
@@ -128,6 +131,7 @@
               options-dense
               emit-value
               map-options
+              :dark="$q.dark.isActive"
             />
 
             <q-input
@@ -137,6 +141,7 @@
               label="Valor"
               class="q-mb-md text-body2"
               clearable
+              :dark="$q.dark.isActive"
             />
 
             <q-toggle
@@ -145,12 +150,13 @@
               color="primary"
               size="sm"
               class="text-body2"
+              :dark="$q.dark.isActive"
             />
           </q-tab-panel>
 
         </q-tab-panels>
 
-        <q-separator class="q-my-sm" />
+        <q-separator class="q-my-sm" :dark="$q.dark.isActive" />
 
         <!-- Acciones -->
         <div class="q-px-md q-pb-md q-pt-sm flex gap-sm justify-end">
@@ -167,7 +173,7 @@
           <q-btn
             flat
             label="Cancelar"
-            color="grey-8"
+            :color="$q.dark.isActive ? 'grey-4' : 'grey-8'"
             size="sm"
             no-caps
             v-close-popup
@@ -193,7 +199,10 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
+import { useQuasar } from 'quasar';
 import type { QTableColumn } from 'quasar';
+
+const $q = useQuasar();
 
 // Evitamos usar 'any' usando genéricos o Record estricto
 const props = defineProps<{
@@ -321,7 +330,7 @@ const limpiarFiltro = () => {
 }
 
 .border-subtle {
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--q-separator-color);
   border-radius: 6px;
   overflow: hidden;
 }

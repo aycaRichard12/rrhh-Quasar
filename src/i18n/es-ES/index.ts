@@ -104,13 +104,16 @@ export default {
   },
   tables:{
     description: 'Descripción',
+    options: 'Opciones',
     order: 'Orden',
     status: 'Estado',
-    options: 'Opciones',
     amount: 'Cantidad',
     destination: 'Destino',
-    type: 'Tipo'
+    type: 'Tipo',
+    amount2: 'Monto',
   },
+  //CONFIGURACIONES_________________________________________________________________________________
+    //ORGANIZACIÓN:
   areas: {
     title: 'Áreas',
     subtitle: 'Gestión de áreas y sucursales de la empresa.',
@@ -144,28 +147,20 @@ export default {
     nature:'Naturaleza',
     observation:'Obervación'
   },
+  //BENEFICIOS SOCIALES:
   beneficios:{
     title: 'Beneficios',
     subtitle: 'Gestión de beneficios e indemnizaciones del personal.',
     name: 'Beneficios',
     new: 'Nuevo Beneficio',
     edit: 'Editar Beneficio',
-    nature:'Naturaleza',
-    observation:'Obervación'
   },
   entity:{
     title: 'Entes Reguladores',
     subtitle: 'Gestión de aportes y regulaciones.',
-    form: {
-      formNew: 'Nuevo Ente Regulador',
-      formEdit: 'Editar Ente Regulador',
-      buttonRegister: 'Nuevo Ente Regulador',
-      buttonImport: 'Importar Estándar',
-      name: 'Ente Regulador',
-      percentage: 'Porcentaje',
-      amount: 'Monto',
-      order: 'Orden'
+    name: 'Ente Regulador',
+    new: 'Nuevo Ente Regulador',
+    edit: 'Editar Ente Regulador',
+    percentage: 'Porcentaje',
     },
-  }
-  
 }

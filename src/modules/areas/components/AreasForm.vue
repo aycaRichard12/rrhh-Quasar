@@ -6,7 +6,7 @@
       <q-btn icon="close" flat round dense v-close-popup/>  
     </q-card-section>
 
-    <q-form @submit="emitirGuardar">
+    <q-form @submit="guardar">
       <q-card-section>
         <div class="row q-col-gutter-md">
         
@@ -23,7 +23,7 @@
               option-value="id"
               v-model="datosLocales.idsucursal"
               :options="sucursales"
-              :option-label="item => item ? `${item.sucursal || item.nombre} - ${item.region}` : ''"
+              :option-label="(item) => item ? `${item.nombre} - ${item.region}` : ''"
               :label="$t('areas.branch') + ' *'"
               :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
             />
@@ -53,8 +53,8 @@ import { ref, watch } from 'vue'
 import type { Area, Sucursal } from '../types/areas.types'
 
 const props = defineProps<{
-  area          : Area
-  sucursales    : Sucursal[]
+  area : Area
+  sucursales : Sucursal[]
   esModoEdicion : boolean
 }>();
 
@@ -64,11 +64,11 @@ const emits = defineEmits<{
 
 const datosLocales = ref<Area>({ ...props.area })
 
-watch(() => props.area, (nuevosDatos) => {
-  datosLocales.value = { ...nuevosDatos }
-}, { deep: true })
+watch(() => props.area, (nuevoValor) => {
+  datosLocales.value = { ...nuevoValor };
+}, { deep: true });
 
-const emitirGuardar = () => {
+const guardar = () => {
   emits('guardar', datosLocales.value)
 }
 </script>
