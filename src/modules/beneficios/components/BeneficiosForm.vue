@@ -54,10 +54,10 @@
 
           <div class="col-12">
             <q-input autogrow dense lazy-rules outlined
-            v-model="datosLocales.descripcion"
-            type="textarea"
-            :label="$t('tables.description') + ' *'"
-            :rules="[val => !!val || $t('common.rules.required')]"
+              v-model="datosLocales.descripcion"
+              type="textarea"
+              :label="$t('tables.description') + ' *'"
+              :rules="[val => !!val || $t('common.rules.required')]"
             />
           </div>
         </div>

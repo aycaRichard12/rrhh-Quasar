@@ -22,7 +22,16 @@ export default {
       activate: 'Activar',
       add: 'Añadir',
       update: 'Actualizar',
-      report: 'Generar Reporte'
+      report: 'Generar Reporte',
+      active: 'Activo'
+    },
+    filter: {
+      sortAsc: 'Ordenar de menor a mayor',
+      sortDesc: 'Ordenar de mayor a menor',
+      values: 'Valores',
+      conditions: 'Condiciones',
+      selectAll: 'Seleccionar todo',
+      conditionsInfo: 'Configure condiciones avanzadas aquí'
     },
     notifications: {
       failed: 'Acción fallida',

@@ -1,9 +1,9 @@
 <template>
   <q-input dense outlined
+		class="componente-buscador"
     :model-value="modelValue"
-    @update:model-value="actualizarValor"
-    class="componente-buscador"
-    :placeholder="$t('common.actions.search')"
+		:placeholder="$t('common.actions.search')"
+		@update:model-value="actualizarValor"
   >
    	<template v-slot:prepend>
    		<q-icon
@@ -24,19 +24,19 @@
  
 <script setup lang="ts">
 
-defineProps<{
-	modelValue: string;
-}>();
+	defineProps<{
+		modelValue: string;
+	}>();
 
-const emits = defineEmits<{
-  (e: 'update:modelValue', valor: string): void;
-}>();
+	const emits = defineEmits<{
+		(e: 'update:modelValue', valor: string): void;
+	}>();
 
-const actualizarValor = (valor: string | number | null): void => {
-	emits('update:modelValue', String(valor || ''));
-};
+	const actualizarValor = (valor: string | number | null): void => {
+		emits('update:modelValue', String(valor || ''));
+	};
 
-const limpiarBusqueda = (): void => {
-	emits('update:modelValue', '');
-};
+	const limpiarBusqueda = (): void => {
+		emits('update:modelValue', '');
+	};
 </script>

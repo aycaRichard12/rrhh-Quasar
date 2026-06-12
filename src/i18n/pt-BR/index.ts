@@ -20,7 +20,16 @@ export default {
       activate: 'Ativar',
       add: 'Adicionar',
       update: 'Atualizar',
-      report: 'Gerar Relatório'
+      report: 'Gerar Relatório',
+      active: 'Ativo'
+    },
+    filter: {
+      sortAsc: 'Ordenar crescente',
+      sortDesc: 'Ordenar decrescente',
+      values: 'Valores',
+      conditions: 'Condições',
+      selectAll: 'Selecionar tudo',
+      conditionsInfo: 'Configure condições avançadas aqui'
     },
     notifications: {
       failed: 'Ação falhou',

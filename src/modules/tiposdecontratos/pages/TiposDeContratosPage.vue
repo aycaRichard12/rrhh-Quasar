@@ -28,14 +28,7 @@
             @click="cargarTiposDeContratosEstandar"
           />
 
-          <q-input clearable dense outlined
-            v-model="filtroBusqueda"
-            :placeholder="$t('common.actions.search')"
-          >
-            <template v-slot:append>
-              <q-icon name="manage_search"/>
-            </template>
-          </q-input>
+          <BuscadorGlobal v-model="filtroBusqueda" />
         </div>
       </template>
 
@@ -98,6 +91,7 @@ import { useTiposDeContratos } from '../composables/useTiposDeContratos';
 import TiposDeContratosTable from '../components/TiposDeContratosTable.vue';
 import TiposDeContratosForm from '../components/TiposDeContratosForm.vue';
 import TiposDeContratosStandar from '../components/TiposDeContratosStandar.vue';
+import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
 
 const {
   listaTiposDeContratos, tipoDeContratoActual, esModoEdicion, esVisibleDialogo,

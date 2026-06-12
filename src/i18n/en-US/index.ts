@@ -22,7 +22,16 @@ export default {
       activate: 'Activate',
       add: 'Add',
       update: 'Update',
-      report: 'Generate Report'
+      report: 'Generate Report',
+      active: 'Active'
+    },
+    filter: {
+      sortAsc: 'Sort ascending',
+      sortDesc: 'Sort descending',
+      values: 'Values',
+      conditions: 'Conditions',
+      selectAll: 'Select all',
+      conditionsInfo: 'Configure advanced conditions here'
     },
     notifications: {
       failed: 'Action failed',

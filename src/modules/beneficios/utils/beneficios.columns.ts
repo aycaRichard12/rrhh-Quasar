@@ -2,7 +2,7 @@ import type { QTableColumn } from "quasar";
 import type { Beneficio } from "../types/beneficios.types";
 
 export const obtenerColumnasBeneficios = (t: (key: string) => string): QTableColumn<Beneficio>[] => [
-  { name: 'numero',     label: 'N°',                   align: 'right',field: () => '',     style: 'width: 50px'},
+  { name: 'numero',     label: 'N°',                   align: 'right',field: () => '',      style: 'width: 50px'},
   { name: 'nombre',     label: t('beneficios.name'),   align: 'left',  field: 'nombre',     style: 'white-space: normal; width: 150px;'},
   { name: 'descripcion',label: t('tables.description'),align: 'left',  field: 'descripcion',style: 'white-space: normal; min-width: 150px;'},
   { name: 'tipo',       label: t('tables.type'),       align: 'center',field: 'tipo',       style: 'width: 100px', format: (val: number) => (val === 1 ? 'Porcentaje' : 'Monto Específico')},
