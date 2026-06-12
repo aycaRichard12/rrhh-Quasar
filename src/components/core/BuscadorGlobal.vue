@@ -40,3 +40,22 @@
 		emits('update:modelValue', '');
 	};
 </script>
+
+<style scoped>                                                                                             
+.componente-buscador {                                                                                     
+	width: 10px;                                                                                              
+	min-width: 50px;                                                                                        
+	max-width: 100px;                                                                                        
+	transition: all 0.3s ease;                                                                           
+}
+@media (max-width: 599px) {                                                                               
+.componente-buscador {                                                                                   
+	max-width: 100px;                                                                                       
+}                                                                                                       
+}
+@media (max-width: 409px) {                                                                                
+.componente-buscador {                                                                                  
+ max-width: 50px;                                                                                    
+}                                                                                                      
+}                                                                                                        
+</style>

@@ -9,7 +9,7 @@
       </div>
     </div>
     
-    <q-card-section class="row q-gutter-sm justify-between items-center">
+    <q-card-section class="row no-wrap justify-between items-center q-gutter-x-sm">
       <template v-if="!esVistaEstandar">
         <q-btn
           class="global-btn-page"
@@ -20,7 +20,7 @@
           @click="prepararNuevoBeneficio"
         />
 
-        <div class="item-center row q-gutter-sm">
+        <div class="row no-wrap q-gutter-x-sm items-center col-grow justify-end">
           <q-btn outline
             color="secondary"
             icon="cloud_download"
@@ -29,7 +29,7 @@
             :round="$q.screen.lt.sm"
             @click="cargarBeneficiosEstandar"
           />
-          <BuscadorGlobal v-model="filtroBusqueda"/>
+          <BuscadorGlobal v-model="filtroBusqueda" class="col-grow" style="max-width: 300px" />
         </div>
       </template>
     
@@ -82,7 +82,7 @@
     
     <q-dialog
       v-model="esVisibleDialogo"
-||||>
+    >
       <BeneficiosForm
         :beneficio="beneficioActual"
         :es-modo-edicion="esModoEdicion"

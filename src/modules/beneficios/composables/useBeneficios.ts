@@ -83,10 +83,8 @@ export function useBeneficios() {
         idempresa : idEmpresa,
         ...datosGuardar
       };
-      
       const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await beneficiosService.guardarBeneficio(datosFormulario);
-      
       if (respuesta.estado === 'exito') {
         notificarExitoAccion('guardar');
         esVisibleDialogo.value = false;
