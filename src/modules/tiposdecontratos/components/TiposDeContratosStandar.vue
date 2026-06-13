@@ -1,64 +1,31 @@
 <template>
-  <div>
-    <div class="row q-mb-md justify-end">
-      <div class="q-gutter-sm">
-        <q-btn 
-          color="warning" 
-          icon="sync" 
-          label="Reemplazar Todo" 
-          @click="emits('importar', 1)" 
-        />
-        <q-btn 
-          color="positive" 
-          icon="add_circle" 
-          label="Añadir Datos" 
-          @click="emits('importar', 2)" 
-        />
-      </div>
-    </div>
-
-    <q-table
-      flat
-      bordered
-      :rows="props.listaEstandar"
-      :columns="columnas"
+  <q-card>
+    <q-table bordered flat
       row-key="id"
-      :rows-per-page-options="[10, 20, 50, 0]"
+      class="global-table-header"
+      :rows="props.rows"
+      :columns="listaColumnas"
+      :rows-per-page-label="t('common.report.recordsPerPage')"
+      :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${t('common.report.of')} ${totalRows}`"
     >
       <template v-slot:body-cell-numero="propsCell">
-        <q-td :props="propsCell">
-          {{ propsCell.rowIndex + 1 }}
-        </q-td>
-      </template>
-
-      <template v-slot:body-cell-observacion="propsCell">
-        <q-td :props="propsCell">
-          <div class="ellipsis" style="max-width: 300px" :title="propsCell.row.observacion">
-            {{ propsCell.row.observacion }}
-          </div>
-        </q-td>
+        <q-td :props="propsCell">{{ propsCell.rowIndex + 1 }}</q-td>
       </template>
     </q-table>
-  </div>
+  </q-card>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { QTableColumn } from 'quasar';
+import { useI18n } from 'vue-i18n'
+import { obtenerColumnasTiposDeContratosEstandar } from '../utils/tiposDeContratos.columns';
 import type { TipoDeContrato } from '../types/tiposDeContratos.types';
 
+const { t } = useI18n();
+
 const props = defineProps<{
-  listaEstandar: TipoDeContrato[];
+  rows: TipoDeContrato[];
 }>();
 
-const emits = defineEmits<{
-  (e: 'importar', tipo: number): void;
-}>();
-
-// Columnas reducidas para la vista estándar
-const columnas = computed<QTableColumn<TipoDeContrato>[]>(() => [
-  { name: 'numero', label: 'N°', align: 'center', field: () => '', sortable: false },
-  { name: 'nombre', label: 'Tipo de contrato', align: 'left', field: (row) => row.nombre, sortable: true },
-  { name: 'observacion', label: 'Observación', align: 'left', field: (row) => row.observacion, sortable: true }
-]);
+const listaColumnas = computed(() => obtenerColumnasTiposDeContratosEstandar(t));
 </script>

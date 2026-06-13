@@ -1,61 +1,57 @@
 <template>
-  <q-card style="min-width: 50vw;">
-    <q-card-section class="prueba-form-titulo2 row items-center justify-between text-white">
-      <div class="text-h6">{{ esModoEdicion ? $t('cargos.form.edit', 'Editar Cargo') : $t('cargos.form.new', 'Nuevo Registro') }}</div>
-      <q-btn icon="close" flat round dense v-close-popup />
+  <q-card style="width: 100vh">
+
+    <q-card-section class="global-form-header row justify-between">
+      <div class="text-h6">{{ esModoEdicion ? $t('cargos.edit') : $t('cargos.new') }}</div>
+      <q-btn icon="close" flat round dense v-close-popup/>
     </q-card-section>
 
     <q-form @submit="emitirGuardar">
-      <q-card-section class="q-pt-md scroll" style="max-height: 70vh;">
+      <q-card-section>
         <div class="row q-col-gutter-md">
           
-          <div class="col-12 col-md-8">
-            <q-input autofocus dense outlined lazy-rules
+          <div class="col-12">
+            <q-input autofocus dense lazy-rules outlined
               v-model="datosLocales.cargo"
-              :label="$t('cargos.form.cargo', 'Cargo') + ' *'"
-              :rules="[val => (val !== null && val !== '') || $t('rules.required', 'Obligatorio')]"
+              :label="$t('cargos.name') + ' *'"
+              :rules="[val => (val !== null && val !== '') || $t('rules.required')]"
             />
           </div>
 
-          <div class="col-12 col-md-4">
+          <div class="col-6">
             <q-input dense outlined lazy-rules
               v-model="datosLocales.salario"
-              :label="$t('cargos.form.salary', 'Salario') + ' *'"
               type="number"
-              step="0.01"
-              :rules="[
-                val => (val !== null && val !== '') || $t('rules.required', 'Obligatorio'),
-                val => /^\d+(\.\d+)?$/.test(String(val)) || $t('rules.numeric', 'Debe ser numérico')
-              ]"
+              :label="$t('cargos.salary') + ' *'"
+              :rules="[val => (val !== null && val !== '') || $t('rules.required'), val => /^\d+(\.\d+)?$/.test(String(val)) || $t('rules.numeric')]"
             />
           </div>
 
-          <div class="col-12">
+          <div class="col-6">
             <q-select dense outlined emit-value map-options lazy-rules
               v-model="datosLocales.idarea"
-              :options="listaAreas"
               option-value="id"
               option-label="nombre"
-              :label="$t('cargos.form.area', 'Área') + ' *'"
-              :rules="[val => (val !== null && val !== '') || $t('rules.required', 'Obligatorio')]"
+              :options="listaAreas"
+              :label="$t('areas.name') + ' *'"
+              :rules="[val => (val !== null && val !== '') || $t('rules.required')]"
             />
           </div>
 
           <div class="col-12">
-            <q-input autogrow dense outlined lazy-rules
+            <q-input autogrow dense lazy-rules outlined
               v-model="datosLocales.descripcion"
               type="textarea"
-              :label="$t('tables.description', 'Descripción') + ' *'"
-              :rules="[val => (val !== null && val !== '') || $t('rules.required', 'Obligatorio')]"
+              :label="$t('tables.description') + ' *'"
+              :rules="[val => (val !== null && val !== '') || $t('rules.required')]"
             />
           </div>
-
         </div>
       </q-card-section>
 
-      <q-card-actions align="right" class="text-primary q-pb-md q-pr-md">
-        <q-btn flat :label="$t('common.actions.cancel', 'Cancelar')" color="negative" v-close-popup />
-        <q-btn type="submit" icon="save" :label="$t('common.actions.save', 'Guardar')" color="primary" />
+      <q-card-actions align="right" class="q-pb-md q-pr-md">
+        <q-btn flat :label="$t('common.actions.cancel')" color="negative" v-close-popup />
+        <q-btn type="submit" icon="save" :label="$t('common.actions.save')" class="global-btn-page" />
       </q-card-actions>
     </q-form>
   </q-card>
@@ -66,12 +62,14 @@ import { ref, watch } from 'vue';
 import type { Cargo, AreaMin } from '../types/cargos.types';
 
 const props = defineProps<{
-  cargo: Cargo;
-  listaAreas: AreaMin[];
-  esModoEdicion: boolean;
+  cargo         : Cargo;
+  listaAreas    : AreaMin[];
+  esModoEdicion : boolean;
 }>();
 
-const emits = defineEmits<{ (e: 'guardar', datos: Cargo): void }>();
+const emits = defineEmits<{
+  (e: 'guardar', datos: Cargo): void
+}>();
 
 const datosLocales = ref<Cargo>({ ...props.cargo });
 
@@ -83,9 +81,3 @@ const emitirGuardar = () => {
   emits('guardar', datosLocales.value); 
 };
 </script>
-
-<style>
-.prueba-form-titulo2{
-  background-color: #004d40 !important;
-}
-</style>

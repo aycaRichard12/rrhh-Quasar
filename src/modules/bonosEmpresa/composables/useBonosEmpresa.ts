@@ -5,17 +5,22 @@ import { useNotificaciones } from 'src/composables/useNotificaciones';
 import { bonosEmpresaService } from '../services/bonosEmpresa.service';
 import type { BonoEmpresa } from '../types/bonosEmpresa.types';
 
-const listaBonosEmpresa = ref<BonoEmpresa[]>([]);
-const listaBonosEmpresaEstandar = ref<BonoEmpresa[]>([]);
-const esModoEdicion = ref(false);
-const esVistaEstandar = ref(false);
-const esVisibleDialogo = ref(false);
-
-const bonoEmpresaActual = ref<BonoEmpresa>({
-  nombre: '', descripcion: '', tipo: '1', cantidad: '0', orden: '', destino: '1'
-});
-
 export function useBonosEmpresa() {
+
+  const listaBonosEmpresa = ref<BonoEmpresa[]>([]);
+  const listaBonosEmpresaEstandar = ref<BonoEmpresa[]>([]);
+  const esModoEdicion = ref(false);
+  const esVistaEstandar = ref(false);
+  const esVisibleDialogo = ref(false);
+
+  const bonoEmpresaActual = ref<BonoEmpresa>({
+    nombre: '',
+    descripcion: '',
+    tipo: '1',
+    cantidad: '0',
+    orden: '',
+    destino: '1'
+  });
   const { notificarExito, notificarError, notificarAdvertencia, confirmarAccion } = useNotificaciones();
   const idEmpresa = String(idempresa_md5());
 

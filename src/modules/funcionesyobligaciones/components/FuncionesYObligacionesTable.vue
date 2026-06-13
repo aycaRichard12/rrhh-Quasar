@@ -1,12 +1,12 @@
 <template>
-  <q-table
-    flat
-    bordered
+  <q-table bordered flat
+    row-key="id"
+    class="global-table-header"
     :rows="listaFuncionesYObligaciones"
     :columns="columnas"
-    row-key="id"
     :filter="filtro"
-    :rows-per-page-label="t('common.registrosPorPagina')"
+    :rows-per-page-label="$t('common.report.recordsPerPage')"
+      :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${$t('common.report.of')} ${totalRows}`"
   >
     <template v-slot:body-cell-numero="props">
       <q-td :props="props">
@@ -16,23 +16,17 @@
 
     <template v-slot:body-cell-opciones="props">
       <q-td :props="props" class="q-gutter-sm">
-        <q-btn
-          flat
-          round
-          dense
-          color="info"
-          icon="edit"
+        <q-btn dense flat round
+          class="global-btn-page"
+          icon="sym_o_edit_square"
           @click="emit('editar', String(props.row.id))"
         >
           <q-tooltip>{{ t('common.editar') }}</q-tooltip>
         </q-btn>
         
-        <q-btn
-          flat
-          round
-          dense
+        <q-btn dense round
           color="negative"
-          icon="delete"
+          icon="delete_forever"
           @click="emit('eliminar', String(props.row.id))"
         >
           <q-tooltip>{{ t('common.eliminar') }}</q-tooltip>

@@ -1,23 +1,36 @@
 <template>
-  <q-page padding>
-    <div class="row justify-between items-center">
-
-      <div class="q-gutter-sm q-mb-md">
-        <q-btn class="prueba-boton" text-color="white" icon="add" label="Nueva Area" @click="prepararNuevaArea" />
+  <q-page>
+    <div class="lt-sm">
+      <div class="row justify-left">
+        <h4 class="q-my-none text-positive">{{ $t('areas.title') }}</h4>
       </div>
-      <div class="col-6 col-sm-3 q-mb-sm-none q-mb-md">
+      <div class="row justify-left">
+        <p class="text-grey-7">{{ $t('areas.subtitle') }}</p>
+      </div>
+    </div>
+
+    <q-card-section class="row justify-between items-center">
+        <q-btn
+          class="global-btn-page"
+          icon="sym_o_add_notes" size="15px"
+          :label="$q.screen.lt.sm ? '' : $t('areas.new')"
+          :round="$q.screen.lt.sm"
+          @click="prepararNuevaArea"
+        />
         <q-input clearable dense outlined 
           v-model="filtroBusqueda" 
-          :placeholder="$t('common.search', 'Buscar cualquier palabra...')"
+          :placeholder="$t('common.actions.search')"
         >
-          <template v-slot:append> <q-icon name="search" /> </template>
+          <template v-slot:append>
+            <q-icon name="manage_search"/>
+          </template>
         </q-input>
-      </div>
-    </div> 
+    </q-card-section>
 
     <AreasTable
       :lista-areas="listaAreas"
       :filtro="filtroBusqueda"
+      :cargando="listaAreas.length === 0"
       @editar="prepararEdicionArea"
       @eliminar="confirmarEliminarArea"
     />
@@ -41,17 +54,10 @@ import AreasTable from '../components/AreasTable.vue';
 
 const {
   listaAreas, listaSucursales, esVisibleDialogo, esModoEdicion, areaActual, filtroBusqueda,
-  cargarAreasSucursales, prepararNuevaArea, prepararEdicionArea, guardarArea, confirmarEliminarArea
+  cargarAreas, prepararNuevaArea, prepararEdicionArea, guardarArea, confirmarEliminarArea
 } = useAreas();
 
 onMounted(() => { 
-  void cargarAreasSucursales();
+  void cargarAreas();
 })
 </script>
-
-<style>
-.prueba-boton{
-  /* background-color: #004d40 !important; */
-  background: linear-gradient(180deg, #004d40 0%, #002e25 70%, #001a12 100%);
-}
-</style>

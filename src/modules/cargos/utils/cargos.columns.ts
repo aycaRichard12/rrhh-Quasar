@@ -2,10 +2,10 @@ import type { QTableColumn } from 'quasar';
 import type { Cargo } from '../types/cargos.types';
 
 export const obtenerColumnasCargos = (t: (key: string) => string): QTableColumn<Cargo>[] => [
-  { name: 'numero',      label: 'N°', align: 'center', field: () => '', style: 'width: 50px' },
-  { name: 'cargo',       label: t('cargos.form.cargo'), align: 'left', field: 'cargo', style: 'white-space: normal; min-width: 150px', sortable:true },
-  { name: 'salario',     label: t('cargos.form.salary'), align: 'left', field: 'salario', style: 'width: 100px', sortable:true},
-  { name: 'descripcion', label: t('tables.description'), align: 'left', field: 'descripcion', style: 'white-space: normal' },
-  { name: 'area',        label: t('cargos.form.area'), align: 'center', field: 'area', style: 'white-space: normal; width: 150px' },
-  { name: 'opciones',    label: t('tables.options'), align: 'center', field: () => '', style: 'width: 100px' }
+  { name: 'numero',     label: 'N°',                   align: 'right', field: () => '',     style: 'width: 50px' },
+  { name: 'cargo',      label: t('cargos.name'),       align: 'left',  field: 'cargo',      style: 'width: 153px; white-space: normal' },
+  { name: 'descripcion',label: t('tables.description'),align: 'left',  field: 'descripcion',style: 'white-space: normal; min-width:210px' },
+  { name: 'area',       label: t('areas.name'),        align: 'center',field: 'area',       style: 'width: 130px; white-space: normal' },
+  { name: 'salario',    label: t('cargos.salary'),     align: 'right', field: 'salario',    style: 'width: 98px' },
+  { name: 'opciones',   label: t('tables.options'),    align: 'center',field: () => '',     style: 'width: 110px' }
 ];

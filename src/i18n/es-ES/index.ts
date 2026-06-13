@@ -12,7 +12,7 @@ export default {
       saveChanges: 'Guardar Cambios',
       register: 'Registrar',
       reload: 'Recargar',
-      search: 'Buscar',
+      search: 'Buscar cualquier palabra...',
       apply: 'Aplicar',
       clear: 'Limpiar',
       download: 'Descargar',
@@ -22,7 +22,16 @@ export default {
       activate: 'Activar',
       add: 'Añadir',
       update: 'Actualizar',
-      report: 'Generar Reporte'
+      report: 'Generar Reporte',
+      active: 'Activo'
+    },
+    filter: {
+      sortAsc: 'Ordenar de menor a mayor',
+      sortDesc: 'Ordenar de mayor a menor',
+      values: 'Valores',
+      conditions: 'Condiciones',
+      selectAll: 'Seleccionar todo',
+      conditionsInfo: 'Configure condiciones avanzadas aquí'
     },
     notifications: {
       failed: 'Acción fallida',
@@ -96,36 +105,71 @@ export default {
     subtitle: 'Selecciona una opción del menú lateral para gestionar el talento humano.',
   },
   ///////////////////////////////////////////////////////////////////////////////////
+  forms:{
+    standar: 'Importar Estándar',
+    add: 'Agregar',
+    back: 'Volver',
+    replace: 'Reemplazar',
+  },
   tables:{
     description: 'Descripción',
+    options: 'Opciones',
+    order: 'Orden',
     status: 'Estado',
-    options: 'Opciones'
+    amount: 'Cantidad',
+    destination: 'Destino',
+    type: 'Tipo',
+    amount2: 'Monto',
   },
+  //CONFIGURACIONES_________________________________________________________________________________
+    //ORGANIZACIÓN:
   areas: {
     title: 'Áreas',
     subtitle: 'Gestión de áreas y sucursales de la empresa.',
-    form: {
-      formNew: 'Nueva Area',
-      formEdit: 'Editar Area',
-      buttonRegister: 'Nueva Area',
-      name: 'Area',
-      branch: 'Sucursal',
-      noBranch: 'Sin sucursal',
-    }
+    name: 'Área',
+    new: 'Nueva Área',
+    edit: 'Editar Área',
+    branch: 'Sucursal',
+    noBranch: 'Sin sucursal',
+  },
+  cargos: {
+    title: 'Cargos',
+    subtitle: 'Gestión de cargos, salarios y vinculación con áreas de la empresa.',
+    name: 'Cargo',
+    new: 'Nuevo Cargo',
+    edit: 'Editar Cargo',
+    salary: 'Salario',
+  },
+  prerrequisitos: {
+    title: 'Prerrequisitos de Cargo',
+    subtitle: 'Gestión de condiciones o requisitos indispensables por cargo.',
+    name: 'Prerrequisito',
+    new: 'Nuevo Prerrequisito',
+    edit: 'Editar Prerrequisito',
+  },
+  tiposdecontratos:{
+    title: 'Tipos de Contrato',
+    subtitle: 'Gestión de contrataciones',
+    name: 'Tipo de Contrato',
+    new: 'Nuevo Tipo de Contrato',
+    edit: 'Editar Tipo de Contrato',
+    nature:'Naturaleza',
+    observation:'Obervación'
+  },
+  //BENEFICIOS SOCIALES:
+  beneficios:{
+    title: 'Beneficios',
+    subtitle: 'Gestión de beneficios e indemnizaciones del personal.',
+    name: 'Beneficios',
+    new: 'Nuevo Beneficio',
+    edit: 'Editar Beneficio',
   },
   entity:{
     title: 'Entes Reguladores',
     subtitle: 'Gestión de aportes y regulaciones.',
-    form: {
-      formNew: 'Nuevo Ente Regulador',
-      formEdit: 'Editar Ente Regulador',
-      buttonRegister: 'Nuevo Ente Regulador',
-      buttonImport: 'Importar Estándar',
-      name: 'Ente Regulador',
-      percentage: 'Porcentaje',
-      amount: 'Monto',
-      order: 'Orden'
+    name: 'Ente Regulador',
+    new: 'Nuevo Ente Regulador',
+    edit: 'Editar Ente Regulador',
+    percentage: 'Porcentaje',
     },
-  }
-  
 }

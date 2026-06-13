@@ -5,49 +5,64 @@ import { useNotificaciones } from 'src/composables/useNotificaciones';
 import { beneficiosService } from '../services/beneficios.service';
 import type { Beneficio } from '../types/beneficios.types';
 
-const listaBeneficios         = ref<Beneficio[]>([]);
-const listaBeneficiosEstandar = ref<Beneficio[]>([]);
-const esModoEdicion           = ref<boolean>(false);
-const esVistaEstandar         = ref<boolean>(false);
-const esVisibleDialogo        = ref<boolean>(false);
-
-const beneficioActual        = ref<Beneficio>({
-  nombre: '', descripcion: '', tipo: '1', cantidad: '', orden: '', destino: '1'
-});
-
 export function useBeneficios() {
-
-  const { notificarExito, notificarError, notificarAdvertencia, confirmarAccion } = useNotificaciones();
+  const listaBeneficios = ref<Beneficio[]>([]);
+  const cargando = ref<boolean>(false);
   const idEmpresa = String(idempresa_md5());
+  const esModoEdicion = ref<boolean>(false);
+  const esVisibleDialogo = ref<boolean>(false);
+  const filtroBusqueda = ref<string>('');
+  const listaBeneficiosEstandar = ref<Beneficio[]>([]);
+  const esVistaEstandar = ref<boolean>(false);
+
+  const beneficioActual = ref<Beneficio>({
+    nombre: '',
+    descripcion: '',
+    tipo: 1,
+    cantidad: 0,
+    orden: 1,
+    destino: 1,
+    estado: 1
+  });
+
+  const { 
+    notificarAdvertencia, notificarErrorAccion, notificarExitoAccion,
+    confirmarEliminacionPredefinida, confirmarImportacionPredefinida
+  } = useNotificaciones();
 
   const cargarBeneficios = async () => {
+    cargando.value = true;
     try {
       listaBeneficios.value = await beneficiosService.listarBeneficios();
     } catch (error) {
-      console.error('Error al cargar beneficios:', error);
-      notificarError('Error al cargar los datos o conexión a internet desactivada');
+      console.error(error);
+      notificarErrorAccion('cargar');
+    } finally {
+      cargando.value = false;
     }
   };
 
-  const cargarBeneficiosEstandar = async () => {
-    try {
-      listaBeneficiosEstandar.value = await beneficiosService.listarBeneficiosEstandar();
-      esVistaEstandar.value = true;
-    } catch (error) {
-      console.error('Error al cargar beneficios estándar:', error);
-      notificarError('Error al cargar los datos o conexión a internet desactivada');
-    }
+  const calcularSiguienteOrden = (): number => {
+    if (listaBeneficios.value.length === 0) return 1;
+    const ordenes = listaBeneficios.value.map(b => Number(b.orden) || 0);
+    return Math.max(...ordenes) + 1;
   };
 
   const prepararNuevoBeneficio = () => {
     beneficioActual.value = {
-      nombre: '', descripcion: '', tipo: '1', cantidad: '', orden: '', destino: '1'
+      nombre: '',
+      descripcion: '',
+      tipo: 1,
+      cantidad: 0,
+      orden: calcularSiguienteOrden(),
+      destino: 1,
+      estado: 1
     };
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
   };
 
-  const prepararEdicionBeneficio = async (id: string) => {
+  const prepararEdicionBeneficio = async (id: number) => {
     try {
       const respuesta = await beneficiosService.editarBeneficio(id);
       if (respuesta.estado === 'exito' && respuesta.datos) {
@@ -57,27 +72,21 @@ export function useBeneficios() {
       }
     } catch (error) {
       console.error(error);
-      notificarError('Error al obtener datos del beneficio');
+      notificarErrorAccion('cargar');
     }
   };
 
   const guardarBeneficio = async (datosGuardar: Beneficio) => {
     try {
       const payload = {
-        ver        : esModoEdicion.value ? 'editarbeneficio' : 'registrobeneficio',
-        idempresa  : idEmpresa,
-        id         : esModoEdicion.value ? datosGuardar.id : undefined, 
-        nombre     : datosGuardar.nombre,
-        descripcion: datosGuardar.descripcion,
-        tipo       : datosGuardar.tipo,
-        cantidad   : datosGuardar.cantidad,
-        orden      : datosGuardar.orden,
-        destino    : datosGuardar.destino
+        ver : esModoEdicion.value ? 'editarbeneficio' : 'registrobeneficio',
+        idempresa : idEmpresa,
+        ...datosGuardar
       };
-      const datosFormulario = prepararDatosFormulario(payload)
+      const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await beneficiosService.guardarBeneficio(datosFormulario);
       if (respuesta.estado === 'exito') {
-        notificarExito(esModoEdicion.value ? 'Registro Actualizado con éxito' : 'Registro creado con éxito');
+        notificarExitoAccion('guardar');
         esVisibleDialogo.value = false;
         void cargarBeneficios();
       } else {
@@ -85,70 +94,68 @@ export function useBeneficios() {
       }
     } catch (error){
       console.error(error);
-      notificarError('Error al procesar la solicitud');
+      notificarErrorAccion('guardar');
     }
   };
 
-  const confirmarEliminarBeneficio = (id: string) => {
-    confirmarAccion('¿Está Seguro?', 'No podrá recuperar este registro.', async () => {
+  const confirmarEliminarBeneficio = (id: number) => {
+    confirmarEliminacionPredefinida(async () => {
       try {
         const respuesta = await beneficiosService.eliminarBeneficio(id);
         if (respuesta.estado === 'exito') {
-          notificarExito(respuesta.mensaje);
+          notificarExitoAccion('eliminar');
           void cargarBeneficios();
+        } else {
+          notificarAdvertencia(respuesta.mensaje);
         }
       } catch (error) {
         console.error(error);
-        notificarError('Error al eliminar el registro');
+        notificarErrorAccion('eliminar');
       }
     });
   };
 
-  const cambiarEstadoRegistro = async (beneficio: Beneficio) => {
-    if (!beneficio.id) return;
-    const nuevoEstado = beneficio.estado == '1' ? '2' : '1'; 
+  const cargarBeneficiosEstandar = async () => {
+    cargando.value = true;
     try {
-      await beneficiosService.cambiarEstadoBeneficio(beneficio.id, nuevoEstado);
-      notificarExito('Estado actualizado correctamente');
-      void cargarBeneficios();
+      listaBeneficiosEstandar.value = await beneficiosService.listarBeneficiosEstandar();
+      esVistaEstandar.value = true;
     } catch (error) {
-      console.error('Error al cambiar estado:', error);
-      notificarError('Error al cambiar el estado del registro');
+      console.error(error);
+      notificarErrorAccion('cargar');
+    } finally {
+      cargando.value = false;
     }
   };
 
-  const confirmarImportacion = (tipoAccion: 'reemplazar' | 'anadir') => {
-    const mensaje = tipoAccion === 'reemplazar'
-      ? 'Esta acción reemplazará todos sus datos actuales por los del catálogo estándar. ¿Desea continuar?'
-      : 'Esta acción agregará los datos del catálogo estándar a su tabla actual. ¿Desea continuar?';
-
-    confirmarAccion('Confirmar Importación', mensaje, () => {
+  const confirmarImportacion = (tipoAccion: 'reemplazar' | 'agregar') => {
+    confirmarImportacionPredefinida(tipoAccion, () => {
       void procesarImportacion(tipoAccion);
     });
   };
 
-  const procesarImportacion = async (tipoAccion: 'reemplazar' | 'anadir') => {
+  const procesarImportacion = async (tipoAccion: 'reemplazar' | 'agregar') => {
     try {
       const payload = {
-        ver      : 'remplazarocopiardatosbeneficios',
-        idempresa: idEmpresa,
-        datos    : JSON.stringify(listaBeneficiosEstandar.value),
-        tipo     : tipoAccion === 'reemplazar' ? '1' : '2'
+        ver : 'remplazarocopiardatosbeneficios',
+        idempresa : idEmpresa,
+        datos : JSON.stringify(listaBeneficiosEstandar.value),
+        tipo : tipoAccion === 'reemplazar' ? '1' : '2'
       };
 
       const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await beneficiosService.guardarBeneficio(datosFormulario);
       
       if (respuesta.estado === 'exito') {
-        notificarExito('Catálogo procesado correctamente');
+        notificarExitoAccion('importar');
         alternarVistaEstandar();
         void cargarBeneficios();
       } else {
         notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
-      console.error('Error procesando importación:', error);
-      notificarError('Error al procesar el catálogo');
+      console.error(error);
+      notificarErrorAccion('importar');
     }
   };
 
@@ -156,8 +163,24 @@ export function useBeneficios() {
     esVistaEstandar.value = !esVistaEstandar.value;
   };
 
+  const cambiarEstadoRegistro = async (beneficio: Beneficio) => {
+    if (!beneficio.id) return;
+    const nuevoEstado = beneficio.estado === 1 ? 2 : 1;
+    try {
+      await beneficiosService.cambiarEstadoBeneficio(beneficio.id, nuevoEstado);
+      notificarExitoAccion('guardar');
+      void cargarBeneficios();
+    } catch (error) {
+      console.error(error);
+      notificarErrorAccion('guardar');
+    }
+  };
+
   return {
-    listaBeneficios, listaBeneficiosEstandar, esVisibleDialogo, esModoEdicion, beneficioActual, esVistaEstandar,
-    cargarBeneficios,cargarBeneficiosEstandar, prepararNuevoBeneficio, prepararEdicionBeneficio, guardarBeneficio, confirmarEliminarBeneficio, cambiarEstadoRegistro, confirmarImportacion, alternarVistaEstandar
+    listaBeneficios, beneficioActual, esModoEdicion, filtroBusqueda, cargando,
+    esVisibleDialogo, listaBeneficiosEstandar, esVistaEstandar,
+    cargarBeneficios, prepararNuevoBeneficio, guardarBeneficio,
+    prepararEdicionBeneficio, confirmarEliminarBeneficio,
+    cargarBeneficiosEstandar, confirmarImportacion, alternarVistaEstandar, cambiarEstadoRegistro
   };
 }

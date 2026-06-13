@@ -6,18 +6,22 @@ import { useNotificaciones } from 'src/composables/useNotificaciones';
 import { cargosService } from '../services/cargos.service';
 import type { Cargo, AreaMin } from '../types/cargos.types';
 
-const listaCargos = ref<Cargo[]>([]);
-const listaAreas = ref<AreaMin[]>([]);
-const esVisibleDialogo = ref<boolean>(false);
-const esModoEdicion = ref<boolean>(false);
-const filtroBusqueda = ref<string>('');
-const idAreaSeleccionada = ref<string>('');
-
-const cargoActual = ref<Cargo>({
-  cargo: '', salario: '', descripcion: '', idarea: ''
-});
-
 export function useCargos() {
+
+  const listaCargos = ref<Cargo[]>([]);
+  const listaAreas = ref<AreaMin[]>([]);
+  const esVisibleDialogo = ref<boolean>(false);
+  const esModoEdicion = ref<boolean>(false);
+  const filtroBusqueda = ref<string>('');
+  const idAreaSeleccionada = ref<string>('');
+
+  const cargoActual = ref<Cargo>({
+    cargo: '',
+    salario: '',
+    descripcion: '',
+    idarea: ''
+  });
+  
   const { t } = useI18n();
   const { notificarExito, notificarError, notificarAdvertencia, confirmarAccion } = useNotificaciones();
   const idEmpresa = String(idempresa_md5());

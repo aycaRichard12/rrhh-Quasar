@@ -1,10 +1,10 @@
 export interface Beneficio {
-  id?        : string;
-  nombre     : string;
-  descripcion: string;
-  tipo       : string;
-  cantidad   : string;
-  orden      : string;
-  destino    : string;
-  estado?    : string;
+  id?:number;
+  nombre:string;
+  descripcion:string;
+  tipo:number;
+  cantidad:number;
+  orden:number;
+  destino:number;
+  estado:number;
 }

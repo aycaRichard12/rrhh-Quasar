@@ -12,11 +12,14 @@
       <!-- ── LOGO AREA ──────────────────────────────────────────────────── -->
       <div class="logo-area q-px-lg q-pt-lg q-pb-md">
         <div class="row items-center q-gutter-sm">
-          <div class="logo-badge">
-            <q-img src="favicon.ico" width="26px" height="26px" />
-          </div>
+          <!-- <div class="logo-badge">
+            <q-img src="favicon.ico" width="40px" height="40px" />
+          </div> -->
           <div class="column">
-            <div class="logo-name">MisterSofts</div>
+            <!-- <div class="logo-name">MisterSofts</div> -->
+            <div >
+              <q-img src="logi.jpg" width="245px" height="42px" />
+            </div>
             <div class="logo-sub">GESTIÓN RRHH</div>
           </div>
         </div>
@@ -299,8 +302,9 @@ console.log(
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #f2c037;
-  opacity: 0.9;
+  color: #f5d104;
+  /* color: #f2c037; */
+  /* opacity: 0.9; */
   line-height: 1.4;
 }
 

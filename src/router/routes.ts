@@ -7,8 +7,8 @@ const routes: RouteRecordRaw[] = [
     redirect: '/auth/login',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: 'dashboard', component: () => import('pages/IndexPage.vue') },
-      { path: 'welcome', component: () => import('pages/WelcomePage.vue') },
+      { path: 'dashboard'            , component: () => import('pages/IndexPage.vue') },
+      { path: 'welcome'              , component: () => import('pages/WelcomePage.vue') },
 //____________| CONFIGURACION |_________________________________________________________________________________________
 //Organizacion
       { path: 'areas'                , component: () => import('src/modules/areas/pages/AreasPage.vue') },
