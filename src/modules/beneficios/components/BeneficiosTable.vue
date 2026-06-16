@@ -143,13 +143,11 @@
       <template v-slot:body-cell-estado="propsCell">
         <q-td :props="propsCell" class="text-center">
           <q-btn round dense
-            :color="propsCell.row.estado === 1 ? 'positive' : 'negative'"
+            :color="propsCell.row.estado === 1 ? 'primary' : 'negative'"
             :icon="propsCell.row.estado === 1 ? 'thumb_up' : 'thumb_down'"
             @click="emitirCambioEstado(propsCell.row)"
           >
-            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-              {{ $t('common.actions.active') }}
-            </q-tooltip>
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.active') }}</q-tooltip>
           </q-btn>
         </q-td>
       </template>
@@ -161,18 +159,14 @@
             icon="sym_o_edit_square"
             @click="emitirEditar(propsCell.row.id)"
           >
-            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-              {{ $t('common.actions.edit') }}
-            </q-tooltip>
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.edit') }}</q-tooltip>
           </q-btn>
           <q-btn dense round
             icon="delete_forever"
             color="negative"
             @click="emitirEliminar(propsCell.row.id)"
           >
-            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-              {{ $t('common.actions.delete') }}
-            </q-tooltip>
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.delete') }}</q-tooltip>
           </q-btn>
         </q-td>
       </template>
@@ -183,10 +177,10 @@
 <script setup lang="ts">
   import { computed } from 'vue';
   import { useI18n } from 'vue-i18n';
-  import TablaGenerica from 'src/components/core/TablaGenerica.vue';
-  import TablaFiltroExcel from 'src/components/core/TablaFiltroExcel.vue';
   import { useFiltroExcel, type ConfiguracionColumnaExcel } from 'src/composables/core/useFiltroExcel';
   import { obtenerColumnasBeneficios } from '../utils/beneficios.columns';
+  import TablaGenerica from 'src/components/core/TablaGenerica.vue';
+  import TablaFiltroExcel from 'src/components/core/TablaFiltroExcel.vue';
   import type { Beneficio } from '../types/beneficios.types';
     
   const { t } = useI18n();
@@ -204,7 +198,6 @@
     (e: 'update:filtro', val: string): void;
   }>();
     
-  // 1. Configuración de Filtros Tipo Excel
   const configuracionFiltros: ConfiguracionColumnaExcel[] = [
     { 
       campo: 'tipo', 
@@ -229,16 +222,11 @@
     }
   ];
     
-  // 2. Uso del Composable Core
   const { 
     filtrosActivos, valoresUnicosPorColumna, datosFiltrados,
     orden, establecerOrden, limpiarFiltrosColumna
-  } = useFiltroExcel(
-    () => props.listaBeneficios,
-      configuracionFiltros
-    );
+  } = useFiltroExcel(() => props.listaBeneficios, configuracionFiltros);
 
-  // 3. Lógica interna
   const filtroInterno = computed({
     get: () => props.filtro,
     set: (val: string) => emits('update:filtro', val)

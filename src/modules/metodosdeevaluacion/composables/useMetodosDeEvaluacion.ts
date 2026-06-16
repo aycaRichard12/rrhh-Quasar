@@ -1,41 +1,53 @@
 import { ref } from 'vue';
+import { date } from 'quasar';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
 import { metodosDeEvaluacionService } from '../services/metodosDeEvaluacion.service';
 import type { MetodosDeEvaluacion, RangosDeEvaluacion } from '../types/metodosDeEvaluacion.types';
-import { date } from 'quasar';
+
+/**
+ * Retorna una nueva fecha con la hora reseteada a 00:00:00:000
+ */
+const obtenerFechaLimpia = (fecha: Date = new Date()) => {
+  const d = new Date(fecha);
+  d.setHours(0, 0, 0, 0);
+  return d;
+};
 
 export function useMetodosDeEvaluacion() {
-  const listaMetodos = ref<MetodosDeEvaluacion[]>([]);
-  const listaRangos = ref<RangosDeEvaluacion[]>([]);
-  const cargando = ref(false);
-  const esVistaEstandar = ref(false); 
-  const filtroBusqueda = ref('');
-  const esVisibleDialogoMetodo = ref(false);
-  const esVisibleDialogoRango = ref(false);
-  const esModoEdicion = ref(false);
+  //Generales
   const idEmpresa = String(idempresa_md5());
-
+  const filtroBusqueda = ref('');
+  const esModoEdicion = ref(false);
+  //Metodos
+  const listaMetodos = ref<MetodosDeEvaluacion[]>([]);
+  const esVisibleDialogoMetodo = ref(false);
+  //Rangos
+  const listaRangos = ref<RangosDeEvaluacion[]>([]);
+  const esVisibleDialogoRango = ref(false);
+  //
+  const cargando = ref(false);
+  const metodoSeleccionado = ref<MetodosDeEvaluacion | null>(null);
+  const esVistaRangos = ref(false); 
+  
   const metodoActual = ref<MetodosDeEvaluacion>({
     nombre: '',
     descripcion: '',
     calificacionMax: 0,
-    fecha: new Date()
+    fecha: obtenerFechaLimpia()
   });
 
   const rangoActual = ref<RangosDeEvaluacion>({
     nombre: '',
     cantidad: 0,
-    fecha: new Date(),
+    fecha: obtenerFechaLimpia(),
     idMetodoDeEvaluacion: 0
   });
 
-  const metodoSeleccionado = ref<MetodosDeEvaluacion | null>(null);
-
   const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida } = useNotificaciones();
 
-  // --- Métodos de Evaluación ---
+  //______________________ Métodos de Evaluación______________________________
   const cargarMetodos = async () => {
     cargando.value = true;
     try {
@@ -53,7 +65,7 @@ export function useMetodosDeEvaluacion() {
       nombre: '', 
       descripcion: '', 
       calificacionMax: 0, 
-      fecha: new Date() 
+      fecha: obtenerFechaLimpia() 
     };
     esModoEdicion.value = false;
     esVisibleDialogoMetodo.value = true;
@@ -81,7 +93,7 @@ export function useMetodosDeEvaluacion() {
         id: datos.id,
         nombre: datos.nombre,
         fecha: date.formatDate(datos.fecha, 'YYYY-MM-DD'),
-        calmax: datos.calificacionMax, // Mapeo a 'calmax' según legacy JS
+        calmax: datos.calificacionMax,
         descripcion: datos.descripcion
       };
       const formData = prepararDatosFormulario(payload);
@@ -115,12 +127,11 @@ export function useMetodosDeEvaluacion() {
       }
     });
   };
-
-  // --- Rangos de Evaluación ---
+  //______________________ Rangos de Evaluación______________________________
   const gestionarRangos = (metodo: MetodosDeEvaluacion) => {
     if (!metodo.id) return;
     metodoSeleccionado.value = metodo;
-    esVistaEstandar.value = true;
+    esVistaRangos.value = true;
     void cargarRangos(metodo.id);
   };
 
@@ -141,7 +152,7 @@ export function useMetodosDeEvaluacion() {
     rangoActual.value = {
       nombre: '', 
       cantidad: 0, 
-      fecha: new Date(),
+      fecha: obtenerFechaLimpia(),
       idMetodoDeEvaluacion: metodoSeleccionado.value.id
     };
     esModoEdicion.value = false;
@@ -166,7 +177,7 @@ export function useMetodosDeEvaluacion() {
     try {
       const payload = {
         ver: esModoEdicion.value ? 'editarRangoevaluacion' : 'registroRangoevaluacion',
-        metodoevaluacion: datos.idMetodoDeEvaluacion, // Mapeo según legacy JS
+        metodoevaluacion: datos.idMetodoDeEvaluacion,
         id: datos.id,
         nombre: datos.nombre,
         cantidad: datos.cantidad
@@ -204,14 +215,14 @@ export function useMetodosDeEvaluacion() {
   };
 
   const alternarVista = () => {
-    esVistaEstandar.value = !esVistaEstandar.value;
-    if (!esVistaEstandar.value) {
+    esVistaRangos.value = !esVistaRangos.value;
+    if (!esVistaRangos.value) {
       metodoSeleccionado.value = null;
     }
   };
 
   return {
-    listaMetodos, listaRangos, cargando, esVistaEstandar, filtroBusqueda,
+    listaMetodos, listaRangos, cargando, esVistaRangos, filtroBusqueda,
     esVisibleDialogoMetodo, esVisibleDialogoRango, esModoEdicion,
     metodoActual, rangoActual, metodoSeleccionado,
     cargarMetodos, prepararNuevoMetodo, prepararEdicionMetodo, guardarMetodo, confirmarEliminarMetodo,

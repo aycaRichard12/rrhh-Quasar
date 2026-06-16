@@ -27,7 +27,7 @@ export function useSueldosYSalarios() {
   };
 
   const prepararNuevo = () => {
-    itemActual.value = { nombre: '', cargo: '', ci: '' };
+    itemActual.value = { id: '', nombre: '', cargo: '', ci: '' };
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
   };
@@ -49,7 +49,7 @@ export function useSueldosYSalarios() {
   const guardar = async (datos: SueldosYSalarios) => {
     try {
       const payload = {
-        ver: esModoEdicion.value ? 'editarFirmasRRHH' : 'registroFirmasRRHH',
+        ver: esModoEdicion.value ? 'editarFirmasRRHH' : 'registrarFirmasRRHH',
         idempresa: idempresa_md5(),
         ...datos
       };

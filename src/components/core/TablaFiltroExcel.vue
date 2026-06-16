@@ -112,6 +112,7 @@
 
 <script setup lang="ts">
   import { ref, computed, watch } from 'vue';
+  import { date } from 'quasar';
   import type { ConfiguracionColumnaExcel } from 'src/composables/core/useFiltroExcel';
 
   /**
@@ -120,7 +121,7 @@
 
   const props = defineProps<{
     columna: ConfiguracionColumnaExcel;
-    valoresDisponibles: (string | number)[];
+    valoresDisponibles: (string | number | Date)[];
     modeloFiltro: string[];
     sentidoOrden?: 'asc' | 'desc' | null;
   }>();
@@ -137,7 +138,11 @@
   const seleccionados = ref<string[]>([...props.modeloFiltro]);
 
   const valoresDisponiblesStr = computed(() =>
-    props.valoresDisponibles.map(v => String(v))
+    props.valoresDisponibles.map(v => {
+      if (props.columna.format) return String(props.columna.format(v));
+      if (v instanceof Date) return date.formatDate(v, 'DD/MM/YYYY');
+      return String(v);
+    })
   );
 
   const valoresFiltrados = computed(() => {
@@ -145,8 +150,7 @@
     if (!query) return valoresDisponiblesStr.value;
     
     return valoresDisponiblesStr.value.filter(v => {
-      const label = formatearValor(v).toLowerCase();
-      return label.includes(query) || v.toLowerCase().includes(query);
+      return v.toLowerCase().includes(query);
     });
   });
 
@@ -168,9 +172,15 @@
     todosSeleccionados.value = valor;
   };
 
-  const formatearValor = (valor: string | number): string => {
-    if (props.columna.opciones) {
+  const formatearValor = (valor: string | number | Date): string => {
+    if (props.columna.opciones && (typeof valor === 'string' || typeof valor === 'number')) {
       return props.columna.opciones[valor] || String(valor);
+    }
+    if (props.columna.format) {
+      return String(props.columna.format(valor));
+    }
+    if (valor instanceof Date) {
+      return date.formatDate(valor, 'DD/MM/YYYY');
     }
     return String(valor);
   };

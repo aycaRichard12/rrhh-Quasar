@@ -120,6 +120,7 @@ export default {
     destination: 'Destino',
     type: 'Tipo',
     amount2: 'Monto',
+    date: 'Fecha',
   },
   //CONFIGURACIONES_________________________________________________________________________________
     //ORGANIZACIÓN:
@@ -171,5 +172,25 @@ export default {
     new: 'Nuevo Ente Regulador',
     edit: 'Editar Ente Regulador',
     percentage: 'Porcentaje',
-    },
+  },
+  //METODOS DE EVALUACION:
+  evaluationMethods:{
+    title: 'Métodos de Evaluación',
+    subtitle: 'Gestiona los métodos para calificar el desempeño.',
+    name: 'Método de Evaluación',
+    new: 'Nuevo Método de Evaluación',
+    edit: 'Editar Método de Evaluación',
+    maximumRating: 'Calificación Máxima',
+    manageRanges: 'Gestionar Rangos',
+    range:{
+      title: 'Rangos de ',
+      subtitle:'Gestiona los niveles de calificación',
+      name:'Rango de Evaluacion',
+      new: 'Nuevo Rango de Evaluación',
+      edit: 'Editar Rango de Evaluación',
+      criteria: 'Criterio/Rango',
+      score: 'Puntaje',
+    }
+    
+  }
 }

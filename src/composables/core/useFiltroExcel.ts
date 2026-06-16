@@ -1,4 +1,5 @@
 import { ref, computed, toValue, type MaybeRefOrGetter } from 'vue';
+import { date } from 'quasar';
 
 export interface ConfiguracionColumnaExcel {
   campo: string;
@@ -6,6 +7,7 @@ export interface ConfiguracionColumnaExcel {
   tipoDato?: 'texto' | 'numero' | 'estado';
   esFiltrable?: boolean;
   opciones?: Record<string | number, string>; // Mapeo de valores (ej: { 1: 'Activo' })
+  format?: (val: unknown) => string | number; // Función para formatear el valor para visualización y filtrado
 }
 /**
  * useFiltroExcel - Maneja filtrado y ordenamiento tipo Excel para tablas.
@@ -30,9 +32,12 @@ export function useFiltroExcel<T extends object>(
         return;
       }
       const unicos = new Set(
-        datos.map((item) =>
-          (item as Record<string, unknown>)[col.campo] as string | number
-        )
+        datos.map((item) => {
+          const val = (item as Record<string, unknown>)[col.campo];
+          if (col.format) return col.format(val);
+          if (val instanceof Date) return date.formatDate(val, 'DD/MM/YYYY');
+          return val as string | number;
+        })
       );
       mapaValores[col.campo] = Array.from(unicos).sort((a, b) => {
         if (typeof a === 'number' && typeof b === 'number') return a - b;
@@ -51,9 +56,20 @@ export function useFiltroExcel<T extends object>(
       return Object.keys(filtrosActivos.value).every((campo) => {
         const seleccionados = filtrosActivos.value[campo];
         if (!seleccionados || seleccionados.length === 0) return true;
-        return seleccionados.includes(
-          String((fila as Record<string, unknown>)[campo])
-        );
+        
+        const col = configuracion.find(c => c.campo === campo);
+        const valFila = (fila as Record<string, unknown>)[campo];
+        
+        let valProcesado: string | number;
+        if (col?.format) {
+          valProcesado = col.format(valFila);
+        } else if (valFila instanceof Date) {
+          valProcesado = date.formatDate(valFila, 'DD/MM/YYYY');
+        } else {
+          valProcesado = String(valFila);
+        }
+        
+        return seleccionados.includes(String(valProcesado));
       });
     });
 

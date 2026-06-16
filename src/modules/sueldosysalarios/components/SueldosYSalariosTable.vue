@@ -1,5 +1,6 @@
 <template>
   <q-table
+    class="global-table-header"
     flat bordered
     :rows="props.rows"
     :columns="columns"
@@ -8,8 +9,8 @@
   >
     <template v-slot:body-cell-opciones="propsCell">
       <q-td :props="propsCell" class="q-gutter-xs">
-        <q-btn flat round dense icon="edit" color="primary" @click="emits('editar', propsCell.row.id)" />
-        <q-btn flat round dense icon="delete" color="negative" @click="emits('eliminar', propsCell.row.id)" />
+        <q-btn flat round dense icon="edit" color="primary" @click="emits('editar', propsCell.row.id!)" />
+        <q-btn flat round dense icon="delete" color="negative" @click="emits('eliminar', propsCell.row.id!)" />
       </q-td>
     </template>
   </q-table>
@@ -32,4 +33,5 @@ const emits = defineEmits<{
 
 const { t } = useI18n();
 const columns = obtenerColumnasSueldosYSalarios(t);
+
 </script>
