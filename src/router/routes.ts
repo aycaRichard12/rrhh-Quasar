@@ -21,6 +21,7 @@ const routes: RouteRecordRaw[] = [
       { path: 'beneficios'           , component: () => import('src/modules/beneficios/pages/BeneficiosPage.vue') },
 //Valoración
       { path: 'metodosdeevaluacion'  , component: () => import('src/modules/metodosdeevaluacion/pages/MetodosDeEvaluacionPage.vue') },
+      { path: 'actividadesdeevaluacion',component: () => import('src/modules/actividadesdeevaluacion/pages/actividadesDeEvaluacionPage.vue') },
 //Sanciones
       { path: 'niveles'              , component: () => import('src/modules/niveles/pages/NivelesPage.vue') },
 //Remuneración
