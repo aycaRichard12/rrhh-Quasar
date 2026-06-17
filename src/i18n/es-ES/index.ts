@@ -52,6 +52,7 @@ export default {
     messages: {
       noData: 'No hay registros',
       loading: 'Cargando',
+      synchronizing: 'Sincronizando',
       unknown: 'Desconocido',
       items: 'elemento(s)',
       downloadSuccess: 'Archivo descargado correctamente',
@@ -177,7 +178,7 @@ export default {
   evaluationMethods:{
     title: 'Métodos de Evaluación',
     subtitle: 'Gestiona los métodos para calificar el desempeño.',
-    name: 'Método de Evaluación',
+    name: 'Método',
     new: 'Nuevo Método de Evaluación',
     edit: 'Editar Método de Evaluación',
     maximumRating: 'Calificación Máxima',
@@ -192,5 +193,12 @@ export default {
       score: 'Puntaje',
     }
     
+  },
+  evaluationActivities: {
+    title: 'Actividades de Evaluación',
+    subtitle: 'Gestión de actividades para evaluar el desempeño.',
+    name: 'Actividad',
+    new: 'Nueva Actividad',
+    edit: 'Editar Actividad',
   }
 }

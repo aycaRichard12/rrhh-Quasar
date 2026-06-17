@@ -3,13 +3,20 @@ import { idempresa_md5, urlApiAdministracion} from 'src/composables/funcionesGen
 import type { RespuestaApi } from 'src/types/api.types';
 import type { EnteRegulador } from '../types/entesReguladores.types';
 
-const ID_EMPRESA = idempresa_md5();
+const sanearEnte = (item: EnteRegulador): EnteRegulador => ({
+    ...item,
+    id: Number(item.id),
+    porcentaje: Number(item.porcentaje),
+    monto: Number(item.monto),
+    orden: Number(item.orden),
+    estado: Number(item.estado),
+});
 
 export const entesReguladoresService = {
 
   async listarEntesReguladores(): Promise<EnteRegulador[]> {
-    const { data } = await api.get<EnteRegulador[]>(`listaEntesreguladores/${ID_EMPRESA}`);
-    return data;
+    const { data } = await api.get<EnteRegulador[]>(`listaEntesreguladores/${idempresa_md5()}`);
+    return Array.isArray(data) ? data.map(sanearEnte) : [];
   },
 
   async guardarEnteRegulador(payload: FormData): Promise<RespuestaApi> {
@@ -17,17 +24,23 @@ export const entesReguladoresService = {
     return data;
   },
 
-  async cambiarEstadoEnteRegulador(id: string, estado: string): Promise<RespuestaApi> {
+  async cambiarEstadoEnteRegulador(id: number, estado: number): Promise<RespuestaApi> {
     const { data } = await api.get<RespuestaApi>(`editarEstadoEntesreguladores/${id}/${estado}`);
     return data;
   },
 
-  async editarEnteRegulador(id: string): Promise<RespuestaApi<EnteRegulador>> {
-    const { data } = await api.get<RespuestaApi<EnteRegulador>>(`verificarIDentesreguladores/${id}`);
+  async editarEnteRegulador(id: number): Promise<RespuestaApi<EnteRegulador>> {
+    const { data } = await api.get(`verificarIDentesreguladores/${id}`);
+        if (data.estado === 'exito' && data.datos) {
+          return {
+            ...data,
+            datos: sanearEnte(data.datos)
+          };
+        }
     return data;
   },
 
-  async eliminarEnteRegulador(id: string): Promise<RespuestaApi> {
+  async eliminarEnteRegulador(id: number): Promise<RespuestaApi> {
     const { data } = await api.get<RespuestaApi>(`eliminarEntesreguladores/${id}`);
     return data;
   },
@@ -35,12 +48,6 @@ export const entesReguladoresService = {
   async listarEntesReguladoresEstandar(): Promise<EnteRegulador[]> {
     const urlAd = urlApiAdministracion();
     const { data } = await api.get<EnteRegulador[]>(`${urlAd}api/listareguladores`);
-    return data;
-  },
-
-  async procesarImportacionEstandar (payload: FormData): Promise<RespuestaApi> {
-    const { data } = await api.post<RespuestaApi>('/', payload);
-    return data;
+    return Array.isArray(data) ? data.map(sanearEnte) : [];
   }
-  
 };

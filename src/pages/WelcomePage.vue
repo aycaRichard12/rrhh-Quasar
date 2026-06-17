@@ -5,9 +5,7 @@
       <div class="column items-center q-mb-xl">
         <div class="row items-center justify-center q-gutter-lg">
           <q-icon name="waving_hand" size="100px" color="primary" class="col-auto" />
-          <q-avatar size="100px" class="col-auto shadow-3" style=" border: 2px solid rgba(0,0,0,0.05);">
-            <img src="favicon.ico" alt="MisterSofts Logo" style="object-fit: contain; padding: 10px;" />
-          </q-avatar>
+          <img src="favicon.ico" alt="MisterSofts Logo" style="object-fit: contain; height: 90px;" />
         </div>
       </div>
       

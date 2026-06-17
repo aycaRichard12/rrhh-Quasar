@@ -1,9 +1,9 @@
 export interface EnteRegulador {
-  id?        : string;
-  nombre     : string;
+  id?: number;
+  nombre: string;
   descripcion: string;
-  porcentaje : string;
-  monto      : string;
-  orden      : string;
-  estado?    : string;
+  porcentaje: number;
+  monto: number;
+  orden: number;
+  estado?: number;
 }

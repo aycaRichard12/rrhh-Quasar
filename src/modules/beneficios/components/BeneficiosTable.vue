@@ -35,7 +35,7 @@
           </q-btn>
         </q-th>
       </template>
-    
+      
       <!-- Columna: Cantidad -->
       <template v-slot:header-cell-cantidad="propsCell">
         <q-th :props="propsCell">
