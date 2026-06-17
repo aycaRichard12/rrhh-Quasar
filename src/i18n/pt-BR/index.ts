@@ -121,4 +121,18 @@ export default {
       branch: 'Filial',
     }
   },
+  niveles: {
+    title: 'Níveis de Gravidade',
+    subtitle: 'Gestão de níveis de gravidade para sanções.',
+    name: 'Nível',
+    new: 'Novo Nível',
+    edit: 'Editar Nível',
+  },
+  tiposdesanciones: {
+    title: 'Tipos de Sanções',
+    subtitle: 'Gestão de tipos de sanções e sua gravidade.',
+    name: 'Tipo de Sanção',
+    new: 'Novo Tipo de Sanção',
+    edit: 'Editar Tipo de Sanção',
+  }
 };

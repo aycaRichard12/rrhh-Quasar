@@ -135,5 +135,19 @@ export default {
       amount: 'Amount',
       order: 'Order'
     },
+  },
+  niveles: {
+    title: 'Gravity Levels',
+    subtitle: 'Management of gravity levels for sanctions.',
+    name: 'Level',
+    new: 'New Level',
+    edit: 'Edit Level',
+  },
+  tiposdesanciones: {
+    title: 'Sanction Types',
+    subtitle: 'Management of sanction types and their gravity.',
+    name: 'Sanction Type',
+    new: 'New Sanction Type',
+    edit: 'Edit Sanction Type',
   }
 };

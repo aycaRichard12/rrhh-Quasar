@@ -200,5 +200,19 @@ export default {
     name: 'Actividad',
     new: 'Nueva Actividad',
     edit: 'Editar Actividad',
+  },
+  niveles: {
+    title: 'Niveles de Gravedad',
+    subtitle: 'Gestión de niveles de gravedad para sanciones.',
+    name: 'Nivel',
+    new: 'Nuevo Nivel',
+    edit: 'Editar Nivel',
+  },
+  tiposdesanciones: {
+    title: 'Tipos de Sanciones',
+    subtitle: 'Gestión de tipos de sanciones y su gravedad.',
+    name: 'Tipo de Sanción',
+    new: 'Nuevo Tipo de Sanción',
+    edit: 'Editar Tipo de Sanción',
   }
 }
