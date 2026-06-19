@@ -3,16 +3,12 @@
     :rows="props.rows"
     :columns="listaColumnas"
     row-key="id"
-    :rows-per-page-label="$t('table.recordsPerPage', 'Registros por página:')"
-    :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${$t('table.of', 'de')} ${totalRows}`"
+    :rows-per-page-label="t('common.report.recordsPerPage')"
+    :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${t('common.report.of')} ${totalRows}`"
   >
     <template v-slot:body-cell-numero="propsCell">
-      <q-td :props="propsCell">{{ propsCell.rowIndex + 1 }}</q-td>
-    </template>
-
-    <template v-slot:body-cell-porcentaje="propsCell">
-      <q-td :props="propsCell" class="text-center">
-        {{ propsCell.row.porcentaje }} %
+      <q-td :props="propsCell" class="text-right">
+        {{ propsCell.rowIndex + 1 }}
       </q-td>
     </template>
   </q-table>
@@ -28,5 +24,5 @@ const { t } = useI18n();
 
 const props = defineProps<{ rows: EnteRegulador[] }>();
 
-const listaColumnas = computed(() => obtenerColumnasEntesReguladoresEstandar(t))
+const listaColumnas = computed(() => obtenerColumnasEntesReguladoresEstandar(t));
 </script>

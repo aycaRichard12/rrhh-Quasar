@@ -53,18 +53,6 @@
           <q-tooltip>Nueva versión disponible</q-tooltip>
         </q-btn>
 
-
-        <q-btn flat round
-          icon= 'filter_alt'
-          color="'primary' : ($q.dark.isActive ? 'grey-4' : 'grey-7')"
-          :size="$q.screen.lt.sm ? 'sm' : 'md'"
-        >
-          <q-tooltip>{{ 'Activar Filtros Avanzados' }}</q-tooltip>
-        </q-btn>
-
-
-
-
         <!-- Idioma -->
         <LanguageSelector
           type="menu"

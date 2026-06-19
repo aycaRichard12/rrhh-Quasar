@@ -3,45 +3,58 @@ import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import type { RespuestaApi } from 'src/types/api.types';
 import type { MetodosDeEvaluacion, RangosDeEvaluacion } from '../types/metodosDeEvaluacion.types';
 
-interface MetodoApi {
-  id: string | number;
-  nombre: string;
-  descripcion: string;
-  calificacionMax: string | number;
-  fecha: string;
-}
+const sanearMetodo = (item: MetodosDeEvaluacion): MetodosDeEvaluacion => {
+  // 1. Aseguramos extraer el texto de la fecha (por si alguna vez mandan hora, cortamos en la 'T' o el espacio)
+  const fechaStr = String(item.fecha);
+  const partes = fechaStr.split('-');
+  // 2. Creamos una fecha segura (si por algún error la API manda vacío, usamos la fecha actual de respaldo)
+  let fechaLocal = new Date();
+  if (partes.length >= 3) {
+    const year = Number(partes[0]);
+    const month = Number(partes[1]);
+    const day = Number(partes[2]);
+    fechaLocal = new Date(year, month - 1, day);
+  }
+  return {
+    ...item,
+    id: Number(item.id),
+    calificacionMax: Number(item.calificacionMax),
+    // 3. Sobrescribimos el string original con el objeto Date real
+    fecha: fechaLocal 
+  };
+};
 
-interface RangoApi {
-  id: string | number;
-  nombre: string;
-  cantidad: string | number;
-  fecha: string;
-  idMetodoDeEvaluacion?: string | number;
-}
-
-const sanearMetodo = (item: MetodoApi): MetodosDeEvaluacion => ({
-  ...item,
-  id: Number(item.id),
-  calificacionMax: Number(item.calificacionMax) || 0,
-  fecha: item.fecha ? new Date(item.fecha + 'T00:00:00') : new Date()
-});
-
-const sanearRango = (item: RangoApi, idMetodo?: number): RangosDeEvaluacion => ({
-  ...item,
-  id: Number(item.id),
-  cantidad: Number(item.cantidad) || 0,
-  fecha: item.fecha ? new Date(item.fecha + 'T00:00:00') : new Date(),
-  idMetodoDeEvaluacion: idMetodo ?? Number(item.idMetodoDeEvaluacion)
-});
+const sanearRango = (item: RangosDeEvaluacion): RangosDeEvaluacion => {
+  // 1. Aseguramos extraer el texto de la fecha (por si alguna vez mandan hora, cortamos en la 'T' o el espacio)
+  const fechaStr = String(item.fecha);
+  const partes = fechaStr.split('-');
+  // 2. Creamos una fecha segura (si por algún error la API manda vacío, usamos la fecha actual de respaldo)
+  let fechaLocal = new Date();
+  if (partes.length >= 3) {
+    const year = Number(partes[0]);
+    const month = Number(partes[1]);
+    const day = Number(partes[2]);
+    fechaLocal = new Date(year, month - 1, day);
+  }
+  return {
+    ...item,
+    id: Number(item.id),
+    cantidad: Number(item.cantidad),
+    // 3. Sobrescribimos el string original con el objeto Date real
+    fecha: fechaLocal,
+    idMetodoDeEvaluacion: Number(item.idMetodoDeEvaluacion)
+  };
+};
 
 export const metodosDeEvaluacionService = {
+  //______________________ Métodos de Evaluación______________________________
   async listarMetodosDeEvaluacion(): Promise<MetodosDeEvaluacion[]> {
-    const { data } = await api.get<MetodoApi[]>(`listaMetodoevaluacion/${idempresa_md5()}`);
+    const { data } = await api.get(`listaMetodoevaluacion/${idempresa_md5()}`);
     return Array.isArray(data) ? data.map(sanearMetodo) : [];
   },
 
   async guardarMetodoDeEvaluacion(formData: FormData): Promise<RespuestaApi> {
-    const { data } = await api.post<RespuestaApi>('/', formData);
+    const { data } = await api.post('/', formData);
     return data;
   },
 
@@ -57,17 +70,17 @@ export const metodosDeEvaluacionService = {
   },
 
   async eliminarMetodoDeEvaluacion(id: number): Promise<RespuestaApi> {
-    const { data } = await api.get<RespuestaApi>(`eliminarMetodoevaluacion/${id}`);
+    const { data } = await api.get(`eliminarMetodoevaluacion/${id}`);
     return data;
   },
-
-  async listarRangosDeEvaluacion(idMetodo: number): Promise<RangosDeEvaluacion[]> {
-    const { data } = await api.get<RangoApi[]>(`listaRangoevaluacion/${idMetodo}`);
-    return Array.isArray(data) ? data.map(item => sanearRango(item, idMetodo)) : [];
+  //______________________ Rangos de Evaluación______________________________
+  async listarRangosDeEvaluacion(idMetodoDeEvaluacion: number): Promise<RangosDeEvaluacion[]> {
+    const { data } = await api.get(`listaRangoevaluacion/${idMetodoDeEvaluacion}`);
+    return Array.isArray(data) ? data.map(sanearRango) : [];
   },
 
   async guardarRangoDeEvaluacion(formData: FormData): Promise<RespuestaApi> {
-    const { data } = await api.post<RespuestaApi>('/', formData);
+    const { data } = await api.post('/', formData);
     return data;
   },
 
@@ -83,7 +96,7 @@ export const metodosDeEvaluacionService = {
   },
 
   async eliminarRangoDeEvaluacion(id: number): Promise<RespuestaApi> {
-    const { data } = await api.get<RespuestaApi>(`eliminarRangoevaluacion/${id}`);
+    const { data } = await api.get(`eliminarRangoevaluacion/${id}`);
     return data;
   },
 }

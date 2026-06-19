@@ -2,58 +2,60 @@
   <q-page>
     <div class="lt-sm">
       <div class="row justify-left">
-        <h4 class="q-my-none text-primary">{{ esVistaEstandar ? 'Rangos de: ' + metodoSeleccionado?.nombre : 'Métodos de Evaluación' }}</h4>
+        <h4 class="q-my-none text-primary">{{ esVistaRangos ? $t('evaluationMethods.range.title') + metodoSeleccionado?.nombre : $t('evaluationMethods.title') }}</h4>
       </div>
       <div class="row justify-left">
-        <p class="text-grey-7">{{ esVistaEstandar ? 'Gestiona los niveles de calificación' : 'Gestiona los métodos para calificar el desempeño' }}</p>
+        <p class="text-grey-7">{{ esVistaRangos ? $t('evaluationMethods.range.subtitle') : $t('evaluationMethods.subtitle') }}</p>
       </div>
     </div>
 
     <q-card-section class="row no-wrap justify-between items-center q-gutter-x-sm">
-      <template v-if="!esVistaEstandar">
+      <template v-if="!esVistaRangos">
         <q-btn
           class="global-btn-page"
-          icon="add"
+          icon="sym_o_add_notes"
           size="15px"
-          :label="$q.screen.lt.sm ? '' : 'Nuevo Método'"
+          :label="$q.screen.lt.sm ? '' : $t('evaluationMethods.new')"
           :round="$q.screen.lt.sm"
           @click="prepararNuevoMetodo"
         />
-        <BuscadorGlobal v-model="filtroBusqueda" />
+        <div class="row no-wrap q-gutter-x-sm items-center col-grow justify-end">
+          <BuscadorGlobal v-model="filtroBusqueda" class="col-grow" style="max-width: 300px" />
+        </div>
       </template>
 
       <template v-else>
         <q-btn
-          color="positive"
-          icon="add"
+          class="global-btn-page"
+          icon="sym_o_add_notes"
           size="15px"
-          label="Registrar Rango"
+          :label="$q.screen.lt.sm ? '' : $t('evaluationMethods.range.new')"
+          :round="$q.screen.lt.sm"
           @click="prepararNuevoRango"
         />
-        <q-space />
-        <q-btn
-          outline
+        <q-btn outline
           color="negative"
           icon="arrow_back"
           size="15px"
-          label="Volver"
+          :label="$q.screen.lt.sm ? '' : $t('forms.back')"
+          :round="$q.screen.lt.sm"
           @click="alternarVista"
         />
       </template>
     </q-card-section>
 
-    <div v-if="!esVistaEstandar" class="q-pa-md">
+    <div v-if="!esVistaRangos">
       <MetodosDeEvaluacionTable
+        v-model:filtro="filtroBusqueda"
         :lista-metodos="listaMetodos"
         :cargando="cargando"
-        v-model:filtro="filtroBusqueda"
         @editar="prepararEdicionMetodo"
         @eliminar="confirmarEliminarMetodo"
         @gestionar-rangos="gestionarRangos"
       />
     </div>
 
-    <div v-else class="q-pa-md">
+    <div v-else>
       <RangosDeEvaluacionTable
         :rows="listaRangos"
         :loading="cargando"
@@ -63,7 +65,9 @@
     </div>
 
     <!-- Diálogos -->
-    <q-dialog v-model="esVisibleDialogoMetodo">
+    <q-dialog 
+      v-model="esVisibleDialogoMetodo"
+    >
       <MetodosDeEvaluacionForm
         :metodo="metodoActual"
         :es-modo-edicion="esModoEdicion"
@@ -93,7 +97,7 @@ import RangosDeEvaluacionForm from '../components/RangosDeEvaluacionForm.vue';
 import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
 
 const {
-  listaMetodos, listaRangos, cargando, esVistaEstandar, filtroBusqueda,
+  listaMetodos, listaRangos, cargando, esVistaRangos, filtroBusqueda,
   esVisibleDialogoMetodo, esVisibleDialogoRango, esModoEdicion,
   metodoActual, rangoActual, metodoSeleccionado,
   cargarMetodos, prepararNuevoMetodo, prepararEdicionMetodo, guardarMetodo, confirmarEliminarMetodo,

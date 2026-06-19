@@ -1,7 +1,6 @@
 <template>
-  <q-page padding>
-    
-    <div class="col q-mb-md">
+  <q-page>
+    <div class="lt-sm">
       <div class="row justify-left">
         <h4 class="q-my-none text-primary">{{ $t('entity.title') }}</h4>
       </div>
@@ -9,59 +8,109 @@
         <p class="text-grey-7">{{ $t('entity.subtitle') }}</p>
       </div>
     </div>
-
-    <div class="row justify-between items-center q-mb-md">
-
+    
+    <q-card-section class="row no-wrap justify-between items-center q-gutter-x-sm">
       <template v-if="!esVistaEstandar">
-        <q-btn color="secondary" label="Importar Standar" @click="cargarEntesReguladoresEstandar" icon="cloud_download" outline />
-        <q-btn color="primary"   label="Nuevo Registro"   @click="prepararNuevoEnteRegulador" icon="add"/>
-      </template> 
+        <q-btn
+          class="global-btn-page"
+          icon="sym_o_add_notes"
+          size="15px"
+          :label="$q.screen.lt.sm ? '' : $t('entity.new')"
+          :round="$q.screen.lt.sm"
+          @click="prepararNuevoEnteRegulador"
+        />
 
-      <template v-else>
-        <q-btn color="negative" :label="$t('formBtn.back', 'Volver')" @click="alternarVistaEstandar" icon="arrow_back" outline/>
-        <div class="q-gutter-sm">
-          <q-btn color="warning" :label="$t('formBtn.replace', 'Reemplazar')" @click="confirmarImportacion('reemplazar')" icon="autorenew"/>
-          <q-btn color="positive" :label="$t('formBtn.add', 'Añadir')" @click="confirmarImportacion('agregar')" icon="add"/>
+        <div class="row no-wrap q-gutter-x-sm items-center col-grow justify-end">
+          <q-btn outline
+            color="secondary"
+            icon="cloud_download"
+            size="15px"
+            :label="$q.screen.lt.sm ? '' : $t('forms.standar')"
+            :round="$q.screen.lt.sm"
+            @click="cargarEntesReguladoresEstandar"
+          />
+          <BuscadorGlobal v-model="filtroBusqueda" class="col-grow" style="max-width: 300px" />
         </div>
       </template>
-    </div>
-
+    
+      <template v-else>
+        <q-btn outline
+          color="negative"
+          icon="arrow_back"
+          size="15px"
+          :label="$q.screen.lt.sm ? '' : $t('forms.back')"
+          :round="$q.screen.lt.sm"
+          @click="alternarVistaEstandar"
+        />
+        <div class="q-gutter-sm">
+          <q-btn
+            color="warning"
+            icon="autorenew"
+            size="15px"
+            :label="$q.screen.lt.sm ? '' : $t('forms.replace')"
+            :round="$q.screen.lt.sm"
+            @click="confirmarImportacion('reemplazar')"
+          />
+          <q-btn
+            color="positive"
+            icon="add"
+            size="15px"
+            :label="$q.screen.lt.sm ? '' : $t('forms.add')"
+            :round="$q.screen.lt.sm"
+            @click="confirmarImportacion('agregar')"
+          />
+        </div>
+      </template>
+    </q-card-section>
+    
     <div v-if="!esVistaEstandar">
       <EntesReguladoresTable
+        v-model:filtro="filtroBusqueda"
         :lista-entes-reguladores="listaEntesReguladores"
-        @import="alternarVistaEstandar"
+        :cargando="cargando"
         @editar="prepararEdicionEnteRegulador"
         @eliminar="confirmarEliminarEnteRegulador"
-        @cambiar-estado-ente-regulador="cambiarEstadoEnteRegulador"
+        @cambiar-estado-registro="cambiarEstadoRegistro"
       />
     </div>
+    
     <div v-else>
       <EntesReguladoresStandar
         :rows="listaEntesReguladoresEstandar"
       />
     </div>
-
-    <q-dialog v-model="esVisibleDialogo">
+    
+    <q-dialog
+      v-model="esVisibleDialogo"
+    >
       <EntesReguladoresForm
         :ente-regulador="enteReguladorActual"
         :es-modo-edicion="esModoEdicion"
         @guardar="guardarEnteRegulador"
       />
     </q-dialog>
- </q-page>
+  </q-page>
 </template>
-
+    
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useEntesReguladores } from '../composables/useEntesReguladores';
 import EntesReguladoresTable from '../components/EntesReguladoresTable.vue';
-import EntesReguladoresStandar from '../components/EntesReguladoresStandar.vue';
 import EntesReguladoresForm from '../components/EntesReguladoresForm.vue';
-
+import EntesReguladoresStandar from '../components/EntesReguladoresStandar.vue';
+import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
+      
 const {
-  listaEntesReguladores, listaEntesReguladoresEstandar, esVisibleDialogo, esModoEdicion, enteReguladorActual, esVistaEstandar,
-  cargarEntesReguladores, cargarEntesReguladoresEstandar, prepararNuevoEnteRegulador, prepararEdicionEnteRegulador, guardarEnteRegulador, confirmarEliminarEnteRegulador, cambiarEstadoEnteRegulador, alternarVistaEstandar, confirmarImportacion
+  listaEntesReguladores, enteReguladorActual, esModoEdicion, esVisibleDialogo,
+  filtroBusqueda, cargando,
+  listaEntesReguladoresEstandar, esVistaEstandar,
+  cargarEntesReguladores, prepararNuevoEnteRegulador, guardarEnteRegulador,
+  prepararEdicionEnteRegulador, confirmarEliminarEnteRegulador,
+  cargarEntesReguladoresEstandar, alternarVistaEstandar, confirmarImportacion,
+  cambiarEstadoRegistro,
 } = useEntesReguladores();
-
-onMounted(() => { void cargarEntesReguladores() })
+    
+onMounted(() => {
+  void cargarEntesReguladores();
+});
 </script>

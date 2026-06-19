@@ -52,6 +52,7 @@ export default {
     messages: {
       noData: 'No hay registros',
       loading: 'Cargando',
+      synchronizing: 'Sincronizando',
       unknown: 'Desconocido',
       items: 'elemento(s)',
       downloadSuccess: 'Archivo descargado correctamente',
@@ -120,6 +121,7 @@ export default {
     destination: 'Destino',
     type: 'Tipo',
     amount2: 'Monto',
+    date: 'Fecha',
   },
   //CONFIGURACIONES_________________________________________________________________________________
     //ORGANIZACIÓN:
@@ -171,5 +173,46 @@ export default {
     new: 'Nuevo Ente Regulador',
     edit: 'Editar Ente Regulador',
     percentage: 'Porcentaje',
-    },
+  },
+  //METODOS DE EVALUACION:
+  evaluationMethods:{
+    title: 'Métodos de Evaluación',
+    subtitle: 'Gestiona los métodos para calificar el desempeño.',
+    name: 'Método',
+    new: 'Nuevo Método de Evaluación',
+    edit: 'Editar Método de Evaluación',
+    maximumRating: 'Calificación Máxima',
+    manageRanges: 'Gestionar Rangos',
+    range:{
+      title: 'Rangos de ',
+      subtitle:'Gestiona los niveles de calificación',
+      name:'Rango de Evaluacion',
+      new: 'Nuevo Rango de Evaluación',
+      edit: 'Editar Rango de Evaluación',
+      criteria: 'Criterio/Rango',
+      score: 'Puntaje',
+    }
+    
+  },
+  evaluationActivities: {
+    title: 'Actividades de Evaluación',
+    subtitle: 'Gestión de actividades para evaluar el desempeño.',
+    name: 'Actividad',
+    new: 'Nueva Actividad',
+    edit: 'Editar Actividad',
+  },
+  niveles: {
+    title: 'Niveles de Gravedad',
+    subtitle: 'Gestión de niveles de gravedad para sanciones.',
+    name: 'Nivel',
+    new: 'Nuevo Nivel',
+    edit: 'Editar Nivel',
+  },
+  tiposdesanciones: {
+    title: 'Tipos de Sanciones',
+    subtitle: 'Gestión de tipos de sanciones y su gravedad.',
+    name: 'Tipo de Sanción',
+    new: 'Nuevo Tipo de Sanción',
+    edit: 'Editar Tipo de Sanción',
+  }
 }

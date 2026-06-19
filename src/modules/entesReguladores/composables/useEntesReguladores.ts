@@ -5,157 +5,180 @@ import { useNotificaciones } from 'src/composables/useNotificaciones';
 import { entesReguladoresService } from '../services/entesReguladores.service';
 import type { EnteRegulador } from '../types/entesReguladores.types';
 
-const listaEntesReguladores        = ref<EnteRegulador[]>([]);
-const listaEntesReguladoresEstandar= ref<EnteRegulador[]>([]);
-const esVisibleDialogo             = ref<boolean>(false);
-const esModoEdicion                = ref<boolean>(false);
-const esVistaEstandar              = ref<boolean>(false);
-
-const enteReguladorActual          = ref<EnteRegulador>({
-	nombre: '', porcentaje: '', descripcion: '', monto: '', orden: ''
-});
-
 export function useEntesReguladores() {
-  
-	const { notificarExito, notificarError, notificarAdvertencia, confirmarAccion } = useNotificaciones();
-	const idEmpresa = String(idempresa_md5());
+  const listaEntesReguladores = ref<EnteRegulador[]>([]);
+  const cargando = ref<boolean>(false);
+  const idEmpresa = String(idempresa_md5());
+  const esModoEdicion = ref<boolean>(false);
+  const esVisibleDialogo = ref<boolean>(false);
+  const filtroBusqueda = ref<string>('');
+  const listaEntesReguladoresEstandar = ref<EnteRegulador[]>([]);
+  const esVistaEstandar = ref<boolean>(false);
 
- 	const cargarEntesReguladores = async () => {
-  	try {
-   		listaEntesReguladores.value = await entesReguladoresService.listarEntesReguladores();
-  	} catch (error) {
-   		console.error('Error al cargar entes:', error);
-   		notificarError('Error al cargar los datos o conexión a internet desactivada');
-  	}
- 	};
+  const enteReguladorActual = ref<EnteRegulador>({
+    nombre: '',
+    descripcion: '',
+    porcentaje: 0,
+    monto: 0,
+    orden: 1,
+    estado: 1
+  });
 
-  const cargarEntesReguladoresEstandar = async () => {
+  const { 
+    notificarAdvertencia, notificarErrorAccion, notificarExitoAccion,
+    confirmarEliminacionPredefinida, confirmarImportacionPredefinida
+  } = useNotificaciones();
+
+  const cargarEntesReguladores = async () => {
+    cargando.value = true;
     try {
-      listaEntesReguladoresEstandar.value = await entesReguladoresService.listarEntesReguladoresEstandar();
-      esVistaEstandar.value = true;
+      listaEntesReguladores.value = await entesReguladoresService.listarEntesReguladores();
     } catch (error) {
-      console.error('Error al cargar entes estándar:', error);
-   		notificarError('Error al cargar los datos o conexión a internet desactivada');
+      console.error(error);
+      notificarErrorAccion('cargar');
+    } finally {
+      cargando.value = false;
     }
+  };
+
+  const calcularSiguienteOrden = (): number => {
+    if (listaEntesReguladores.value.length === 0) return 1;
+    const ordenes = listaEntesReguladores.value.map(e => Number(e.orden) || 0);
+    return Math.max(...ordenes) + 1;
   };
 
   const prepararNuevoEnteRegulador = () => {
     enteReguladorActual.value = {
-      nombre: '', porcentaje: '', descripcion: '', monto: '', orden: ''
-    }
+      nombre: '',
+      descripcion: '',
+      porcentaje: 0,
+      monto: 0,
+      orden: calcularSiguienteOrden(),
+      estado: 1
+    };
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
   };
 
-  const prepararEdicionEnteRegulador = async (id: string) => {
-    try{
+  const prepararEdicionEnteRegulador = async (id: number) => {
+    try {
       const respuesta = await entesReguladoresService.editarEnteRegulador(id);
-      if (respuesta.estado === 'exito' && respuesta.datos){
+      if (respuesta.estado === 'exito' && respuesta.datos) {
         enteReguladorActual.value = { ...respuesta.datos };
         esModoEdicion.value = true;
         esVisibleDialogo.value = true;
       }
     } catch (error) {
-      	console.error(error);
-      	notificarError('Error al obtener datos del ente regulador' );
+      console.error(error);
+      notificarErrorAccion('cargar');
     }
   };
 
   const guardarEnteRegulador = async (datosGuardar: EnteRegulador) => {
     try {
-			const payload = {
-				ver				 : esModoEdicion.value ? 'editarEnteregulador' : 'registroEnteregulador',
-				idempresa	 : idEmpresa,
-      	id				 : esModoEdicion.value ? datosGuardar.id: undefined,
-				nombre		 : datosGuardar.nombre,
-      	porcentaje : datosGuardar.porcentaje,
-      	descripcion: datosGuardar.descripcion,
-      	monto			 : datosGuardar.monto,
-      	orden			 : datosGuardar.orden
-			}
-			const datosFormulario = prepararDatosFormulario(payload)
+      const payload = {
+        ver : esModoEdicion.value ? 'editarEnteregulador' : 'registroEnteregulador',
+        idempresa : idEmpresa,
+        ...datosGuardar
+      };
+      const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await entesReguladoresService.guardarEnteRegulador(datosFormulario);
       if (respuesta.estado === 'exito') {
-        notificarExito(esModoEdicion.value ? 'Registro Actualizado con éxito' : 'Registro creado con éxito');
+        notificarExitoAccion('guardar');
         esVisibleDialogo.value = false;
         void cargarEntesReguladores();
       } else {
         notificarAdvertencia(respuesta.mensaje);
       }
-    } catch (error) {
+    } catch (error){
       console.error(error);
-      notificarError('Error al procesar la solicitud');
+      notificarErrorAccion('guardar');
     }
   };
 
-  const confirmarEliminarEnteRegulador = (id: string) => {
-    confirmarAccion('¿Está Seguro?', 'No podrá recuperar este registro.', async () => {
+  const confirmarEliminarEnteRegulador = (id: number) => {
+    confirmarEliminacionPredefinida(async () => {
       try {
         const respuesta = await entesReguladoresService.eliminarEnteRegulador(id);
-          if (respuesta.estado === 'exito') {
-            notificarExito(respuesta.mensaje);
-            void cargarEntesReguladores();
-          }
+        if (respuesta.estado === 'exito') {
+          notificarExitoAccion('eliminar');
+          void cargarEntesReguladores();
+        } else {
+          notificarAdvertencia(respuesta.mensaje);
+        }
       } catch (error) {
-        	console.error(error);
-        	notificarError('Error al eliminar el registro');
+        console.error(error);
+        notificarErrorAccion('eliminar');
       }
     });
   };
 
-  const cambiarEstadoEnteRegulador = async (enteRegulador: EnteRegulador) => {
-    if (!enteRegulador.id) return;
-      const nuevoEstado = enteRegulador.estado == '1' ? '2' : '1';
-		try {
-			await entesReguladoresService.cambiarEstadoEnteRegulador(enteRegulador.id, nuevoEstado);
-      notificarExito('Estado actualizado correctamente');
-      void cargarEntesReguladores();
+  const cargarEntesReguladoresEstandar = async () => {
+    cargando.value = true;
+    try {
+      listaEntesReguladoresEstandar.value = await entesReguladoresService.listarEntesReguladoresEstandar();
+      esVistaEstandar.value = true;
     } catch (error) {
-      console.error('Error al cambiar estado:', error);
-			notificarError('Error al cambiar el estado del registro');
-		}
+      console.error(error);
+      notificarErrorAccion('cargar');
+    } finally {
+      cargando.value = false;
+    }
   };
 
   const confirmarImportacion = (tipoAccion: 'reemplazar' | 'agregar') => {
-    const mensaje = tipoAccion === 'reemplazar'
-      ? 'Esta acción reemplazará todos sus datos actuales por los del catálogo estándar. ¿Desea continuar?'
-      : 'Esta acción agregará los datos del catálogo estándar a su tabla actual. ¿Desea continuar?';
-      
-    confirmarAccion('Confirmar Importación', mensaje, () => {
-        void procesarImportacion(tipoAccion);
-      });
-	};
-      
-  const procesarImportacion = async (tipoAccion: 'reemplazar' | 'agregar') => {
-  	try {
-			const payload = {
-				ver			 : 'remplazarocopiardatosEntesReguladores',
-      	idempresa: idEmpresa,
-      	datos		 : JSON.stringify(listaEntesReguladoresEstandar.value),
-        tipo		 : tipoAccion === 'reemplazar' ? '1' : '2'
-			};    
-      const datosFormulario = prepararDatosFormulario(payload);
-			const respuesta = await entesReguladoresService.guardarEnteRegulador(datosFormulario);
+    confirmarImportacionPredefinida(tipoAccion, () => {
+      void procesarImportacion(tipoAccion);
+    });
+  };
 
+  const procesarImportacion = async (tipoAccion: 'reemplazar' | 'agregar') => {
+    try {
+      const payload = {
+        ver : 'remplazarocopiardatosEntesReguladores',
+        idempresa : idEmpresa,
+        datos : JSON.stringify(listaEntesReguladoresEstandar.value),
+        tipo : tipoAccion === 'reemplazar' ? '1' : '2'
+      };
+
+      const datosFormulario = prepararDatosFormulario(payload);
+      const respuesta = await entesReguladoresService.guardarEnteRegulador(datosFormulario);
+      
       if (respuesta.estado === 'exito') {
-        notificarExito('Catálogo procesado correctamente');
+        notificarExitoAccion('importar');
         alternarVistaEstandar();
         void cargarEntesReguladores();
       } else {
         notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
-      console.error('Error procesando importación:', error);
-      notificarError('Error al procesar el catálogo');
+      console.error(error);
+      notificarErrorAccion('importar');
     }
   };
-	
-	const alternarVistaEstandar = () => {
+
+  const alternarVistaEstandar = () => {
     esVistaEstandar.value = !esVistaEstandar.value;
   };
 
+  const cambiarEstadoRegistro = async (ente: EnteRegulador) => {
+    if (!ente.id) return;
+    const nuevoEstado = ente.estado === 1 ? 2 : 1;
+    try {
+      await entesReguladoresService.cambiarEstadoEnteRegulador(ente.id, nuevoEstado);
+      notificarExitoAccion('guardar');
+      void cargarEntesReguladores();
+    } catch (error) {
+      console.error(error);
+      notificarErrorAccion('guardar');
+    }
+  };
+
   return {
-    listaEntesReguladores, listaEntesReguladoresEstandar, esVisibleDialogo, esModoEdicion,  enteReguladorActual, esVistaEstandar,
-    cargarEntesReguladores, cargarEntesReguladoresEstandar, prepararEdicionEnteRegulador, prepararNuevoEnteRegulador, guardarEnteRegulador, confirmarEliminarEnteRegulador , cambiarEstadoEnteRegulador, confirmarImportacion, alternarVistaEstandar
+    listaEntesReguladores, enteReguladorActual, esModoEdicion, filtroBusqueda, cargando,
+    esVisibleDialogo, listaEntesReguladoresEstandar, esVistaEstandar,
+    cargarEntesReguladores, prepararNuevoEnteRegulador, guardarEnteRegulador,
+    prepararEdicionEnteRegulador, confirmarEliminarEnteRegulador,
+    cargarEntesReguladoresEstandar, confirmarImportacion, alternarVistaEstandar, cambiarEstadoRegistro
   };
 }

@@ -11,5 +11,5 @@ export interface RangosDeEvaluacion {
   nombre: string;
   cantidad: number;
   fecha: Date;
-  idMetodoDeEvaluacion: number;
+  idMetodoDeEvaluacion?: number;
 }
