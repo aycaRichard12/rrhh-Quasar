@@ -59,11 +59,12 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import type { Cargo, AreaMin } from '../types/cargos.types';
+import type { Cargo } from '../types/cargos.types';
+import type { Area } from 'src/modules/areas/types/areas.types';
 
 const props = defineProps<{
   cargo         : Cargo;
-  listaAreas    : AreaMin[];
+  listaAreas    : Area[];
   esModoEdicion : boolean;
 }>();
 

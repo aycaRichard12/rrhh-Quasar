@@ -25,12 +25,12 @@ const routes: RouteRecordRaw[] = [
       { path: 'tiposdesanciones'       ,component: () => import('src/modules/tiposdesanciones/pages/TiposDeSancionesPage.vue') },
 //Sanciones
       { path: 'niveles'                ,component: () => import('src/modules/niveles/pages/NivelesPage.vue') },
-
-
+      { path: 'motivosdebaja'          ,component: () => import('src/modules/motivosdebaja/pages/MotivosDeBajaPage.vue') },
+      { path: 'bajas'                  ,component: () => import('src/modules/bajas/pages/BajasPage.vue') },
 //Remuneración
       { path: 'metodosdepago'          ,component: () => import('src/modules/metodosdepago/pages/MetodosDePagoPage.vue') },
       { path: 'bonosEmpresa'           ,component: () => import('src/modules/bonosempresa/pages/BonosEmpresaPage.vue') },
-
+      { path: 'salariominimo'          ,component: () => import('src/modules/salariominimo/pages/SalarioMinimoPage.vue') },
 //____________| GESTIÓN RECLUTAMIENTO |_________________________________________________________________________________
 // Admisión
       { path: 'convocatorias'          ,component: () => import('src/modules/convocatorias/pages/convocatoriasPage.vue') },

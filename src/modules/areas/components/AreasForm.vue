@@ -21,9 +21,9 @@
           <div class="col-6">
             <q-select dense emit-value lazy-rules map-options outlined
               option-value="id"
-              v-model="datosLocales.idsucursal"
+              v-model="datosLocales.sucursal.idsucursal"
               :options="sucursales"
-              :option-label="(item) => item ? `${item.nombre} - ${item.region}` : ''"
+              :option-label="(item) => item ? `${item.sucursal} - ${item.region}` : ''"
               :label="$t('areas.branch') + ' *'"
               :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
             />
@@ -62,10 +62,15 @@ const emits = defineEmits<{
   (e: 'guardar', datos: Area): void
 }>();
 
-const datosLocales = ref<Area>({ ...props.area })
+const deconstruirArea = (area: Area): Area => ({
+  ...area,
+  sucursal: area.sucursal ? { ...area.sucursal } : { idsucursal: 0, nombre: '', region: '', idregion: 0 }
+});
+
+const datosLocales = ref<Area>(deconstruirArea(props.area))
 
 watch(() => props.area, (nuevoValor) => {
-  datosLocales.value = { ...nuevoValor };
+  datosLocales.value = deconstruirArea(nuevoValor);
 }, { deep: true });
 
 const guardar = () => {

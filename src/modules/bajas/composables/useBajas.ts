@@ -1,0 +1,2 @@
+// ver registrobaja (idusuario, idtrabajador, motivo, dias, fecha, fechai, fechaf, observacion, idcontrato, tipo)
+// ver editarbaja (idusuario, idtrabajador, motivo, dias, fecha, fechai, fechaf, observacion, id, idcontrato, tipo)

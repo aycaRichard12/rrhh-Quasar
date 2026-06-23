@@ -1,7 +1,7 @@
 <template>
-  <q-card style="width: 500px; max-width: 90vw;">
+  <q-card style="width: 100vh;">
     <q-card-section class="global-form-header row justify-between items-center">
-      <div class="text-h6">{{ esModoEdicion ? $t('niveles.edit') : $t('niveles.new') }}</div>
+      <div class="text-h6">{{ esModoEdicion ? $t('levels.edit') : $t('levels.new') }}</div>
       <q-btn icon="close" flat round dense v-close-popup />
     </q-card-section>
 
@@ -11,7 +11,7 @@
           <div class="col-12">
             <q-input autofocus dense lazy-rules outlined 
               v-model="datosLocales.nombre"
-              :label="$t('niveles.name') + ' *'"
+              :label="$t('levels.name') + ' *'"
               :rules="[val => !!val || $t('common.rules.required')]"
             />
           </div>

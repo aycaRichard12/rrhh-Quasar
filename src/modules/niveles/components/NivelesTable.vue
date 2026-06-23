@@ -1,37 +1,14 @@
 <template>
-  <q-card shadow-2 rounded>
+  <q-card>
     <TablaGenerica
       v-model:modelo-busqueda="filtroInterno"
       :filas="datosFiltrados"
       :columnas="listaColumnas"
+      :columnas-texto-largo="['nombre']"
       :esta-cargando="cargando"
-    >
-      <!-- CUSTOMIZACIÓN DE CELDAS (BODY) -->
-      <template v-slot:body-cell-numero="propsCell">
-        <q-td :props="propsCell">
-          {{ propsCell.rowIndex + 1 }}
-        </q-td>
-      </template>
-
-      <template v-slot:body-cell-opciones="propsCell">
-        <q-td :props="propsCell" class="text-center q-gutter-xs">
-          <q-btn dense round
-            class="global-btn-page"
-            icon="sym_o_edit_square"
-            @click="emits('editar', propsCell.row.id!)"
-          >
-            <q-tooltip>{{ $t('common.actions.edit') }}</q-tooltip>
-          </q-btn>
-          <q-btn dense round
-            color="negative"
-            icon="delete_forever"
-            @click="emits('eliminar', propsCell.row.id!)"
-          >
-            <q-tooltip>{{ $t('common.actions.delete') }}</q-tooltip>
-          </q-btn>
-        </q-td>
-      </template>
-    </TablaGenerica>
+      @editar="(id) => emits('editar', Number(id))"
+      @eliminar="(id) => emits('eliminar', Number(id))"
+    />
   </q-card>
 </template>
 
@@ -57,9 +34,8 @@ const emits = defineEmits<{
   (e: 'update:filtro', val: string): void;
 }>();
 
-const { 
-  datosFiltrados
-} = useFiltroExcel(() => props.listaNiveles, []);
+// Toda la lógica de negocio de la tabla se mantiene aquí intacta
+const { datosFiltrados } = useFiltroExcel(() => props.listaNiveles, []);
 
 const filtroInterno = computed({
   get: () => props.filtro,
