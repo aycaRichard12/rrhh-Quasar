@@ -9,26 +9,24 @@
       </div>
     </div>
 
-    <q-card-section class="row justify-between items-center">
+    <q-card-section class="row no-wrap justify-between items-center q-gutter-x-sm">
       <q-btn
         class="global-btn-page"
-        icon="sym_o_add_notes" size="15px" :label="$q.screen.lt.sm ? '' : $t('cargos.new')"
+        icon="sym_o_add_notes"
+        size="15px"
+        :label="$q.screen.lt.sm ? '' : $t('cargos.new')"
         :round="$q.screen.lt.sm"
         @click="prepararNuevoCargo"
       />
-      <q-input clearable dense outlined 
-        v-model="filtroBusqueda"
-        :placeholder="$t('common.actions.search')"
-      >
-        <template v-slot:append>
-          <q-icon name="manage_search"/>
-          </template>
-      </q-input>
+      <div class="row no-wrap q-gutter-x-sm items-center col-grow justify-end">
+        <BuscadorGlobal v-model="filtroBusqueda" class="col-grow" style="max-width: 300px" />
+      </div>
     </q-card-section>
 
     <CargosTable
-      :lista-cargos="listaCargosFiltrados"
-      :filtro="filtroBusqueda"
+      v-model:filtro="filtroBusqueda"
+      :lista-cargos="listaCargos"
+      :cargando="cargando"
       @editar="prepararEdicionCargo"
       @eliminar="confirmarEliminarCargo"
     />
@@ -49,13 +47,15 @@ import { onMounted } from 'vue';
 import { useCargos } from '../composables/useCargos';
 import CargosTable from '../components/CargosTable.vue';
 import CargosForm from '../components/CargosForm.vue';
+import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
 
 const {
-  listaCargosFiltrados, listaAreas, esVisibleDialogo, esModoEdicion, cargoActual, filtroBusqueda,
-  cargarCargosYAreas, prepararNuevoCargo, prepararEdicionCargo, guardarCargo, confirmarEliminarCargo
+  listaCargos, listaAreas, cargando, filtroBusqueda,
+  esVisibleDialogo, esModoEdicion, cargoActual,
+  cargarCargos, prepararNuevoCargo, prepararEdicionCargo, guardarCargo, confirmarEliminarCargo
 } = useCargos();
 
 onMounted(() => {
-  void cargarCargosYAreas();
+  void cargarCargos();
 });
 </script>

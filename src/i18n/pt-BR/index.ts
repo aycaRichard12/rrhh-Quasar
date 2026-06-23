@@ -121,7 +121,7 @@ export default {
       branch: 'Filial',
     }
   },
-  niveles: {
+  levels: {
     title: 'Níveis de Gravidade',
     subtitle: 'Gestão de níveis de gravidade para sanções.',
     name: 'Nível',
@@ -134,5 +134,13 @@ export default {
     name: 'Tipo de Sanção',
     new: 'Novo Tipo de Sanção',
     edit: 'Editar Tipo de Sanção',
+  },
+  reasonLeave: {
+    title: 'Motivos de Desligamento',
+    subtitle: 'Gestão de motivos de desligamento e demissão de pessoal.',
+    name: 'Motivo',
+    new: 'Novo Motivo',
+    edit: 'Editar Motivo',
+    type: 'Tipo'
   }
 };

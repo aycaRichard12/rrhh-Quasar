@@ -2,10 +2,10 @@
   <q-page>
     <div class="lt-sm">
       <div class="row justify-left">
-        <h4 class="q-my-none text-primary">{{ $t('niveles.title') }}</h4>
+        <h4 class="q-my-none text-primary">{{ $t('levels.title') }}</h4>
       </div>
       <div class="row justify-left">
-        <p class="text-grey-7">{{ $t('niveles.subtitle') }}</p>
+        <p class="text-grey-7">{{ $t('levels.subtitle') }}</p>
       </div>
     </div>
 
@@ -14,7 +14,7 @@
         class="global-btn-page"
         icon="add"
         size="15px"
-        :label="$q.screen.lt.sm ? '' : $t('niveles.new')"
+        :label="$q.screen.lt.sm ? '' : $t('levels.new')"
         :round="$q.screen.lt.sm"
         @click="prepararNuevoNivel"
       />

@@ -5,6 +5,8 @@
       :filas="datosFiltrados"
       :columnas="listaColumnas"
       :esta-cargando="cargando"
+      @editar="(id) => emits('editar', Number(id))"
+      @eliminar="(id) => emits('eliminar', Number(id))"
     >
       <!-- Columna: Calificacion Max -->
       <template v-slot:header-cell-calificacionMax="propsCell">
@@ -71,25 +73,19 @@
       </template>
 
       <!-- CUSTOMIZACIÓN DE CELDAS (BODY) -->
-      <template v-slot:body-cell-numero="propsCell">
-        <q-td :props="propsCell">
-          {{ propsCell.rowIndex + 1 }}
-        </q-td>
-      </template>
-
       <template v-slot:body-cell-opciones="propsCell">
         <q-td :props="propsCell" class="text-center q-gutter-xs">
           <q-btn dense round
             class="global-btn-page"
             icon="sym_o_edit_square"
-            @click="emits('editar', propsCell.row.id!)"
+            @click="emits('editar', Number(propsCell.row.id))"
           >
             <q-tooltip>{{ $t('common.actions.edit') }}</q-tooltip>
           </q-btn>
           <q-btn dense round
             color="negative"
             icon="delete_forever"
-            @click="emits('eliminar', propsCell.row.id!)"
+            @click="emits('eliminar', Number(propsCell.row.id))"
           >
             <q-tooltip>{{ $t('common.actions.delete') }}</q-tooltip>
           </q-btn>
@@ -114,7 +110,6 @@ import { useFiltroExcel, type ConfiguracionColumnaExcel } from 'src/composables/
 import TablaGenerica from 'src/components/core/TablaGenerica.vue';
 import TablaFiltroExcel from 'src/components/core/TablaFiltroExcel.vue';
 import type { MetodosDeEvaluacion } from '../types/metodosDeEvaluacion.types';
-
 import { date } from 'quasar';
 
 const { t } = useI18n();

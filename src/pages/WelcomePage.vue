@@ -5,7 +5,7 @@
       <div class="column items-center q-mb-xl">
         <div class="row items-center justify-center q-gutter-lg">
           <q-icon name="waving_hand" size="100px" color="primary" class="col-auto" />
-          <img src="favicon.ico" alt="MisterSofts Logo" style="object-fit: contain; height: 90px;" />
+          <img :src="faviconSrc" alt="MisterSofts Logo" style="object-fit: contain; height: 90px;" />
         </div>
       </div>
       
@@ -21,6 +21,12 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useQuasar } from 'quasar';
+
+const $q = useQuasar();
+const faviconSrc = computed(() => $q.dark.isActive ? 'favicondark.ico' : 'faviconlight.ico');
+
 // Welcome page for users who don't have dashboard access
 </script>
 

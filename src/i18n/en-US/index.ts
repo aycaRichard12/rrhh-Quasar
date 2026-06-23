@@ -136,7 +136,7 @@ export default {
       order: 'Order'
     },
   },
-  niveles: {
+  levels: {
     title: 'Gravity Levels',
     subtitle: 'Management of gravity levels for sanctions.',
     name: 'Level',
@@ -149,5 +149,13 @@ export default {
     name: 'Sanction Type',
     new: 'New Sanction Type',
     edit: 'Edit Sanction Type',
+  },
+  reasonLeave: {
+    title: 'Termination Reasons',
+    subtitle: 'Management of employee termination and leave reasons.',
+    name: 'Reason',
+    new: 'New Reason',
+    edit: 'Edit Reason',
+    type: 'Type'
   }
 };

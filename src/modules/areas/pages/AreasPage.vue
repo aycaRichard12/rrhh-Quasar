@@ -9,28 +9,24 @@
       </div>
     </div>
 
-    <q-card-section class="row justify-between items-center">
-        <q-btn
-          class="global-btn-page"
-          icon="sym_o_add_notes" size="15px"
-          :label="$q.screen.lt.sm ? '' : $t('areas.new')"
-          :round="$q.screen.lt.sm"
-          @click="prepararNuevaArea"
-        />
-        <q-input clearable dense outlined 
-          v-model="filtroBusqueda" 
-          :placeholder="$t('common.actions.search')"
-        >
-          <template v-slot:append>
-            <q-icon name="manage_search"/>
-          </template>
-        </q-input>
+    <q-card-section class="row no-wrap justify-between items-center q-gutter-x-sm">
+      <q-btn
+        class="global-btn-page"
+        icon="sym_o_add_notes"
+        size="15px"
+        :label="$q.screen.lt.sm ? '' : $t('areas.new')"
+        :round="$q.screen.lt.sm"
+        @click="prepararNuevaArea"
+      />
+      <div class="row no-wrap q-gutter-x-sm items-center col-grow justify-end">
+        <BuscadorGlobal v-model="filtroBusqueda" class="col-grow" style="max-width: 300px" />
+      </div>
     </q-card-section>
 
     <AreasTable
+      v-model:filtro="filtroBusqueda"
       :lista-areas="listaAreas"
-      :filtro="filtroBusqueda"
-      :cargando="listaAreas.length === 0"
+      :cargando="cargando"
       @editar="prepararEdicionArea"
       @eliminar="confirmarEliminarArea"
     />
@@ -51,9 +47,11 @@ import { onMounted } from 'vue';
 import { useAreas } from '../composables/useAreas';
 import AreasForm from '../components/AreasForm.vue';
 import AreasTable from '../components/AreasTable.vue';
+import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
 
 const {
-  listaAreas, listaSucursales, esVisibleDialogo, esModoEdicion, areaActual, filtroBusqueda,
+  listaAreas, listaSucursales, cargando, filtroBusqueda,
+  esVisibleDialogo, esModoEdicion, areaActual,
   cargarAreas, prepararNuevaArea, prepararEdicionArea, guardarArea, confirmarEliminarArea
 } = useAreas();
 

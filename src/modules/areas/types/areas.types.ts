@@ -1,16 +1,19 @@
 export interface Area {
-  id?:number;
-  nombre:string;
-  descripcion:string;
-  idsucursal:number;
-  sucursal:Sucursal;
+  id?: number;
+  nombre: string;
+  descripcion: string;
+  sucursal: {
+    idsucursal: number;
+    nombre: string;
+    region: string;
+    idregion: number;
+  }
 }
 
 export interface Sucursal {
-  id?:number;
-  nombre:string;
-  sucursal:string;
-  idempresa:number;
-  idregion:number;
-  region:string;
+  id?: number;
+  sucursal: string;
+  region: string;
+  idregion: number;
+  idempresa: number;
 }

@@ -13,29 +13,31 @@ export function useAreas() {
   const esVisibleDialogo = ref<boolean>(false);
   const esModoEdicion = ref<boolean>(false);
   const filtroBusqueda = ref<string>('');
+  const cargando = ref<boolean>(false);
 
   const areaActual = ref<Area>({
     nombre: '',
     descripcion: '',
-    idsucursal: 0,
     sucursal: {
+      idsucursal: 0,
       nombre: '',
-      sucursal: '',
-      idempresa: 0,
-      idregion: 0,
-      region: ''
+      region: '',
+      idregion: 0
     }
   });
 
   const { notificarAdvertencia, notificarErrorAccion, notificarExitoAccion, confirmarEliminacionPredefinida } = useNotificaciones();
 
   const cargarAreas = async () => {
+    cargando.value = true;
     try {
       listaAreas.value = await areasService.listarAreas();
       listaSucursales.value = await areasService.listarSucursales();
     } catch (error) {
       console.error(error);
       notificarErrorAccion('cargar');
+    } finally {
+      cargando.value = false;
     }
   };
 
@@ -43,13 +45,11 @@ export function useAreas() {
     areaActual.value = {
       nombre: '',
       descripcion: '',
-      idsucursal: 0,
       sucursal: {
+        idsucursal: 0,
         nombre: '',
-        sucursal: '',
-        idempresa: 0,
-        idregion: 0,
-        region: ''
+        region: '',
+        idregion: 0
       }
     };
     esModoEdicion.value = false;
@@ -78,11 +78,11 @@ export function useAreas() {
         id: datosGuardar.id,
         nombre: datosGuardar.nombre,
         descripcion: datosGuardar.descripcion,
-        idsucursal: datosGuardar.idsucursal
-        };
+        idsucursal: datosGuardar.sucursal.idsucursal
+      };
 
-        const datosFormulario = prepararDatosFormulario(payload);
-        const respuesta = await areasService.guardarArea(datosFormulario);
+      const datosFormulario = prepararDatosFormulario(payload);
+      const respuesta = await areasService.guardarArea(datosFormulario);
 
       if (respuesta.estado === 'exito') {
         notificarExitoAccion('guardar');
@@ -116,7 +116,7 @@ export function useAreas() {
 
   return {
     listaAreas, listaSucursales, areaActual, esModoEdicion, filtroBusqueda,
-    esVisibleDialogo, 
+    esVisibleDialogo, cargando,
     cargarAreas, prepararNuevaArea, guardarArea,
     prepararEdicionArea, confirmarEliminarArea
   };

@@ -18,9 +18,9 @@
           <div class="column">
             <!-- <div class="logo-name">MisterSofts</div> -->
             <div >
-              <q-img src="logi.jpg" width="245px" height="42px" />
+              <q-img src="favicondrawer.png" width="265px" height="42px" />
             </div>
-            <div class="logo-sub">GESTIÓN RRHH</div>
+            <div class="logo-sub" >GESTIÓN RRHH</div>
           </div>
         </div>
       </div>
@@ -310,9 +310,9 @@ console.log(
 
 /* ── SEPARADOR ───────────────────────────────────────────────────────────── */
 .drawer-separator {
-  height: 1px;
+  height: 2px;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-  margin: 0 24px;
+  margin: 0 5px;
 }
 
 /* ── SECTION LABEL ───────────────────────────────────────────────────────── */
