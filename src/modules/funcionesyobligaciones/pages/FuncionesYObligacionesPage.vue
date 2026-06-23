@@ -12,20 +12,6 @@
       </div>
 
       <div class="col-12 col-sm-4">
-        <q-select
-          v-model="cargoFiltro"
-          :options="opcionesFiltroCargo"
-          option-value="id"
-          option-label="cargo"
-          emit-value
-          map-options
-          dense
-          outlined
-          :label="t('funcionesYObligaciones.filtroCargo', 'Filtrar por Cargo')"
-        />
-      </div>
-
-      <div class="col-12 col-sm-4">
         <q-input
           v-model="filtroBusqueda"
           dense
@@ -41,12 +27,11 @@
       
     </div>
 
-    <FuncionesYObligacionesTable
-      :lista-funciones-y-obligaciones="listaFuncionesYObligacionesFiltrada"
+    <!-- <FuncionesYObligacionesTable
       :filtro="filtroBusqueda"
       @editar="prepararEdicionFuncionYObligacion"
       @eliminar="confirmarEliminarFuncionYObligacion"
-    />
+    /> -->
 
     <q-dialog v-model="esVisibleDialogo" persistent>
       <FuncionesYObligacionesForm
@@ -63,16 +48,13 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import FuncionesYObligacionesTable from '../components/FuncionesYObligacionesTable.vue';
+// import FuncionesYObligacionesTable from '../components/FuncionesYObligacionesTable.vue';
 import FuncionesYObligacionesForm from '../components/FuncionesYObligacionesForm.vue';
 import { useFuncionesYObligaciones } from '../composables/useFuncionesYObligaciones';
 
 const { t } = useI18n();
 const {
-  listaFuncionesYObligacionesFiltrada,
   listaCargos,
-  opcionesFiltroCargo,
-  cargoFiltro,
   esModoEdicion,
   esVisibleDialogo,
   filtroBusqueda,
@@ -80,9 +62,9 @@ const {
   cargarCargos,
   cargarFuncionesYObligaciones,
   prepararNuevaFuncionYObligacion,
-  prepararEdicionFuncionYObligacion,
+  // prepararEdicionFuncionYObligacion,
   guardarFuncionYObligacion,
-  confirmarEliminarFuncionYObligacion
+  // confirmarEliminarFuncionYObligacion
 } = useFuncionesYObligaciones();
 
 onMounted(() => {

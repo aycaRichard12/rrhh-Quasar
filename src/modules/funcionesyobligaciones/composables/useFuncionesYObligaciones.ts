@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
@@ -26,24 +26,6 @@ export function useFuncionesYObligaciones() {
   
   const funcionYObligacionActual = ref<FuncionYObligacion>({
     nombre: '', descripcion: '', idcargo: ''
-  });
-
-  // 🌟 COMPUTED: Inyecta "Todos" al principio de la lista de cargos para el filtro
-  const opcionesFiltroCargo = computed(() => {
-    return [
-      { id: 'Todos', cargo: t('common.todos', 'Todos') } as Cargo,
-      ...listaCargos.value
-    ];
-  });
-
-  // 🌟 COMPUTED: Filtra la tabla en el cliente sin llamar a la API
-  const listaFuncionesYObligacionesFiltrada = computed(() => {
-    if (cargoFiltro.value === 'Todos' || !cargoFiltro.value) {
-      return listaFuncionesYObligaciones.value;
-    }
-    return listaFuncionesYObligaciones.value.filter(
-      (item) => String(item.idcargo) === String(cargoFiltro.value)
-    );
   });
 
   // Funciones de acción (Verbos)
@@ -146,9 +128,7 @@ export function useFuncionesYObligaciones() {
   };
 
   return {
-    listaFuncionesYObligacionesFiltrada,
     listaCargos,
-    opcionesFiltroCargo,
     cargoFiltro,
     esModoEdicion,
     esVisibleDialogo,

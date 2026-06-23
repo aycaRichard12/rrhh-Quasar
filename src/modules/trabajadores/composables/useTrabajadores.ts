@@ -161,7 +161,7 @@ export const useTrabajadores = () => {
   };
 
   // --- Lógica del Historial ---
-  const abrirHistorial = async (trabajador: Trabajador) => {
+  const abrirHistorial = () => {
     // Aquí a futuro llamarías a tu servicio: await trabajadoresService.obtenerHistorial(trabajador.id)
     // Por ahora lo inicializamos vacío para abrir el modal
     listaHistorial.value = []; 
