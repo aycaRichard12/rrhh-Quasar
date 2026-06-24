@@ -6,15 +6,6 @@
   >
     <template #body-cell-opciones="propsCell">
       <q-td :props="propsCell" class="q-gutter-sm">
-        <q-btn
-          dense
-          round
-          color="info"
-          icon="history"
-          @click="emits('historial', propsCell.row)"
-        >
-          <q-tooltip>{{ $t('common.actions.history') }}</q-tooltip>
-        </q-btn>
 
         <q-btn
           dense
@@ -34,6 +25,16 @@
           @click="emits('eliminar', propsCell.row.id!)"
         >
           <q-tooltip>{{ $t('common.actions.delete') }}</q-tooltip>
+        </q-btn>
+
+        <q-btn
+          dense
+          round
+          color="info"
+          icon="history"
+          @click="emits('historial', propsCell.row)"
+        >
+          <q-tooltip>{{ $t('common.actions.history') }}</q-tooltip>
         </q-btn>
       </q-td>
     </template>

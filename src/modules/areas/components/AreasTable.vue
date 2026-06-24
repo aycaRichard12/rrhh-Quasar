@@ -5,8 +5,9 @@
       :filas="datosFiltrados"
       :columnas="listaColumnas"
       :esta-cargando="cargando"
+      @editar="(id) => emits('editar', Number(id))"
+      @eliminar="(id) => emits('eliminar', Number(id))"
     >
-      <!-- Columna: Sucursal -->
       <template v-slot:header-cell-sucursal="propsCell">
         <q-th :props="propsCell">
           {{ propsCell.col.label }}
@@ -37,27 +38,6 @@
           </q-btn>
         </q-th>
       </template>
-
-      <!-- CUSTOMIZACIÓN DE CELDAS (BODY) -->
-
-      <template v-slot:body-cell-opciones="propsCell">
-        <q-td :props="propsCell" class="text-center q-gutter-xs">
-          <q-btn dense round
-            class="global-btn-page"
-            icon="sym_o_edit_square"
-            @click="emitirEditar(propsCell.row.id)"
-          >
-            <q-tooltip>{{ $t('common.actions.edit') }}</q-tooltip>
-          </q-btn>
-          <q-btn dense round
-            color="negative"
-            icon="delete_forever"
-            @click="emitirEliminar(propsCell.row.id)"
-          >
-            <q-tooltip>{{ $t('common.actions.delete') }}</q-tooltip>
-          </q-btn>
-        </q-td>
-      </template>
     </TablaGenerica>
   </q-card>
 </template>
@@ -65,18 +45,18 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { obtenerColumnasAreas } from '../utils/areas.columns';
 import { useFiltroExcel, type ConfiguracionColumnaExcel } from 'src/composables/core/useFiltroExcel';
 import TablaGenerica from 'src/components/core/TablaGenerica.vue';
 import TablaFiltroExcel from 'src/components/core/TablaFiltroExcel.vue';
+import { obtenerColumnasAreas } from '../utils/areas.columns';
 import type { Area } from '../types/areas.types';
 
 const { t } = useI18n();
 
 const props = defineProps<{
   listaAreas: Area[];
-  filtro: string;
   cargando: boolean;
+  filtro: string;
 }>();
 
 const emits = defineEmits<{
@@ -84,14 +64,6 @@ const emits = defineEmits<{
   (e: 'eliminar', id: number): void;
   (e: 'update:filtro', val: string): void;
 }>();
-
-const emitirEditar = (id?: number) => {
-  if (id) emits('editar', id);
-};
-
-const emitirEliminar = (id?: number) => {
-  if (id) emits('eliminar', id);
-};
 
 const mappedAreas = computed(() => {
   return props.listaAreas.map((area) => {

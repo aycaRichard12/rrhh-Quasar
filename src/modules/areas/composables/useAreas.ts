@@ -1,5 +1,4 @@
 import { ref } from 'vue';
-import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
 import { areasService } from 'src/modules/areas/services/areas.service';
@@ -9,7 +8,6 @@ export function useAreas() {
 
   const listaAreas = ref<Area[]>([]);
   const listaSucursales = ref<Sucursal[]>([]);
-  const idEmpresa = String(idempresa_md5());
   const esVisibleDialogo = ref<boolean>(false);
   const esModoEdicion = ref<boolean>(false);
   const filtroBusqueda = ref<string>('');
@@ -28,7 +26,7 @@ export function useAreas() {
 
   const { notificarAdvertencia, notificarErrorAccion, notificarExitoAccion, confirmarEliminacionPredefinida } = useNotificaciones();
 
-  const cargarAreas = async () => {
+  const cargarAreas = async (): Promise<void> => {
     cargando.value = true;
     try {
       listaAreas.value = await areasService.listarAreas();
@@ -56,7 +54,7 @@ export function useAreas() {
     esVisibleDialogo.value = true;
   };
 
-  const prepararEdicionArea = async (id: number) => {
+  const prepararEdicionArea = async (id: number): Promise<void> => {
     try{
       const respuesta = await areasService.editarArea(id);
       if (respuesta.estado === 'exito' && respuesta.datos){
@@ -70,17 +68,17 @@ export function useAreas() {
     }
   };
 
-  const guardarArea = async (datosGuardar: Area) => {
+  const guardarArea = async (datosGuardar: Area): Promise<void> =>{
     try {
-      const payload = {
+      const payload: Record<string, string | number> = {
         ver : esModoEdicion.value ? 'editarArea' : 'registroAreas',
-        idempresa : idEmpresa,
-        id: datosGuardar.id,
         nombre: datosGuardar.nombre,
         descripcion: datosGuardar.descripcion,
-        idsucursal: datosGuardar.sucursal.idsucursal
+        sucursal: datosGuardar.sucursal.idsucursal
       };
-
+      if (esModoEdicion.value && datosGuardar.id !== undefined) {
+        payload.id = datosGuardar.id;
+      }
       const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await areasService.guardarArea(datosFormulario);
 
@@ -97,7 +95,7 @@ export function useAreas() {
     }
   };
 
-  const confirmarEliminarArea = (id: number) => {
+  const confirmarEliminarArea = (id: number): void =>{
     confirmarEliminacionPredefinida(async () => {
       try {
         const respuesta = await areasService.eliminarArea(id);

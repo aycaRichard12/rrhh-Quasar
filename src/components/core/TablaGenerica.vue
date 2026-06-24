@@ -10,18 +10,6 @@
     :rows-per-page-label="$t('common.report.recordsPerPage')"
     :pagination-label="(inicio, fin, total) => `${inicio}-${fin} ${$t('common.report.of')} ${total}`"
   >
-    <!-- <template #loading>
-      <div class="full-width column flex-center q-py-xl" style="min-height: 250px;">
-        <q-inner-loading showing style="z-index: 10;">
-          <div class="full-width column flex-center" style="min-height: 50px;">
-            <img :src="faviconSrc" alt="Buscando..." class="magnifier-searching" style="height: 70px; width: 70px; object-fit: contain;" />
-            <span class="text-h5 text-weight-medium q-mt-md">
-              {{ $t('common.messages.loading') + '...' }}
-            </span>
-          </div>
-        </q-inner-loading>
-      </div>
-    </template> -->
     <template #no-data>
       <div class="full-width column flex-center q-py-xl" style="min-height: 250px;">
         <q-inner-loading showing style="z-index: 10;">
@@ -116,11 +104,6 @@ const slotsDinamicos = computed(() => {
 // Tipamos estrictamente las acciones genéricas que la tabla base soporta
 type AccionesBase = 'editar' | 'eliminar' | 'cambiarEstado';
 
-// const emitirAccion = (accion: AccionesBase, fila: T) => {
-//   if (fila.id !== undefined && fila.id !== null) {
-//     emit(accion, fila.id);
-//   }
-// };
 const emitirAccion = (accion: AccionesBase, fila: T) => {
   if (fila.id !== undefined && fila.id !== null) {
     if (accion === 'editar') {
