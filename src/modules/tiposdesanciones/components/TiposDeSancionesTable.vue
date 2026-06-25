@@ -2,7 +2,7 @@
   <q-card shadow-2 rounded>
     <TablaGenerica
       v-model:modelo-busqueda="filtroInterno"
-      :filas="datosFiltrados"
+      :filas="filasTipadas"
       :columnas="listaColumnas"
       :esta-cargando="cargando"
     >
@@ -75,6 +75,9 @@ import { useFiltroExcel, type ConfiguracionColumnaExcel } from 'src/composables/
 import TablaGenerica from 'src/components/core/TablaGenerica.vue';
 import TablaFiltroExcel from 'src/components/core/TablaFiltroExcel.vue';
 import type { TiposDeSanciones } from '../types/tiposDeSanciones.types';
+import type { FilaBase } from 'src/components/core/TablaGenerica.vue'
+  
+  const filasTipadas = computed(() => datosFiltrados.value as unknown as FilaBase[]);
 
 const { t } = useI18n();
 

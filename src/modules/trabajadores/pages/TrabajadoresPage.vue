@@ -10,9 +10,13 @@
         :label="$t('common.actions.new')"
         @click="prepararNuevoTrabajador"
       />
+      <div class="row no-wrap q-gutter-x-sm items-center col-grow justify-end">
+        <BuscadorGlobal v-model="filtroBusqueda" class="col-grow" style="max-width: 300px" />
+      </div>
     </div>
 
     <TrabajadoresTable
+      v-model:filtro="filtroBusqueda"
       :lista-trabajadores="listaTrabajadores"
       :cargando="cargando"
       @editar="prepararEdicionTrabajador"
@@ -43,12 +47,14 @@ import TrabajadoresTable from '../components/TrabajadoresTable.vue';
 import TrabajadoresForm from '../components/TrabajadoresForm.vue';
 import TrabajadoresHistory from '../components/TrabajadoresHistory.vue';
 import { useTrabajadores } from '../composables/useTrabajadores';
+import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
 
 const {
   listaTrabajadores,
   listaCargos,
   trabajadorActual,
   cargando,
+  filtroBusqueda,
   esModoEdicion,
   esVisibleDialogo,
   esVisibleHistorial,

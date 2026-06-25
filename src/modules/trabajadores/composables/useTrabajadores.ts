@@ -19,6 +19,7 @@ export const useTrabajadores = () => {
   const cargando = ref<boolean>(false);
   const esModoEdicion = ref<boolean>(false);
   const esVisibleDialogo = ref<boolean>(false);
+  const filtroBusqueda = ref('');
   
   // Estados de Historial
   const esVisibleHistorial = ref<boolean>(false);
@@ -182,6 +183,7 @@ export const useTrabajadores = () => {
     esVisibleDialogo,
     esVisibleHistorial,
     listaHistorial,
+    filtroBusqueda,
     cargarTrabajadores,
     cargarCargos,
     prepararNuevoTrabajador,

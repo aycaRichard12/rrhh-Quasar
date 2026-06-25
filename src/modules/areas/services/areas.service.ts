@@ -43,16 +43,29 @@ export const areasService = {
   },
 
   async editarArea(id: number): Promise<RespuestaApi<Area>> {
-    const { data } = await api.get(`verificarIDarea/${id}`);
-    
-    if (data.estado === 'exito' && data.datos) {
-      return {
-        ...data,
-        datos: sanearArea(data.datos)
-      };
-    }
-    return data;
-  },
+  const { data } = await api.get(`verificarIDarea/${id}`);
+
+  if (data.estado === 'exito' && data.datos) {
+    const area: Area = {
+      id: Number(data.datos.id),
+      nombre: String(data.datos.nombre ?? ''),
+      descripcion: String(data.datos.descripcion ?? ''),
+      sucursal: {
+        idsucursal: Number(data.datos.idsucursal ?? 0),
+        nombre: '',
+        region: '',
+        idregion: 0
+      }
+    };
+
+    return {
+      ...data,
+      datos: area
+    };
+  }
+
+  return data;
+},
 
   async guardarArea(payload: FormData): Promise<RespuestaApi> {
     const { data } = await api.post('/', payload);

@@ -25,8 +25,8 @@
 
     <AreasTable
       v-model:filtro="filtroBusqueda"
-      :lista-areas="listaAreas"
       :cargando="cargando"
+      :lista-areas="listaAreas"
       @editar="prepararEdicionArea"
       @eliminar="confirmarEliminarArea"
     />
@@ -44,10 +44,12 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
+import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
+
 import { useAreas } from '../composables/useAreas';
 import AreasForm from '../components/AreasForm.vue';
 import AreasTable from '../components/AreasTable.vue';
-import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
+
 
 const {
   listaAreas, listaSucursales, cargando, filtroBusqueda,

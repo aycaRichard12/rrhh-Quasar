@@ -1,5 +1,5 @@
 import { api } from 'src/boot/axios';
-import { idempresa_md5, urlApiAdministracion} from 'src/composables/funcionesGenerales';
+import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import type { RespuestaApi } from 'src/types/api.types';
 import type { EnteRegulador } from '../types/entesReguladores.types';
 
@@ -46,7 +46,7 @@ export const entesReguladoresService = {
   },
 
   async listarEntesReguladoresEstandar(): Promise<EnteRegulador[]> {
-    const urlAd = urlApiAdministracion();
+    const urlAd = 'https://mistersofts.com/app/ad/'
     const { data } = await api.get<EnteRegulador[]>(`${urlAd}api/listareguladores`);
     return Array.isArray(data) ? data.map(sanearEnte) : [];
   }
