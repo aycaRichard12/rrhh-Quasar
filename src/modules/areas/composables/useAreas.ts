@@ -5,13 +5,13 @@ import { areasService } from 'src/modules/areas/services/areas.service';
 import type { Area, Sucursal } from 'src/modules/areas/types/areas.types';
 
 export function useAreas() {
-
   const listaAreas = ref<Area[]>([]);
   const listaSucursales = ref<Sucursal[]>([]);
-  const esVisibleDialogo = ref<boolean>(false);
-  const esModoEdicion = ref<boolean>(false);
-  const filtroBusqueda = ref<string>('');
+
   const cargando = ref<boolean>(false);
+  const filtroBusqueda = ref<string>('');
+  const esModoEdicion = ref<boolean>(false);
+  const esVisibleDialogo = ref<boolean>(false);
 
   const areaActual = ref<Area>({
     nombre: '',

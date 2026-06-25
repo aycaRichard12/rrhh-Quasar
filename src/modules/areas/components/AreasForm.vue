@@ -6,7 +6,7 @@
       <q-btn icon="close" flat round dense v-close-popup/>  
     </q-card-section>
 
-    <q-form @submit="guardar">
+    <q-form @submit="emitirGuardar">
       <q-card-section>
         <div class="row q-col-gutter-md">
         
@@ -62,11 +62,6 @@ const emits = defineEmits<{
   (e: 'guardar', datos: Area): void
 }>();
 
-// const deconstruirArea = (area: Area): Area => ({
-//   ...area,
-//   sucursal: area.sucursal ? { ...area.sucursal } : { idsucursal: 0, nombre: '', region: '', idregion: area.sucursal }
-// });
-
 const deconstruirArea = (area: Area): Area => {
   // Buscamos el ID en la sucursal, y si no está, lo buscamos en la raíz del área
   const idSucursalSeguro = area.sucursal?.idsucursal || 0;
@@ -84,11 +79,11 @@ const deconstruirArea = (area: Area): Area => {
 
 const datosLocales = ref<Area>(deconstruirArea(props.area))
 
-watch(() => props.area, (nuevoValor) => {
-  datosLocales.value = deconstruirArea(nuevoValor);
+watch(() => props.area, (nuevosDatos) => {
+  datosLocales.value = deconstruirArea(nuevosDatos);
 }, { deep: true });
 
-const guardar = () => {
+const emitirGuardar = () => {
   emits('guardar', datosLocales.value)
 }
 </script>

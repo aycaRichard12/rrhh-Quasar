@@ -14,7 +14,7 @@
             <q-input autofocus dense lazy-rules outlined
               v-model="datosLocales.cargo"
               :label="$t('cargos.name') + ' *'"
-              :rules="[val => (val !== null && val !== '') || $t('rules.required')]"
+              :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
             />
           </div>
 
@@ -23,7 +23,7 @@
               v-model="datosLocales.salario"
               type="number"
               :label="$t('cargos.salary') + ' *'"
-              :rules="[val => (val !== null && val !== '') || $t('rules.required'), val => /^\d+(\.\d+)?$/.test(String(val)) || $t('rules.numeric')]"
+              :rules="[val => (val !== null && val !== '') || $t('common.rules.required'), val => /^\d+(\.\d+)?$/.test(String(val)) || $t('rules.numeric')]"
             />
           </div>
 
@@ -34,7 +34,7 @@
               option-label="nombre"
               :options="listaAreas"
               :label="$t('areas.name') + ' *'"
-              :rules="[val => (val !== null && val !== '') || $t('rules.required')]"
+              :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
             />
           </div>
 
@@ -43,7 +43,7 @@
               v-model="datosLocales.descripcion"
               type="textarea"
               :label="$t('tables.description') + ' *'"
-              :rules="[val => (val !== null && val !== '') || $t('rules.required')]"
+              :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
             />
           </div>
         </div>

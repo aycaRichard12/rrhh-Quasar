@@ -9,26 +9,24 @@
       </div>
     </div>
 
-    <q-card-section class="row justify-between items-center">
+    <q-card-section class="row no-wrap justify-between items-center q-gutter-x-sm">
       <q-btn
         class="global-btn-page"
-        icon="sym_o_add_notes" size="15px" :label="$q.screen.lt.sm ? '' : $t('prerrequisitos.new')" 
+        icon="sym_o_add_notes"
+        size="15px"
+        :label="$q.screen.lt.sm ? '' : $t('prerrequisitos.new')" 
         :round="$q.screen.lt.sm"
-        @click="prepararNuevoPrerrequisito" />
-
-      <q-input clearable dense outlined 
-        v-model="filtroBusqueda" 
-        :placeholder="$t('common.actions.search')"
-      >
-        <template v-slot:append>
-          <q-icon name="manage_search" />
-        </template>
-      </q-input>
+        @click="prepararNuevoPrerrequisito"
+      />
+      <div class="row no-wrap q-gutter-x-sm items-center col-grow justify-end">
+        <BuscadorGlobal v-model="filtroBusqueda" class="col-grow" style="max-width: 300px" />
+      </div>
     </q-card-section>
 
     <PrerrequisitosCargoTable
-      :lista-prerrequisitos="listaPrerrequisitosFiltrados"
-      :filtro="filtroBusqueda"
+      v-model:filtro="filtroBusqueda"
+      :cargando="cargando"
+      :lista-prerrequisitos="listaPrerrequisitos"
       @editar="prepararEdicionPrerrequisito"
       @eliminar="confirmarEliminarPrerrequisito"
     />
@@ -46,16 +44,20 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
+import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
+
 import { usePrerrequisitosCargo } from '../composables/usePrerrequisitosCargo';
-import PrerrequisitosCargoTable from '../components/PrerrequisitosCargoTable.vue';
 import PrerrequisitosCargoForm from '../components/PrerrequisitosCargoForm.vue';
+import PrerrequisitosCargoTable from '../components/PrerrequisitosCargoTable.vue';
 
 const {
-  listaPrerrequisitosFiltrados, listaCargos, esVisibleDialogo, esModoEdicion, prerrequisitoActual, filtroBusqueda,
-  cargarDatos, prepararNuevoPrerrequisito, prepararEdicionPrerrequisito, guardarPrerrequisito, confirmarEliminarPrerrequisito
+  listaPrerrequisitos, listaCargos, cargando, filtroBusqueda,
+  esVisibleDialogo, esModoEdicion, prerrequisitoActual, 
+  cargarPrerrequisitos, prepararNuevoPrerrequisito,
+  prepararEdicionPrerrequisito, guardarPrerrequisito, confirmarEliminarPrerrequisito
 } = usePrerrequisitosCargo();
 
 onMounted(() => {
-  void cargarDatos();
+  void cargarPrerrequisitos();
 });
 </script>

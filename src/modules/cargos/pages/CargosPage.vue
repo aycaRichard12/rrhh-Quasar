@@ -25,8 +25,8 @@
 
     <CargosTable
       v-model:filtro="filtroBusqueda"
-      :lista-cargos="listaCargos"
       :cargando="cargando"
+      :lista-cargos="listaCargos"
       @editar="prepararEdicionCargo"
       @eliminar="confirmarEliminarCargo"
     />
@@ -44,15 +44,17 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useCargos } from '../composables/useCargos';
-import CargosTable from '../components/CargosTable.vue';
-import CargosForm from '../components/CargosForm.vue';
 import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
+
+import { useCargos } from '../composables/useCargos';
+import CargosForm from '../components/CargosForm.vue';
+import CargosTable from '../components/CargosTable.vue';
 
 const {
   listaCargos, listaAreas, cargando, filtroBusqueda,
   esVisibleDialogo, esModoEdicion, cargoActual,
-  cargarCargos, prepararNuevoCargo, prepararEdicionCargo, guardarCargo, confirmarEliminarCargo
+  cargarCargos, prepararNuevoCargo,
+  prepararEdicionCargo, guardarCargo, confirmarEliminarCargo
 } = useCargos();
 
 onMounted(() => {

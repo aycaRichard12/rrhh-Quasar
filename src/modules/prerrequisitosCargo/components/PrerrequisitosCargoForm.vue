@@ -50,11 +50,12 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import type { PrerrequisitoCargo, CargoMin } from '../types/prerrequisitosCargo.types'
+import type { PrerrequisitoCargo } from '../types/prerrequisitosCargo.types'
+import type { Cargo } from 'src/modules/cargos/types/cargos.types';
 
 const props = defineProps<{
   prerrequisito : PrerrequisitoCargo;
-  listaCargos   : CargoMin[]
+  listaCargos   : Cargo[]
   esModoEdicion : boolean
 }>()
 

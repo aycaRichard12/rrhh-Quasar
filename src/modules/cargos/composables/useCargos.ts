@@ -71,10 +71,8 @@ export function useCargos() {
         descripcion: datosGuardar.descripcion,
         area: datosGuardar.idarea // El payload API espera el select como "area"
       };
-
       const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await cargosService.guardarCargo(datosFormulario);
-
       if (respuesta.estado === 'exito') {
         notificarExitoAccion('guardar');
         esVisibleDialogo.value = false;

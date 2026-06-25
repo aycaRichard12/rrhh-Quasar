@@ -13,22 +13,10 @@
         :key="config.campo"
         #[`header-filtro-${config.campo}`]
       >
-        <q-btn dense flat round
-          icon="filter_alt"
-          size="xs"
-          :color="filtrosActivos[config.campo]?.length || orden.campo === config.campo ? 'primary' : 'grey-7'"
-        >
-          <q-badge floating rounded
-            v-if="filtrosActivos[config.campo]?.length || orden.campo === config.campo"
-            :color="filtrosActivos[config.campo]?.length ? 'negative' : 'primary'"
-          >
-            <q-icon
-              v-if="orden.campo === config.campo && orden.sentido"
-              size="10px"
-              :name="orden.sentido === 'asc' ? 'arrow_upward' : 'arrow_downward'"
-            />
+        <q-btn dense flat round icon="filter_alt" size="xs" :color="filtrosActivos[config.campo]?.length || orden.campo === config.campo ? 'primary' : 'grey-7'">
+          <q-badge floating rounded v-if="filtrosActivos[config.campo]?.length || orden.campo === config.campo" :color="filtrosActivos[config.campo]?.length ? 'negative' : 'primary'">
+            <q-icon v-if="orden.campo === config.campo && orden.sentido" size="10px" :name="orden.sentido === 'asc' ? 'arrow_upward' : 'arrow_downward'"/>
           </q-badge>
-
           <TablaFiltroExcel
             :columna="config"
             :valores-disponibles="valoresUnicosPorColumna[config.campo] ?? []"
@@ -47,16 +35,17 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { obtenerColumnasCargos } from '../utils/cargos.columns'
 import { useFiltroExcel, type ConfiguracionColumnaExcel } from 'src/composables/core/useFiltroExcel';
 import TablaGenerica from 'src/components/core/TablaGenerica.vue';
 import TablaFiltroExcel from 'src/components/core/TablaFiltroExcel.vue';
-import type { Cargo } from '../types/cargos.types'
 import type { FilaBase } from 'src/components/core/TablaGenerica.vue'
-  
-  const filasTipadas = computed(() => datosFiltrados.value as unknown as FilaBase[]);
+
+import type { Cargo } from '../types/cargos.types'
+import { obtenerColumnasCargos } from '../utils/cargos.columns'
 
 const { t } = useI18n()
+const listaColumnas = computed(() => obtenerColumnasCargos(t))
+const filasTipadas = computed(() => datosFiltrados.value as unknown as FilaBase[]);
 
 const props = defineProps<{
   listaCargos: Cargo[]
@@ -83,17 +72,10 @@ const configuracionFiltros: ConfiguracionColumnaExcel[] = [
   }
 ];
 
-const {
-  filtrosActivos, valoresUnicosPorColumna, datosFiltrados, orden,
-  establecerOrden, limpiarFiltrosColumna
-} = useFiltroExcel(() => props.listaCargos, configuracionFiltros);
-
 const filtroInterno = computed({
   get: () => props.filtro,
   set: (val: string) => emits('update:filtro', val)
 });
-
-const listaColumnas = computed(() => obtenerColumnasCargos(t))
 
 const actualizarFiltro = (campo: string, valores: string[]): void => {
   filtrosActivos.value[campo] = valores;
@@ -102,4 +84,9 @@ const actualizarFiltro = (campo: string, valores: string[]): void => {
 const ordenarColumna = (campo: string, sentido: 'asc' | 'desc' | null): void => {
   establecerOrden(campo, sentido);
 };
+
+const {
+  filtrosActivos, valoresUnicosPorColumna, datosFiltrados, orden,
+  establecerOrden, limpiarFiltrosColumna
+} = useFiltroExcel(() => props.listaCargos, configuracionFiltros);
 </script>

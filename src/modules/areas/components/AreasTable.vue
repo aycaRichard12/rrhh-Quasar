@@ -13,7 +13,7 @@
         :key="config.campo"
         #[`header-filtro-${config.campo}`]
       >
-        <q-btn flat round dense icon="filter_alt" size="xs" :color="filtrosActivos[config.campo]?.length || orden.campo === config.campo ? 'primary' : 'grey-7'">
+        <q-btn dense flat round icon="filter_alt" size="xs" :color="filtrosActivos[config.campo]?.length || orden.campo === config.campo ? 'primary' : 'grey-7'">
           <q-badge floating rounded v-if="filtrosActivos[config.campo]?.length || orden.campo === config.campo" :color="filtrosActivos[config.campo]?.length ? 'negative' : 'primary'">
             <q-icon v-if="orden.campo === config.campo && orden.sentido" size="10px" :name="orden.sentido === 'asc' ? 'arrow_upward' : 'arrow_downward'"/>
           </q-badge>
@@ -45,6 +45,7 @@ import { obtenerColumnasAreas } from '../utils/areas.columns';
 
 const { t } = useI18n();
 const listaColumnas = computed(() => obtenerColumnasAreas(t));
+const filasTipadas = computed(() => datosFiltrados.value as unknown as FilaBase[]);
 
 const props = defineProps<{
   listaAreas: Area[];
@@ -57,33 +58,6 @@ const emits = defineEmits<{
   (e: 'eliminar', id: number): void;
   (e: 'update:filtro', val: string): void;
 }>();
-
-const mappedAreas = computed(() => {
-  return props.listaAreas.map((area) => {
-    const text = area.sucursal && typeof area.sucursal === 'object'
-      ? `${area.sucursal.nombre ?? area.sucursal.nombre} - ${area.sucursal.region}`
-      : '';
-    return {
-      ...area,
-      sucursal: area.sucursal
-        ? {
-            ...area.sucursal,
-            toString() {
-              return text;
-            },
-          }
-        : {
-            idsucursal: 0,
-            nombre: '',
-            region: '',
-            idregion: 0,
-            toString() {
-              return '';
-            },
-          },
-    };
-  });
-});
 
 const configuracionFiltros: ConfiguracionColumnaExcel[] = [
   {
@@ -104,9 +78,6 @@ const configuracionFiltros: ConfiguracionColumnaExcel[] = [
   }
 ];
 
-// 🌟 MAGIA TYPESCRIPT: Convertimos la salida del filtro a FilaBase para TablaGenerica
-const filasTipadas = computed(() => datosFiltrados.value as unknown as FilaBase[]);
-
 const filtroInterno = computed({
   get: () => props.filtro,
   set: (val: string) => emits('update:filtro', val)
@@ -121,7 +92,7 @@ const ordenarColumna = (campo: string, sentido: 'asc' | 'desc' | null): void => 
 };
 
 const { 
-  filtrosActivos, valoresUnicosPorColumna, datosFiltrados,
-  orden, establecerOrden, limpiarFiltrosColumna
-} = useFiltroExcel(mappedAreas, configuracionFiltros);
+  filtrosActivos, valoresUnicosPorColumna, datosFiltrados, orden,
+  establecerOrden, limpiarFiltrosColumna
+} = useFiltroExcel(() => props.listaAreas, configuracionFiltros);
 </script>
