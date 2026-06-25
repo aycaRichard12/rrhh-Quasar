@@ -1,7 +1,7 @@
-export interface Bajas{
+export interface Baja{
   id?: number;
 	tipo: number;
-	fecha: Date;
+	fecha: string;
 	observacion: string;
 	idmotivo: number;
 	idtrabajador: number;
@@ -11,7 +11,7 @@ export interface Bajas{
 	idcargo: number;
 	cargo: string;
 	motivo: string;
-	fechai: Date
-	fechaf: Date;
+	fechai: string;
+	fechaf: string;
 	idcontrato: number;
 }

@@ -21,7 +21,6 @@
       :cargando="cargando"
       @editar="prepararEdicionTrabajador"
       @eliminar="confirmarEliminarTrabajador"
-      @historial="abrirHistorial"
     />
 
     <TrabajadoresForm
@@ -32,12 +31,12 @@
       @guardar="guardarTrabajador"
     />
 
-    <TrabajadoresHistory
+    <!-- <TrabajadoresHistory
       v-model="esVisibleHistorial"
       :trabajador="trabajadorActual"
       :lista-historial="listaHistorial"
       @descargar-pdf="descargarHistorialPdf"
-    />
+    /> -->
   </q-page>
 </template>
 
@@ -45,7 +44,7 @@
 import { onMounted } from 'vue';
 import TrabajadoresTable from '../components/TrabajadoresTable.vue';
 import TrabajadoresForm from '../components/TrabajadoresForm.vue';
-import TrabajadoresHistory from '../components/TrabajadoresHistory.vue';
+// import TrabajadoresHistory from '../components/TrabajadoresHistory.vue';
 import { useTrabajadores } from '../composables/useTrabajadores';
 import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
 
@@ -57,16 +56,13 @@ const {
   filtroBusqueda,
   esModoEdicion,
   esVisibleDialogo,
-  esVisibleHistorial,
-  listaHistorial,
+  // listaHistorial,
   cargarTrabajadores,
   cargarCargos,
   prepararNuevoTrabajador,
   prepararEdicionTrabajador,
   guardarTrabajador,
   confirmarEliminarTrabajador,
-  abrirHistorial,
-  descargarHistorialPdf
 } = useTrabajadores();
 
 onMounted(() => {

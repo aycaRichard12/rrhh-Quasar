@@ -8,14 +8,14 @@ import type { Area } from 'src/modules/areas/types/areas.types';
 
 export function useCargos() {
   const idEmpresa = String(idempresa_md5());
-  const filtroBusqueda = ref<string>('');
-  const esModoEdicion = ref<boolean>(false);
-  const cargando = ref(false);
-
   const listaCargos = ref<Cargo[]>([]);
   const listaAreas = ref<Area[]>([]);
-  const esVisibleDialogo = ref<boolean>(false);
 
+  const cargando = ref(false);
+  const filtroBusqueda = ref<string>('');
+  const esModoEdicion = ref<boolean>(false);
+  const esVisibleDialogo = ref<boolean>(false);
+  
   const cargoActual = ref<Cargo>({
     cargo: '',
     salario: '',
@@ -107,8 +107,8 @@ export function useCargos() {
 
   return {
     listaCargos, listaAreas, cargoActual,
-    cargando, esVisibleDialogo, esModoEdicion, filtroBusqueda,
-    cargarCargos, prepararNuevoCargo, prepararEdicionCargo,
-    guardarCargo, confirmarEliminarCargo
+    cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+    cargarCargos, prepararNuevoCargo,
+    prepararEdicionCargo, guardarCargo, confirmarEliminarCargo
   };
 }
