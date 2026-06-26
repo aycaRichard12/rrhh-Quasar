@@ -8,7 +8,6 @@
     <q-form @submit="emitirGuardar">
       <q-card-section>
         <div class="row q-col-gutter-md">
-          
           <div class="col-12">
             <q-input autofocus dense lazy-rules outlined
               v-model="datosLocales.cargo"
@@ -16,7 +15,6 @@
               :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
             />
           </div>
-
           <div class="col-6">
             <q-input dense outlined lazy-rules
               v-model="datosLocales.salario"
@@ -25,7 +23,6 @@
               :rules="[val => (val !== null && val !== '') || $t('common.rules.required'), val => /^\d+(\.\d+)?$/.test(String(val)) || $t('rules.numeric')]"
             />
           </div>
-
           <div class="col-6">
             <q-select dense outlined emit-value map-options lazy-rules
               v-model="datosLocales.idarea"
@@ -36,7 +33,6 @@
               :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
             />
           </div>
-
           <div class="col-12">
             <q-input dense lazy-rules outlined
               v-model="datosLocales.descripcion"

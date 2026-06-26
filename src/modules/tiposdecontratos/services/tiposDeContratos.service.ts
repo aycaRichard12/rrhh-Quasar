@@ -30,7 +30,8 @@ export const tiposDeContratosService = {
   },
 
   async listarTiposDeContratosEstandar(): Promise<TipoDeContrato[]> {
-    const { data } = await api.get('/listatipocontrato');
+    const urlAd = 'https://mistersofts.com/app/ad/'
+    const { data } = await api.get(`${urlAd}api/listatipocontrato`);
     return data;
   },
 

@@ -13,7 +13,7 @@ export const obtenerColumnasTiposDeContratos = (t: (key: string) => string): QTa
     label: t('tiposdecontratos.name'),
     align: 'left',
     field: 'nombre',
-    style: 'width: 153px'
+    style: 'white-space: pre'
   },
   {name: 'observacion',
     label: t('tiposdecontratos.observation'),

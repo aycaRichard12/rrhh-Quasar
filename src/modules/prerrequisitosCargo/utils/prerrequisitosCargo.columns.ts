@@ -14,14 +14,14 @@ export const obtenerColumnasPrerrequisitosCargo = (t: (key: string) => string): 
     label: t('prerrequisitos.name'),
     align: 'left',
     field: 'nombre',
-    style: 'width: 153px; white-space: normal'
+    style: 'white-space: normal'
   },
   { 
     name: 'descripcion',
     label: t('tables.description'),
     align: 'left',
     field: 'descripcion',
-    style: 'min-width:210px; white-space: normal'
+    style: 'white-space: normal'
   },
   {
     name: 'cargo',

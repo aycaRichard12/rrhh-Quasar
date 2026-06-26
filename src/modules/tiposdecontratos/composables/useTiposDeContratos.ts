@@ -2,6 +2,7 @@ import { ref } from 'vue';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
+
 import { tiposDeContratosService } from '../services/tiposDeContratos.service';
 import type { TipoDeContrato } from '../types/tiposDeContratos.types';
 
@@ -121,15 +122,13 @@ export function useTiposDeContratos() {
   const procesarImportacion = async (tipoAccion: 'reemplazar' | 'agregar') => {
     try {
       const payload = {
-        ver      : 'remplazarocopiardatostiposdecontratos',
-        idempresa: idEmpresa,
-        datos    : JSON.stringify(listaTiposDeContratosEstandar.value),
-        tipo     : tipoAccion === 'reemplazar' ? '1' : '2'
+        ver : 'remplazarocopiardatostiposdecontratos',
+        idempresa : idEmpresa,
+        datos : JSON.stringify(listaTiposDeContratosEstandar.value),
+        tipo : tipoAccion === 'reemplazar' ? '1' : '2'
       };
-
       const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await tiposDeContratosService.guardarTipoDeContrato(datosFormulario);
-      
       if (respuesta.estado === 'exito') {
         notificarExitoAccion('importar');
         alternarVistaEstandar();
@@ -151,8 +150,8 @@ export function useTiposDeContratos() {
     listaTiposDeContratos, tipoDeContratoActual,
     cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
     esVistaEstandar, listaTiposDeContratosEstandar,
-    cargarTiposDeContratos, prepararNuevoTipoDeContrato,
-    guardarTipoDeContrato, prepararEdicionTipoDeContrato, confirmarEliminarTipoDeContrato,
+    cargarTiposDeContratos, guardarTipoDeContrato,
+    prepararNuevoTipoDeContrato, prepararEdicionTipoDeContrato, confirmarEliminarTipoDeContrato,
     cargarTiposDeContratosEstandar, confirmarImportacion, alternarVistaEstandar
   };
 }

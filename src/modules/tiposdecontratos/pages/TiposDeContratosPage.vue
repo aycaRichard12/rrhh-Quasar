@@ -13,7 +13,8 @@
       <template v-if="!esVistaEstandar">
         <q-btn
           class="global-btn-page"
-          icon="sym_o_add_notes" size="15px"
+          icon="sym_o_add_notes"
+          size="15px"
           :label="$q.screen.lt.sm ? '' : $t('tiposdecontratos.new')"
           :round="$q.screen.lt.sm"
           @click="prepararNuevoTipoDeContrato"
@@ -22,7 +23,8 @@
         <div class="row q-gutter-sm">
           <q-btn outline
             color="secondary" 
-            icon="cloud_download" size="15px"
+            icon="cloud_download"
+            size="15px"
             :label="$q.screen.lt.sm ? '' : $t('forms.standar')"
             :round="$q.screen.lt.sm"
             @click="cargarTiposDeContratosEstandar"
@@ -67,7 +69,6 @@
         :lista-tipos-de-contratos="listaTiposDeContratos"
         @editar="prepararEdicionTipoDeContrato"
         @eliminar="confirmarEliminarTipoDeContrato"
-        @import="alternarVistaEstandar"
       />
     </div>
 

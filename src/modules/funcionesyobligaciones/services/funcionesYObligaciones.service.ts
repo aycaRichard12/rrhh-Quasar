@@ -22,6 +22,12 @@ export const funcionesYObligacionesService = {
 
   async editarFuncionYObligacion(id: number): Promise<RespuestaApi<FuncionYObligacion>> {
     const { data } = await api.get(`/verificarIDFunYoblig/${id}`);
+    if (data.estado === 'exito' && data.datos) {
+      return {
+        ...data,
+        datos: sanearFuncionYObligacion(data.datos)
+      };
+    }
     return data;
   },
 

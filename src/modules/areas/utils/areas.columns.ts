@@ -1,7 +1,6 @@
 import type { QTableColumn } from 'quasar';
 import type { Area } from '../types/areas.types';
 
-// Función externa limpia y reutilizable para formatear la sucursal
 export const normalizarSucursal = (row: Area): string => {
   if (row.sucursal && typeof row.sucursal === 'object') {
     // Blindaje: Buscamos 'nombre' o 'sucursal' por si la API varía
@@ -25,7 +24,7 @@ export const obtenerColumnasAreas = (t: (key: string) => string): QTableColumn<A
     label: t('areas.name'),
     align: 'left',
     field: 'nombre',
-    style: 'width: 153px; white-space: normal'
+    style: 'width: 100px; white-space: normal'
   },
   { 
     name: 'descripcion',

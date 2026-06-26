@@ -14,7 +14,7 @@ export const obtenerColumnasCargos = (t: (key: string) => string): QTableColumn<
     label: t('cargos.name'),
     align: 'left',
     field: 'cargo',
-    style: 'width: 153px; white-space: normal'
+    style: 'width: 100px; white-space: normal'
   },
   {
     name: 'descripcion',

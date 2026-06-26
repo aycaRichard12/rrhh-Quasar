@@ -20,7 +20,7 @@
           @click="prepararNuevoEnteRegulador"
         />
 
-        <div class="row no-wrap q-gutter-x-sm items-center col-grow justify-end">
+        <div class="row q-gutter-sm">
           <q-btn outline
             color="secondary"
             icon="cloud_download"
@@ -29,6 +29,9 @@
             :round="$q.screen.lt.sm"
             @click="cargarEntesReguladoresEstandar"
           />
+        </div>
+
+        <div class="row no-wrap q-gutter-x-sm items-center col-grow justify-end">
           <BuscadorGlobal v-model="filtroBusqueda" class="col-grow" style="max-width: 300px" />
         </div>
       </template>
@@ -66,8 +69,8 @@
     <div v-if="!esVistaEstandar">
       <EntesReguladoresTable
         v-model:filtro="filtroBusqueda"
-        :lista-entes-reguladores="listaEntesReguladores"
         :cargando="cargando"
+        :lista-entes-reguladores="listaEntesReguladores"
         @editar="prepararEdicionEnteRegulador"
         @eliminar="confirmarEliminarEnteRegulador"
         @cambiar-estado-registro="cambiarEstadoRegistro"
@@ -80,9 +83,7 @@
       />
     </div>
     
-    <q-dialog
-      v-model="esVisibleDialogo"
-    >
+    <q-dialog v-model="esVisibleDialogo">
       <EntesReguladoresForm
         :ente-regulador="enteReguladorActual"
         :es-modo-edicion="esModoEdicion"
@@ -94,18 +95,19 @@
     
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useEntesReguladores } from '../composables/useEntesReguladores';
-import EntesReguladoresTable from '../components/EntesReguladoresTable.vue';
-import EntesReguladoresForm from '../components/EntesReguladoresForm.vue';
-import EntesReguladoresStandar from '../components/EntesReguladoresStandar.vue';
 import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
-      
+
+import { useEntesReguladores } from '../composables/useEntesReguladores';
+import EntesReguladoresForm from '../components/EntesReguladoresForm.vue';
+import EntesReguladoresTable from '../components/EntesReguladoresTable.vue';
+import EntesReguladoresStandar from '../components/EntesReguladoresStandar.vue';
+
 const {
-  listaEntesReguladores, enteReguladorActual, esModoEdicion, esVisibleDialogo,
-  filtroBusqueda, cargando,
-  listaEntesReguladoresEstandar, esVistaEstandar,
-  cargarEntesReguladores, prepararNuevoEnteRegulador, guardarEnteRegulador,
-  prepararEdicionEnteRegulador, confirmarEliminarEnteRegulador,
+  listaEntesReguladores, enteReguladorActual,
+  cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+  esVistaEstandar, listaEntesReguladoresEstandar,
+  cargarEntesReguladores, guardarEnteRegulador,
+  prepararNuevoEnteRegulador, prepararEdicionEnteRegulador, confirmarEliminarEnteRegulador,
   cargarEntesReguladoresEstandar, alternarVistaEstandar, confirmarImportacion,
   cambiarEstadoRegistro,
 } = useEntesReguladores();

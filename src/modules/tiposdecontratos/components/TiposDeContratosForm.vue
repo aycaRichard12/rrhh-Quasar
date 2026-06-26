@@ -8,7 +8,6 @@
     <q-form @submit="emitirGuardar">
       <q-card-section>
         <div class="row q-col-gutter-md">
-          
           <div class="col-12">
             <q-input autofocus dense outlined
               v-model="datosLocales.nombre"
@@ -24,7 +23,6 @@
               :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
             />
           </div>
-          
           <div class="col-12">
             <q-input dense lazy-rules outlined
               v-model="datosLocales.observacion"

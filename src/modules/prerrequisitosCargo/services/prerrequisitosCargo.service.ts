@@ -33,6 +33,12 @@ export const prerrequisitosCargoService = {
 
   async editarPrerrequisito(id: number): Promise<RespuestaApi<PrerrequisitoCargo>> {
     const { data } = await api.get(`verificarIDPrerrequisito/${id}`);
+    if (data.estado === 'exito' && data.datos) {
+      return {
+        ...data,
+        datos: sanearPrerrequisito(data.datos)
+      };
+    }
     return data;
   },
 
