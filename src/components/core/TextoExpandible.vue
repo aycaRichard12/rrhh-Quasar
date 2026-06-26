@@ -7,11 +7,8 @@
       {{ props.texto }}
     </div>
 
-    <q-btn
+    <q-btn dense flat no-caps
       v-if="estaDesbordado"
-      flat
-      dense
-      no-caps
       color="primary"
       class="q-mt-xs q-pa-none"
       :label="expandido ? 'Ver menos' : 'Ver más...'"
@@ -67,8 +64,8 @@ onBeforeUnmount(() => {
 .texto-limitado {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
   /* transition opcional para suavizar, pero en tablas es mejor dejarlo estricto */

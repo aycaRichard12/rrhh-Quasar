@@ -1,45 +1,42 @@
 <template>
-  <q-page padding>
-    <div class="row q-col-gutter-md q-mb-md items-center">
-      
-      <div class="col-12 col-sm-4">
-        <q-btn
-          class="global-btn-page"
-          icon="add"
-          :label="t('nuevo Registro')"
-          @click="prepararNuevaFuncionYObligacion"
-        />
+  <q-page>
+    <div class="lt-sm">
+      <div class="row justify-left">
+        <h4 class="q-my-none text-positive">{{ $t('funcionesyobligaciones.title') }}</h4>
       </div>
-
-      <div class="col-12 col-sm-4">
-        <q-input
-          v-model="filtroBusqueda"
-          dense
-          outlined
-          clearable
-          :placeholder="t('common.buscar')"
-        >
-          <template v-slot:append>
-            <q-icon name="search" />
-          </template>
-        </q-input>
+      <div class="row justify-left">
+        <p class="text-grey-7">{{ $t('funcionesyobligaciones.subtitle') }}</p>
       </div>
-      
     </div>
 
-    <!-- <FuncionesYObligacionesTable
-      :filtro="filtroBusqueda"
+    <q-card-section class="row no-wrap justify-between items-center q-gutter-x-sm">
+      <q-btn
+        class="global-btn-page"
+        icon="sym_o_add_notes"
+        size="15px"
+        :label="$q.screen.lt.sm ? '' : $t('funcionesyobligaciones.new')"
+        :round="$q.screen.lt.sm"
+        @click="prepararNuevaFuncionYObligacion"
+      />
+      <div class="row no-wrap q-gutter-x-sm items-center col-grow justify-end">
+        <BuscadorGlobal v-model="filtroBusqueda" class="col-grow" style="max-width: 300px" />
+      </div>
+    </q-card-section>
+
+    <FuncionesYObligacionesTable
+      v-model:filtro="filtroBusqueda"
+      :cargando="cargando"
+      :lista-funciones-y-obligaciones="listaFuncionesYObligaciones"
       @editar="prepararEdicionFuncionYObligacion"
       @eliminar="confirmarEliminarFuncionYObligacion"
-    /> -->
+    />
 
-    <q-dialog v-model="esVisibleDialogo" persistent>
+    <q-dialog v-model="esVisibleDialogo">
       <FuncionesYObligacionesForm
         :funcion-y-obligacion="funcionYObligacionActual"
         :lista-cargos="listaCargos"
         :es-modo-edicion="esModoEdicion"
         @guardar="guardarFuncionYObligacion"
-        @cancelar="esVisibleDialogo = false"
       />
     </q-dialog>
   </q-page>
@@ -47,24 +44,17 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
-// import FuncionesYObligacionesTable from '../components/FuncionesYObligacionesTable.vue';
-import FuncionesYObligacionesForm from '../components/FuncionesYObligacionesForm.vue';
-import { useFuncionesYObligaciones } from '../composables/useFuncionesYObligaciones';
+import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
 
-const { t } = useI18n();
+import { useFuncionesYObligaciones } from '../composables/useFuncionesYObligaciones';
+import FuncionesYObligacionesTable from '../components/FuncionesYObligacionesTable.vue';
+import FuncionesYObligacionesForm from '../components/FuncionesYObligacionesForm.vue';
+
 const {
-  listaCargos,
-  esModoEdicion,
-  esVisibleDialogo,
-  filtroBusqueda,
-  funcionYObligacionActual,
-  cargarCargos,
-  cargarFuncionesYObligaciones,
-  prepararNuevaFuncionYObligacion,
-  // prepararEdicionFuncionYObligacion,
-  guardarFuncionYObligacion,
-  // confirmarEliminarFuncionYObligacion
+  listaFuncionesYObligaciones, listaCargos, funcionYObligacionActual,
+  cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+  cargarFuncionesYObligaciones, cargarCargos, guardarFuncionYObligacion,
+  prepararEdicionFuncionYObligacion, prepararNuevaFuncionYObligacion, confirmarEliminarFuncionYObligacion
 } = useFuncionesYObligaciones();
 
 onMounted(() => {

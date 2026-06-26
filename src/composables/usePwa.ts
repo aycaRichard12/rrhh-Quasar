@@ -57,9 +57,7 @@ export function usePwa() {
   });
 
   return {
-    showInstall,
-    showUpdate,
-    installApp,
-    updateApp
+    showInstall, showUpdate,
+    installApp, updateApp
   };
 }

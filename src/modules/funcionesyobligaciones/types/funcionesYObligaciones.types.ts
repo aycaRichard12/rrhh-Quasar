@@ -1,7 +1,7 @@
 export interface FuncionYObligacion {
-  id?: string;
+  id?: number;
   nombre: string;
   descripcion: string;
-  idcargo: string;
-  cargo?: string;
+  idcargo: number;
+  cargo: string;
 }

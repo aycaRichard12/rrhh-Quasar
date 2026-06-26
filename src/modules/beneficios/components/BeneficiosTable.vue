@@ -2,7 +2,7 @@
   <q-card>
     <TablaGenerica
       v-model:modelo-busqueda="filtroInterno"
-      :filas="datosFiltrados"
+      :filas="filasTipadas"
       :columnas="listaColumnas"
       :esta-cargando="cargando"
     >
@@ -182,9 +182,14 @@
   import TablaGenerica from 'src/components/core/TablaGenerica.vue';
   import TablaFiltroExcel from 'src/components/core/TablaFiltroExcel.vue';
   import type { Beneficio } from '../types/beneficios.types';
-    
+  import type { FilaBase } from 'src/components/core/TablaGenerica.vue'
+  
+  const filasTipadas = computed(() => datosFiltrados.value as unknown as FilaBase[]);
   const { t } = useI18n();
-    
+  
+  // Traducimos los datos estrictos al tipo genérico de la tabla de forma segura
+
+
   const props = defineProps<{
     listaBeneficios: Beneficio[];
     cargando: boolean;

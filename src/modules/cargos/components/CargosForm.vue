@@ -1,6 +1,5 @@
 <template>
   <q-card style="width: 100vh">
-
     <q-card-section class="global-form-header row justify-between">
       <div class="text-h6">{{ esModoEdicion ? $t('cargos.edit') : $t('cargos.new') }}</div>
       <q-btn icon="close" flat round dense v-close-popup/>
@@ -9,24 +8,21 @@
     <q-form @submit="emitirGuardar">
       <q-card-section>
         <div class="row q-col-gutter-md">
-          
           <div class="col-12">
             <q-input autofocus dense lazy-rules outlined
               v-model="datosLocales.cargo"
               :label="$t('cargos.name') + ' *'"
-              :rules="[val => (val !== null && val !== '') || $t('rules.required')]"
+              :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
             />
           </div>
-
           <div class="col-6">
             <q-input dense outlined lazy-rules
               v-model="datosLocales.salario"
               type="number"
               :label="$t('cargos.salary') + ' *'"
-              :rules="[val => (val !== null && val !== '') || $t('rules.required'), val => /^\d+(\.\d+)?$/.test(String(val)) || $t('rules.numeric')]"
+              :rules="[val => (val !== null && val !== '') || $t('common.rules.required'), val => /^\d+(\.\d+)?$/.test(String(val)) || $t('rules.numeric')]"
             />
           </div>
-
           <div class="col-6">
             <q-select dense outlined emit-value map-options lazy-rules
               v-model="datosLocales.idarea"
@@ -34,16 +30,15 @@
               option-label="nombre"
               :options="listaAreas"
               :label="$t('areas.name') + ' *'"
-              :rules="[val => (val !== null && val !== '') || $t('rules.required')]"
+              :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
             />
           </div>
-
           <div class="col-12">
-            <q-input autogrow dense lazy-rules outlined
+            <q-input dense lazy-rules outlined
               v-model="datosLocales.descripcion"
               type="textarea"
               :label="$t('tables.description') + ' *'"
-              :rules="[val => (val !== null && val !== '') || $t('rules.required')]"
+              :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
             />
           </div>
         </div>
@@ -63,9 +58,9 @@ import type { Cargo } from '../types/cargos.types';
 import type { Area } from 'src/modules/areas/types/areas.types';
 
 const props = defineProps<{
-  cargo         : Cargo;
-  listaAreas    : Area[];
-  esModoEdicion : boolean;
+  cargo: Cargo;
+  listaAreas: Area[];
+  esModoEdicion: boolean;
 }>();
 
 const emits = defineEmits<{

@@ -1,45 +1,69 @@
 import { ref } from 'vue';
-import { useQuasar } from 'quasar';
-import { useI18n } from 'vue-i18n';
-import { trabajadoresService } from '../services/trabajadores.service';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
+import { prepararDatosFormulario } from 'src/utils/formUtils';
+import { useNotificaciones } from 'src/composables/useNotificaciones';
+import { trabajadoresService } from '../services/trabajadores.service';
 import type { Trabajador, HistorialTrabajador } from '../types/trabajadores.types';
 import type { Cargo } from 'src/modules/cargos/types/cargos.types';
 
 export const useTrabajadores = () => {
-  const $q = useQuasar();
-  const { t } = useI18n();
-
-  // Estados Reactivos
+  const idEmpresa = String(idempresa_md5());
   const listaTrabajadores = ref<Trabajador[]>([]);
   const listaCargos = ref<Cargo[]>([]);
-  const trabajadorActual = ref<Trabajador>({} as Trabajador);
-  
-  // Estados de Interfaz
+    // Estados de Interfaz
   const cargando = ref<boolean>(false);
+  const filtroBusqueda = ref('');
   const esModoEdicion = ref<boolean>(false);
   const esVisibleDialogo = ref<boolean>(false);
   
   // Estados de Historial
-  const esVisibleHistorial = ref<boolean>(false);
+  const esVistaHistorial = ref<boolean>(false);
   const listaHistorial = ref<HistorialTrabajador[]>([]);
 
-  const cargarCargos = async () => {
-    try {
-      listaCargos.value = await trabajadoresService.listarCargos();
-    } catch (error) {
-      console.error(error);
-      $q.notify({ type: 'negative', message: t('common.messages.error') });
-    }
-  };
+  const trabajadorActual = ref<Trabajador>({
+    nombres: '',
+    apellidos: '',
+    ci: '',
+    telefono: '',
+    email: '',
+    fechan: null, // YYYY-MM-DD
+    direccion: '',
+    estado: 1, // Por defecto activo
+    foto: null,
+    nacionalidad: 'Boliviana', // O el valor por defecto que uses
+    profesion: '',
+    estadot: 1,
+    fecha: null,
+    idcargo: '',
+    cargo: '',
+    salario: '',
+    sexo: 1,
+    estadocivil: 1,
+    infcontcto: { estado: '', mensaje: '' },
+    contrato: { mensaje: 'sin contrato', codigo: 101 }
+  })
+
+  const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida } = useNotificaciones();
 
   const cargarTrabajadores = async () => {
     cargando.value = true;
     try {
       listaTrabajadores.value = await trabajadoresService.listarTrabajadores();
     } catch (error) {
+        console.error(error);
+        notificarErrorAccion('cargar');
+      } finally {
+      cargando.value = false;
+    }
+  };
+
+  const cargarCargos = async () => {
+    cargando.value = true;
+    try {
+      listaCargos.value = await trabajadoresService.listarCargos();
+    } catch (error) {
       console.error(error);
-      $q.notify({ type: 'negative', message: t('common.messages.error') });
+      notificarErrorAccion('cargar');
     } finally {
       cargando.value = false;
     }
@@ -67,25 +91,22 @@ export const useTrabajadores = () => {
       estadocivil: 1,
       infcontcto: { estado: '', mensaje: '' },
       contrato: { mensaje: 'sin contrato', codigo: 101 }
-    };
-    esModoEdicion.value = false;
-    esVisibleDialogo.value = true;
-  };
+    }
+  }
 
   const prepararEdicionTrabajador = async (id: number) => {
-    cargando.value = true;
     try {
       const respuesta = await trabajadoresService.editarTrabajador(id);
       if (respuesta.estado === 'exito' && respuesta.datos) {
         trabajadorActual.value = { ...respuesta.datos };
         esModoEdicion.value = true;
         esVisibleDialogo.value = true;
+      } else {
+        notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
       console.error(error);
-      $q.notify({ type: 'negative', message: t('common.messages.error') });
-    } finally {
-      cargando.value = false;
+      notificarErrorAccion('cargar');
     }
   };
 
@@ -93,8 +114,8 @@ export const useTrabajadores = () => {
     try {
       const payload = {
         ver: esModoEdicion.value ? 'editartrabajador' : 'registrotrabajador',
-        idempresa: idempresa_md5(),
-        id: datosGuardar.id ?? '',
+        idempresa: idEmpresa,
+        id: esModoEdicion.value ? datosGuardar.id : undefined,
         estadoimg: '1', // Hardcodeado según tu especificación
         nombres: datosGuardar.nombres,
         apellidos: datosGuardar.apellidos,
@@ -111,84 +132,58 @@ export const useTrabajadores = () => {
         estadot: datosGuardar.estadot,
         imagen: datosGuardar.foto ?? ''
       };
-
-      const formData = new FormData();
-      Object.entries(payload).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          formData.append(key, String(value));
-        }
-      });
-
-      const respuesta = await trabajadoresService.guardarTrabajador(formData);
-
+      const datosFormulario = prepararDatosFormulario(payload);
+      const respuesta = await trabajadoresService.guardarTrabajador(datosFormulario);
       if (respuesta.estado === 'exito') {
-        $q.notify({ type: 'positive', message: respuesta.mensaje });
+        notificarExitoAccion('guardar');
         esVisibleDialogo.value = false;
-        void cargarTrabajadores();
+        void cargarCargos();
       } else {
-        $q.notify({ type: 'negative', message: respuesta.mensaje });
+        notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
       console.error(error);
-      $q.notify({ type: 'negative', message: t('common.messages.error') });
+      notificarErrorAccion('guardar');
     }
   };
 
   const confirmarEliminarTrabajador = (id: number) => {
-    $q.dialog({
-      title: t('common.actions.delete'),
-      message: t('common.messages.deleteConfirmation'),
-      cancel: true,
-      persistent: true
-    }).onOk(() => {
-      void ejecutarEliminacion(id);
+    confirmarEliminacionPredefinida(async () => {
+      try {
+        const respuesta = await trabajadoresService.eliminarTrabajador(id);
+        if (respuesta.estado === 'exito') {
+          notificarExitoAccion('eliminar');
+          void cargarTrabajadores();
+        } else {
+          notificarAdvertencia(respuesta.mensaje);
+        }
+      } catch (error) {
+        console.error(error);
+        notificarErrorAccion('eliminar');
+      }
     });
   };
 
-  const ejecutarEliminacion = async (id: number) => {
-    try {
-      const respuesta = await trabajadoresService.eliminarTrabajador(id);
-      if (respuesta.estado === 'exito') {
-        $q.notify({ type: 'positive', message: respuesta.mensaje });
-        void cargarTrabajadores();
-      } else {
-        $q.notify({ type: 'warning', message: respuesta.mensaje });
-      }
-    } catch (error) {
-      console.error(error);
-      $q.notify({ type: 'negative', message: t('common.messages.error') });
-    }
-  };
-
   // --- Lógica del Historial ---
-  const abrirHistorial = () => {
-    // Aquí a futuro llamarías a tu servicio: await trabajadoresService.obtenerHistorial(trabajador.id)
-    // Por ahora lo inicializamos vacío para abrir el modal
-    listaHistorial.value = []; 
-    esVisibleHistorial.value = true;
-  };
+  // const abrirHistorial = () => {
+  //   // Aquí a futuro llamarías a tu servicio: await trabajadoresService.obtenerHistorial(trabajador.id)
+  //   // Por ahora lo inicializamos vacío para abrir el modal
+  //   listaHistorial.value = []; 
+  //   esVisibleHistorial.value = true;
+  // };
 
-  const descargarHistorialPdf = () => {
-    $q.notify({ type: 'info', message: 'Descargando PDF...' });
-    // Lógica futura para PDF
-  };
+  // const descargarHistorialPdf = () => {
+  //   $q.notify({ type: 'info', message: 'Descargando PDF...' });
+  //   // Lógica futura para PDF
+  // };
 
   return {
-    listaTrabajadores,
-    listaCargos,
-    trabajadorActual,
-    cargando,
-    esModoEdicion,
-    esVisibleDialogo,
-    esVisibleHistorial,
-    listaHistorial,
-    cargarTrabajadores,
-    cargarCargos,
-    prepararNuevoTrabajador,
-    prepararEdicionTrabajador,
-    guardarTrabajador,
-    confirmarEliminarTrabajador,
-    abrirHistorial,
-    descargarHistorialPdf
+    listaTrabajadores, listaCargos, trabajadorActual,
+    cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+    listaHistorial, esVistaHistorial,
+    cargarTrabajadores, cargarCargos, prepararNuevoTrabajador,
+    prepararEdicionTrabajador, guardarTrabajador, confirmarEliminarTrabajador,
+    // abrirHistorial,
+    // descargarHistorialPdf
   };
 };

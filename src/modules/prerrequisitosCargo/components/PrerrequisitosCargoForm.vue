@@ -1,6 +1,5 @@
 <template>
   <q-card style="width: 100vh">
-
     <q-card-section class="global-form-header row justify-between">
       <div class="text-h6">{{ esModoEdicion ? $t('prerrequisitos.edit') : $t('prerrequisitos.new') }}</div>
       <q-btn icon="close" flat round dense v-close-popup />
@@ -9,7 +8,6 @@
     <q-form @submit="emitirGuardar">
       <q-card-section>
         <div class="row q-col-gutter-md">
-          
           <div class="col-12 col-md-6">
             <q-input autofocus autogrow dense lazy-rules outlined
               v-model="datosLocales.nombre"
@@ -17,7 +15,6 @@
               :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
             />
           </div>
-
           <div class="col-12 col-md-6">
             <q-select dense emit-value lazy-rules map-options outlined
               v-model="datosLocales.idcargo"
@@ -28,9 +25,8 @@
               :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
             />
           </div>
-
           <div class="col-12">
-            <q-input autogrow dense outlined lazy-rules
+            <q-input dense outlined lazy-rules
               v-model="datosLocales.descripcion"
               type="textarea"
               :label="$t('tables.description') + ' *'"
@@ -50,11 +46,12 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import type { PrerrequisitoCargo, CargoMin } from '../types/prerrequisitosCargo.types'
+import type { PrerrequisitoCargo } from '../types/prerrequisitosCargo.types'
+import type { Cargo } from 'src/modules/cargos/types/cargos.types';
 
 const props = defineProps<{
   prerrequisito : PrerrequisitoCargo;
-  listaCargos   : CargoMin[]
+  listaCargos   : Cargo[]
   esModoEdicion : boolean
 }>()
 

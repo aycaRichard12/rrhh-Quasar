@@ -2,7 +2,7 @@
   <q-card shadow-2 rounded>
     <TablaGenerica
       v-model:modelo-busqueda="filtroInterno"
-      :filas="datosFiltrados"
+      :filas="filasTipadas"
       :columnas="listaColumnas"
       :esta-cargando="cargando"
     >
@@ -108,6 +108,9 @@ import TablaGenerica from 'src/components/core/TablaGenerica.vue';
 import TablaFiltroExcel from 'src/components/core/TablaFiltroExcel.vue';
 import type { ActividadesDeEvaluacion } from '../types/actividadesDeEvaluacion.types';
 import { date } from 'quasar';
+import type { FilaBase } from 'src/components/core/TablaGenerica.vue'
+  
+  const filasTipadas = computed(() => datosFiltrados.value as unknown as FilaBase[]);
 
 const { t } = useI18n();
 

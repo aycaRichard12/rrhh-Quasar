@@ -9,11 +9,12 @@
       </div>
     </div>
 
-    <q-card-section class="row justify-between items-center">
+    <q-card-section class="row no-wrap justify-between items-center q-gutter-x-sm">
       <template v-if="!esVistaEstandar">
         <q-btn
           class="global-btn-page"
-          icon="sym_o_add_notes" size="15px"
+          icon="sym_o_add_notes"
+          size="15px"
           :label="$q.screen.lt.sm ? '' : $t('tiposdecontratos.new')"
           :round="$q.screen.lt.sm"
           @click="prepararNuevoTipoDeContrato"
@@ -22,18 +23,20 @@
         <div class="row q-gutter-sm">
           <q-btn outline
             color="secondary" 
-            icon="cloud_download" size="15px"
+            icon="cloud_download"
+            size="15px"
             :label="$q.screen.lt.sm ? '' : $t('forms.standar')"
             :round="$q.screen.lt.sm"
             @click="cargarTiposDeContratosEstandar"
           />
+        </div>
 
-          <BuscadorGlobal v-model="filtroBusqueda" />
+        <div class="row no-wrap q-gutter-x-sm items-center col-grow justify-end">
+          <BuscadorGlobal v-model="filtroBusqueda" class="col-grow" style="max-width: 300px" />
         </div>
       </template>
 
       <template v-else>
-
         <q-btn outline
           color="negative" 
           icon="arrow_back" 
@@ -61,11 +64,11 @@
 
     <div v-if="!esVistaEstandar">
       <TiposDeContratosTable 
+        v-model:filtro="filtroBusqueda"
+        :cargando="cargando"
         :lista-tipos-de-contratos="listaTiposDeContratos"
-        :filtro="filtroBusqueda"
         @editar="prepararEdicionTipoDeContrato"
         @eliminar="confirmarEliminarTipoDeContrato"
-        @import="alternarVistaEstandar"
       />
     </div>
 
@@ -87,18 +90,19 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useTiposDeContratos } from '../composables/useTiposDeContratos';
-import TiposDeContratosTable from '../components/TiposDeContratosTable.vue';
-import TiposDeContratosForm from '../components/TiposDeContratosForm.vue';
-import TiposDeContratosStandar from '../components/TiposDeContratosStandar.vue';
 import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
 
+import { useTiposDeContratos } from '../composables/useTiposDeContratos';
+import TiposDeContratosForm from '../components/TiposDeContratosForm.vue';
+import TiposDeContratosTable from '../components/TiposDeContratosTable.vue';
+import TiposDeContratosStandar from '../components/TiposDeContratosStandar.vue';
+
 const {
-  listaTiposDeContratos, tipoDeContratoActual, esModoEdicion, esVisibleDialogo,
-  filtroBusqueda,
-  listaTiposDeContratosEstandar, esVistaEstandar,
-  cargarTiposDeContratos, prepararNuevoTipoDeContrato, guardarTipoDeContrato, 
-  prepararEdicionTipoDeContrato, confirmarEliminarTipoDeContrato,
+  listaTiposDeContratos, tipoDeContratoActual,
+  cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+  esVistaEstandar, listaTiposDeContratosEstandar,
+  cargarTiposDeContratos, guardarTipoDeContrato,
+  prepararNuevoTipoDeContrato, prepararEdicionTipoDeContrato, confirmarEliminarTipoDeContrato,
   cargarTiposDeContratosEstandar, alternarVistaEstandar, confirmarImportacion
 } = useTiposDeContratos();
 

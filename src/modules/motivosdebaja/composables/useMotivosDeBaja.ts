@@ -1,5 +1,4 @@
 import { ref } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
@@ -8,11 +7,11 @@ import type { MotivosDeBaja } from '../types/motivosDeBaja.types';
 
 export function useMotivosDeBaja() {
   const idEmpresa = String(idempresa_md5());
+  const listaMotivos = ref<MotivosDeBaja[]>([]);
+
+  const cargando = ref(false);
   const filtroBusqueda = ref('');
   const esModoEdicion = ref(false);
-  const cargando = ref(false);
-
-  const listaMotivos = ref<MotivosDeBaja[]>([]);
   const esVisibleDialogo = ref(false);
 
   const motivoActual = ref<MotivosDeBaja>({
@@ -21,7 +20,6 @@ export function useMotivosDeBaja() {
     descripcion: ''
   });
 
-  const { t } = useI18n();
   const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida } = useNotificaciones();
 
   const cargarMotivosDeBaja = async () => {
@@ -50,7 +48,7 @@ export function useMotivosDeBaja() {
         esModoEdicion.value = true;
         esVisibleDialogo.value = true;
       } else {
-        notificarAdvertencia(respuesta.mensaje || t('common.messages.errorFetch'));
+        notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
       console.error(error);
@@ -104,8 +102,8 @@ export function useMotivosDeBaja() {
 
   return {
     listaMotivos, motivoActual,
-    cargando, esVisibleDialogo, esModoEdicion, filtroBusqueda,
-    cargarMotivosDeBaja, prepararNuevoMotivo, prepararEdicionMotivo,
-    guardarMotivo, confirmarEliminarMotivo
+    cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+    cargarMotivosDeBaja, prepararNuevoMotivo,
+    prepararEdicionMotivo, guardarMotivo, confirmarEliminarMotivo
   };
 }

@@ -105,13 +105,29 @@ body.body--dark .q-table thead th {
 
 // ─── TABLAS GLOBALES ────────────────────────────────────────────────────────
 // Esta clase se aplicará a los encabezados de todas tus tablas
+
+// .global-table-header th {
+//   background: linear-gradient(180deg, #004d40 0%, #002e25 70%, #001a12 100%) !important;
+//   color: #ffffff !important; // Texto blanco para que resalte
+//   font-weight: 600 !important;
+//   font-size: 0.85rem !important;
+//   letter-spacing: 0.05em;
+//   text-transform: uppercase; // Estándar para tablas profesionales
+// }
+
 .global-table-header th {
-  background: linear-gradient(180deg, #004d40 0%, #002e25 70%, #001a12 100%) !important;
-  color: #ffffff !important; // Texto blanco para que resalte
+  background: linear-gradient(
+    180deg,
+    #004d40 0%,
+    #002e25 70%,
+    #001a12 100%
+  ) !important;
+
+  color: #fff !important;
   font-weight: 600 !important;
   font-size: 0.85rem !important;
   letter-spacing: 0.05em;
-  text-transform: uppercase; // Estándar para tablas profesionales
+  text-transform: uppercase;
 }
 
 // ─── FORMULARIOS (DIÁLOGOS) GLOBALES ────────────────────────────────────────

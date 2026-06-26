@@ -2,7 +2,7 @@
   <q-card>
     <TablaGenerica
       v-model:modelo-busqueda="filtroInterno"
-      :filas="datosFiltrados"
+      :filas="filasTipadas"
       :columnas="listaColumnas"
       :columnas-texto-largo="['nombre']"
       :esta-cargando="cargando"
@@ -15,10 +15,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { obtenerColumnasNiveles } from '../utils/niveles.columns';
 import { useFiltroExcel } from 'src/composables/core/useFiltroExcel';
 import TablaGenerica from 'src/components/core/TablaGenerica.vue';
+import { obtenerColumnasNiveles } from '../utils/niveles.columns';
 import type { NivelesDeGravedad } from '../types/niveles.types';
+import type { FilaBase } from 'src/components/core/TablaGenerica.vue'
+  
+  const filasTipadas = computed(() => datosFiltrados.value as unknown as FilaBase[]);
 
 const { t } = useI18n();
 

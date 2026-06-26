@@ -1,15 +1,14 @@
 <template>
-  <q-table bordered flat 
+  <q-table bordered flat
+    row-key="id"
+    class="global-table-header"
     :rows="props.rows"
     :columns="listaColumnas"
-    row-key="id"
     :rows-per-page-label="t('common.report.recordsPerPage')"
     :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${t('common.report.of')} ${totalRows}`"
   >
     <template v-slot:body-cell-numero="propsCell">
-      <q-td :props="propsCell" class="text-right">
-        {{ propsCell.rowIndex + 1 }}
-      </q-td>
+      <q-td :props="propsCell">{{ propsCell.rowIndex + 1 }}</q-td>
     </template>
   </q-table>
 </template>
@@ -22,7 +21,9 @@ import type { EnteRegulador } from '../types/entesReguladores.types';
 
 const { t } = useI18n();
 
-const props = defineProps<{ rows: EnteRegulador[] }>();
+const props = defineProps<{
+  rows: EnteRegulador[]
+}>();
 
 const listaColumnas = computed(() => obtenerColumnasEntesReguladoresEstandar(t));
 </script>

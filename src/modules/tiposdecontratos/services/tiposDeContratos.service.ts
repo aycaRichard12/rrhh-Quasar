@@ -3,18 +3,15 @@ import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import type { RespuestaApi } from 'src/types/api.types';
 import type { TipoDeContrato } from '../types/tiposDeContratos.types';
 
-const ID_EMPRESA = (): string => idempresa_md5();
+const sanearTipoDeContrato = (item: TipoDeContrato): TipoDeContrato => ({
+  ...item,
+  id: Number(item.id)
+})
 
 export const tiposDeContratosService = {
-
   async listarTiposDeContratos(): Promise<TipoDeContrato[]> {
-    const { data } = await api.get(`/listaTipocontrato/${ID_EMPRESA()}`);
-    return Array.isArray(data) ? data.map((item: Record<string, unknown>) => {
-      return {
-        ...item,
-        id: Number(item.id),
-      } as TipoDeContrato;
-    }) : [];
+    const { data } = await api.get(`/listaTipocontrato/${idempresa_md5()}`);
+    return Array.isArray(data) ? data.map(sanearTipoDeContrato) : [];
   },
 
   async guardarTipoDeContrato(formData: FormData): Promise<RespuestaApi> {
@@ -33,7 +30,8 @@ export const tiposDeContratosService = {
   },
 
   async listarTiposDeContratosEstandar(): Promise<TipoDeContrato[]> {
-    const { data } = await api.get('/listatipocontrato');
+    const urlAd = 'https://mistersofts.com/app/ad/'
+    const { data } = await api.get(`${urlAd}api/listatipocontrato`);
     return data;
   },
 

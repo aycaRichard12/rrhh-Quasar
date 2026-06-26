@@ -3,27 +3,36 @@ import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import type { RespuestaApi } from 'src/types/api.types';
 import type { FuncionYObligacion,} from '../types/funcionesYObligaciones.types';
 
-const ID_EMPRESA = idempresa_md5();
+const sanearFuncionYObligacion = (item: FuncionYObligacion): FuncionYObligacion =>({
+  ...item,
+  id: Number(item.id),
+  idcargo: Number(item.idcargo)
+})
 
 export const funcionesYObligacionesService = {
-  
-  async obtenerFuncionesYObligaciones(): Promise<FuncionYObligacion[]> {
-    const { data } = await api.get(`/listaFunYoblig/${ID_EMPRESA}`);
-    return Array.isArray(data) ? data : [];
+  async listarFuncionesYObligaciones(): Promise<FuncionYObligacion[]> {
+    const { data } = await api.get(`/listaFunYoblig/${idempresa_md5()}`);
+    return Array.isArray(data) ? data.map(sanearFuncionYObligacion) : [];
   },
   
   async guardarFuncionYObligacion(payload: FormData): Promise<RespuestaApi> {
-    const { data } = await api.post<RespuestaApi>('/', payload);
+    const { data } = await api.post('/', payload);
     return data;
   },
 
-  async obtenerFuncionYObligacion(id: string): Promise<RespuestaApi<FuncionYObligacion>> {
-    const { data } = await api.get<RespuestaApi<FuncionYObligacion>>(`/verificarIDFunYoblig/${id}`);
+  async editarFuncionYObligacion(id: number): Promise<RespuestaApi<FuncionYObligacion>> {
+    const { data } = await api.get(`/verificarIDFunYoblig/${id}`);
+    if (data.estado === 'exito' && data.datos) {
+      return {
+        ...data,
+        datos: sanearFuncionYObligacion(data.datos)
+      };
+    }
     return data;
   },
 
-  async eliminarFuncionYObligacion(id: string): Promise<RespuestaApi> {
-    const { data } = await api.get<RespuestaApi>(`/eliminarFunYoblig/${id}`);
+  async eliminarFuncionYObligacion(id: number): Promise<RespuestaApi> {
+    const { data } = await api.get(`/eliminarFunYoblig/${id}`);
     return data;
-  }
+  },
 };

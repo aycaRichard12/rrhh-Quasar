@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="esVisible" persistent>
-    <q-card style="min-width: 600px; max-width: 90vw;">
+    <q-card style="width: 100vh;">
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6">
           {{ props.esEdicion ? $t('common.actions.edit') : $t('common.actions.new') }} Trabajador

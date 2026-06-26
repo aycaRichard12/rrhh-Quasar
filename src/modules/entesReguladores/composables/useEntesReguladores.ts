@@ -2,18 +2,21 @@ import { ref } from 'vue';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
+
 import { entesReguladoresService } from '../services/entesReguladores.service';
 import type { EnteRegulador } from '../types/entesReguladores.types';
 
 export function useEntesReguladores() {
-  const listaEntesReguladores = ref<EnteRegulador[]>([]);
-  const cargando = ref<boolean>(false);
   const idEmpresa = String(idempresa_md5());
+  const listaEntesReguladores = ref<EnteRegulador[]>([]);
+  
+  const cargando = ref<boolean>(false);
+  const filtroBusqueda = ref<string>('');
   const esModoEdicion = ref<boolean>(false);
   const esVisibleDialogo = ref<boolean>(false);
-  const filtroBusqueda = ref<string>('');
-  const listaEntesReguladoresEstandar = ref<EnteRegulador[]>([]);
+  
   const esVistaEstandar = ref<boolean>(false);
+  const listaEntesReguladoresEstandar = ref<EnteRegulador[]>([]);
 
   const enteReguladorActual = ref<EnteRegulador>({
     nombre: '',
@@ -24,10 +27,7 @@ export function useEntesReguladores() {
     estado: 1
   });
 
-  const { 
-    notificarAdvertencia, notificarErrorAccion, notificarExitoAccion,
-    confirmarEliminacionPredefinida, confirmarImportacionPredefinida
-  } = useNotificaciones();
+  const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida, confirmarImportacionPredefinida } = useNotificaciones();
 
   const cargarEntesReguladores = async () => {
     cargando.value = true;
@@ -39,12 +39,6 @@ export function useEntesReguladores() {
     } finally {
       cargando.value = false;
     }
-  };
-
-  const calcularSiguienteOrden = (): number => {
-    if (listaEntesReguladores.value.length === 0) return 1;
-    const ordenes = listaEntesReguladores.value.map(e => Number(e.orden) || 0);
-    return Math.max(...ordenes) + 1;
   };
 
   const prepararNuevoEnteRegulador = () => {
@@ -67,6 +61,8 @@ export function useEntesReguladores() {
         enteReguladorActual.value = { ...respuesta.datos };
         esModoEdicion.value = true;
         esVisibleDialogo.value = true;
+      } else {
+        notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
       console.error(error);
@@ -140,10 +136,8 @@ export function useEntesReguladores() {
         datos : JSON.stringify(listaEntesReguladoresEstandar.value),
         tipo : tipoAccion === 'reemplazar' ? '1' : '2'
       };
-
       const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await entesReguladoresService.guardarEnteRegulador(datosFormulario);
-      
       if (respuesta.estado === 'exito') {
         notificarExitoAccion('importar');
         alternarVistaEstandar();
@@ -174,11 +168,19 @@ export function useEntesReguladores() {
     }
   };
 
+  const calcularSiguienteOrden = (): number => {
+    if (listaEntesReguladores.value.length === 0) return 1;
+    const ordenes = listaEntesReguladores.value.map(e => Number(e.orden) || 0);
+    return Math.max(...ordenes) + 1;
+  };
+
   return {
-    listaEntesReguladores, enteReguladorActual, esModoEdicion, filtroBusqueda, cargando,
-    esVisibleDialogo, listaEntesReguladoresEstandar, esVistaEstandar,
-    cargarEntesReguladores, prepararNuevoEnteRegulador, guardarEnteRegulador,
-    prepararEdicionEnteRegulador, confirmarEliminarEnteRegulador,
-    cargarEntesReguladoresEstandar, confirmarImportacion, alternarVistaEstandar, cambiarEstadoRegistro
+    listaEntesReguladores, enteReguladorActual,
+    cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+    esVistaEstandar, listaEntesReguladoresEstandar,
+    cargarEntesReguladores, guardarEnteRegulador,
+    prepararNuevoEnteRegulador, prepararEdicionEnteRegulador, confirmarEliminarEnteRegulador,
+    cargarEntesReguladoresEstandar, confirmarImportacion, alternarVistaEstandar,
+    cambiarEstadoRegistro
   };
 }

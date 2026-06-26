@@ -1,38 +1,71 @@
 <template>
   <q-table
+    ref="tablaRef"
     class="global-table-header"
     row-key="id"
     :columns="columnas"
     :filter="modeloBusqueda"
     :loading="estaCargando"
-    :rows="filas"
+    :rows="estaCargando ? [] : filas"
     :title="titulo"
     :rows-per-page-label="$t('common.report.recordsPerPage')"
     :pagination-label="(inicio, fin, total) => `${inicio}-${fin} ${$t('common.report.of')} ${total}`"
   >
+    <template #header="props">
+      <q-tr :props="props" class="global-table-header">
+        <q-th
+          v-for="col in props.cols"
+          :key="col.name"
+          :props="props"
+          :class="col.headerClasses"
+        >
+          <div class="row items-center justify-between no-wrap">
+            <span>{{ col.label }}</span>
+            
+            <slot :name="`header-filtro-${col.name}`" :columna="col"></slot>
+          </div>
+        </q-th>
+      </q-tr>
+    </template>
+
     <!-- <template #loading>
-      <div class="full-width column flex-center q-py-xl" style="min-height: 250px;">
-        <q-inner-loading showing style="z-index: 10;">
-          <div class="full-width column flex-center" style="min-height: 50px;">
-            <img :src="faviconSrc" alt="Buscando..." class="magnifier-searching" style="height: 70px; width: 70px; object-fit: contain;" />
-            <span class="text-h5 text-weight-medium q-mt-md">
-              {{ $t('common.messages.loading') + '...' }}
-            </span>
+    <div v-if="estaCargando" style="height: 200px;">
+      <q-inner-loading showing style="z-index: 10;">
+        <div class="full-width column flex-center q-py-xl" style="width: 100%;">
+          <img :src="faviconSrc" alt="Buscando..." class="magnifier-searching" style="height: 70px; width: 70px" />
+          <span class="text-h5 text-weight-medium q-mt-md">{{ $t('common.messages.loading') + '..wat.' }}</span>
+        </div>
+      </q-inner-loading>
+    </div>
+  </template> -->
+    <template #loading>
+      <div  style="height: 250px;">
+        <q-inner-loading showing color="primary" style="z-index: 1000;">
+          <div class="column items-center">
+            <img :src="faviconSrc" alt="Buscando..." class="magnifier-searching" style="height: 70px; width: 70px"/>
+            <span class="text-h5 text-weight-medium q-mt-md">{{ $t('common.messages.loading') + '...' }}</span>
           </div>
         </q-inner-loading>
       </div>
-    </template> -->
+    </template>
+
     <template #no-data>
-      <div class="full-width column flex-center q-py-xl" style="min-height: 250px;">
-        <q-inner-loading showing style="z-index: 10;">
-          <div class="full-width column flex-center" style="min-height: 50px;">
-            <img :src="faviconSrc" alt="Buscando..." class="magnifier-searching" style="height: 70px; width: 70px; object-fit: contain;" />
-            <span class="text-h5 text-weight-medium q-mt-md">
-              {{ $t('common.messages.loading') + '...' }}
-            </span>
-          </div>
-        </q-inner-loading>
+      <div v-if="!estaCargando" class="full-width column flex-center q-py-xl" style="height: 250px;">
+        <q-icon name="folder_off" size="64px" color="grey-5" class="q-mb-sm" />
+        <div class="text-h6 text-grey-7 text-center"> {{ modeloBusqueda ? 'No se encontraron coincidencias en la búsqueda' : 'No hay registros disponibles' }}</div>
       </div>
+    </template>
+
+    <template
+      v-for="nombreCol in columnasTextoLargo"
+      :key="nombreCol"
+      #[`body-cell-${nombreCol}`]="propsCell"
+    >
+      <slot :name="`body-cell-${nombreCol}`" v-bind="propsCell">
+        <q-td :props="propsCell">
+          <TextoExpandible :texto="String((propsCell.row as Record<string, unknown>)[nombreCol] || '')" />
+        </q-td>
+      </slot>
     </template>
 
     <template #body-cell-numero="propsCell">
@@ -43,95 +76,88 @@
       </slot>
     </template>
 
-    <template 
-      v-for="nombreCol in columnasTextoLargo" 
-      :key="nombreCol" 
-      #[`body-cell-${nombreCol}`]="propsCell"
-    >
-      <slot :name="`body-cell-${nombreCol}`" v-bind="propsCell">
-        <q-td :props="propsCell">
-          <TextoExpandible :texto="String((propsCell.row as Record<string, unknown>)[nombreCol] || '')" />
-        </q-td>
-      </slot>
-    </template>
-
     <template #body-cell-opciones="propsCell">
-      <slot name="body-cell-opciones" v-bind="propsCell">
-        <q-td :props="propsCell" class="text-center q-gutter-xs">
-          <q-btn dense round class="global-btn-page" icon="sym_o_edit_square" @click="emitirAccion('editar', propsCell.row)">
-            <q-tooltip>{{ $t('common.actions.edit') }}</q-tooltip>
+      <q-td :props="propsCell">
+        <div class="row justify-center q-gutter-sm">
+          <slot name="botones-opciones-inicio" :fila="propsCell.row"></slot>
+<!-- icon="sym_o_edit_square" -->
+          <q-btn dense round v-if="mostrarEditar" class="global-btn-page" icon="edit" @click="emitirAccion('editar', propsCell.row)">
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.edit') }}</q-tooltip>
           </q-btn>
-          <q-btn dense round color="negative" icon="delete_forever" @click="emitirAccion('eliminar', propsCell.row)">
-            <q-tooltip>{{ $t('common.actions.delete') }}</q-tooltip>
+          <q-btn dense round v-if="mostrarEliminar" color="negative" icon="delete_forever" @click="emitirAccion('eliminar', propsCell.row)">
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.delete') }}</q-tooltip>
           </q-btn>
-        </q-td>
-      </slot>
-    </template>
-
-    <template v-for="nombreSlot in slotsDinamicos" :key="nombreSlot" #[nombreSlot]="slotProps">
-      <slot :name="nombreSlot" v-bind="slotProps ?? {}" />
+          <slot name="botones-opciones-fin" :fila="propsCell.row"></slot>
+        </div>
+      </q-td>
     </template>
   </q-table>
 </template>
 
-<script setup lang="ts" generic="T extends { id?: number | string }">
-import { computed, useSlots } from 'vue';
+<script setup lang="ts">
+import { ref, computed } from 'vue';
 import { useQuasar } from 'quasar';
 import type { QTableColumn } from 'quasar';
-import TextoExpandible from 'src/components/core/TextoExpandible.vue'; // <-- Importamos tu super componente
+import TextoExpandible from 'src/components/core/TextoExpandible.vue';
 
 const $q = useQuasar();
-const $slots = useSlots(); 
+// 1. Tipados Estrictos (Interfaces)
+export interface FilaBase {
+  id?: number;
+  [key: string]: unknown;
+}
 
-const props = withDefaults(defineProps<{
-  titulo?: string;
-  filas: T[];
-  columnas: QTableColumn<T>[];
+export interface PropsTabla {
+  filas: FilaBase[];
+  columnas: QTableColumn[];
   estaCargando?: boolean;
+  titulo?: string;
   modeloBusqueda?: string;
-  columnasTextoLargo?: string[]; 
-}>(), {
-  columnasTextoLargo: () => ['descripcion'] // Asume 'descripcion' si el padre no manda nada
-}); 
+  columnasTextoLargo?: string[];
+  mostrarEditar?: boolean;
+  mostrarEliminar?: boolean;
+}
 
-// 🎯 Definición estricta de emits usando sintaxis de objeto para calmar a Vue-tsc
-const emit = defineEmits<{
-  editar: [id: string | number];
-  eliminar: [id: string | number];
-  cambiarEstado: [id: string | number];
-}>();
-
-const faviconSrc = computed(() => $q.dark.isActive ? 'favicondark.ico' : 'faviconlight.ico');
-
-const slotsDinamicos = computed(() => {
-  const slotsOcupados = [
-    'no-data', 
-    'body-cell-numero', 
-    'body-cell-opciones',
-    ...props.columnasTextoLargo.map(col => `body-cell-${col}`)
-  ];
-  return Object.keys($slots).filter(key => !slotsOcupados.includes(key));
-});
-
-// Tipamos estrictamente las acciones genéricas que la tabla base soporta
+withDefaults(defineProps<PropsTabla>(), {
+  // const props = withDefaults(defineProps<{
+  estaCargando: false,
+  titulo: '',
+  modeloBusqueda: '',
+  mostrarEditar: true,
+  mostrarEliminar: true,
+  columnasTextoLargo: () => ['descripcion']
+})
+// 2. Emits Estrictos a Number
 type AccionesBase = 'editar' | 'eliminar' | 'cambiarEstado';
 
-// const emitirAccion = (accion: AccionesBase, fila: T) => {
-//   if (fila.id !== undefined && fila.id !== null) {
-//     emit(accion, fila.id);
-//   }
-// };
-const emitirAccion = (accion: AccionesBase, fila: T) => {
-  if (fila.id !== undefined && fila.id !== null) {
-    if (accion === 'editar') {
-      emit('editar', fila.id);
-    } else if (accion === 'eliminar') {
-      emit('eliminar', fila.id);
-    } else if (accion === 'cambiarEstado') {
-      emit('cambiarEstado', fila.id);
+const emit = defineEmits<{
+  (e: 'editar', id: number): void;
+  (e: 'eliminar', id: number): void;
+  (e: 'cambiarEstado', id: number): void;
+}>();
+
+// 3. Manejo de Estado Interno
+const tablaRef = ref();
+
+// 4. Funciones Lógicas
+const emitirAccion = (accion: AccionesBase, fila: FilaBase) => {
+  // Garantizamos 100% que TypeScript y Vue manden un número
+  const idNumerico = Number(fila.id);
+    if (!isNaN(idNumerico) && idNumerico !== 0) {
+      // Magia TypeScript: Al usar if/else, TS sabe exactamente qué firma usar en cada línea
+      if (accion === 'editar') {
+        emit('editar', idNumerico);
+      } else if (accion === 'eliminar') {
+        emit('eliminar', idNumerico);
+      } else if (accion === 'cambiarEstado') {
+        emit('cambiarEstado', idNumerico);
+      }
+    } else {
+      console.error(`[TablaGenerica] Error: La fila no tiene un ID numérico válido para la acción ${accion}`, fila);
     }
-  }
 };
+
+const faviconSrc = computed(() => $q.dark.isActive ? 'favicondark.ico' : 'faviconlight.ico');
 </script>
 
 <style scoped>

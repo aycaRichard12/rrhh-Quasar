@@ -4,7 +4,7 @@
     show-if-above
     :bordered="false"
     :model-value="modelValue"
-    :width="306"
+    :width="313"
     @update:model-value="$emit('update:modelValue', $event)"
   >
     <div class="full-height column drawer-inner">

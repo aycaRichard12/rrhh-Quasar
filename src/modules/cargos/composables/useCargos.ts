@@ -2,20 +2,21 @@ import { ref } from 'vue';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
+
 import { cargosService } from '../services/cargos.service';
 import type { Cargo } from '../types/cargos.types';
 import type { Area } from 'src/modules/areas/types/areas.types';
 
 export function useCargos() {
   const idEmpresa = String(idempresa_md5());
-  const filtroBusqueda = ref<string>('');
-  const esModoEdicion = ref<boolean>(false);
-  const cargando = ref(false);
-
   const listaCargos = ref<Cargo[]>([]);
   const listaAreas = ref<Area[]>([]);
-  const esVisibleDialogo = ref<boolean>(false);
 
+  const cargando = ref(false);
+  const filtroBusqueda = ref<string>('');
+  const esModoEdicion = ref<boolean>(false);
+  const esVisibleDialogo = ref<boolean>(false);
+  
   const cargoActual = ref<Cargo>({
     cargo: '',
     salario: '',
@@ -39,7 +40,12 @@ export function useCargos() {
   };
 
   const prepararNuevoCargo = () => {
-    cargoActual.value = { cargo: '', salario: '', descripcion: '', idarea: ''};
+    cargoActual.value = {
+      cargo: '',
+      salario: '',
+      descripcion: '',
+      idarea: ''
+    };
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
   };
@@ -71,10 +77,8 @@ export function useCargos() {
         descripcion: datosGuardar.descripcion,
         area: datosGuardar.idarea // El payload API espera el select como "area"
       };
-
       const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await cargosService.guardarCargo(datosFormulario);
-
       if (respuesta.estado === 'exito') {
         notificarExitoAccion('guardar');
         esVisibleDialogo.value = false;
@@ -107,8 +111,8 @@ export function useCargos() {
 
   return {
     listaCargos, listaAreas, cargoActual,
-    cargando, esVisibleDialogo, esModoEdicion, filtroBusqueda,
-    cargarCargos, prepararNuevoCargo, prepararEdicionCargo,
-    guardarCargo, confirmarEliminarCargo
+    cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+    cargarCargos, guardarCargo,
+    prepararNuevoCargo, prepararEdicionCargo, confirmarEliminarCargo
   };
 }

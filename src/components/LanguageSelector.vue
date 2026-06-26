@@ -1,20 +1,17 @@
 <template>
   <div v-if="type === 'menu'">
-    <q-btn
-      flat
-      no-caps
+    <q-btn flat no-caps
+      icon="language"
       :class="btnClass"
       :label="currentLanguageLabel"
-      icon="language"
     >
       <q-menu auto-close transition-show="jump-down" transition-hide="jump-up">
         <q-list style="min-width: 150px">
-          <q-item
+          <q-item clickable
             v-for="lang in languages"
             :key="lang.value"
-            clickable
-            @click="setLanguage(lang.value)"
             :active="locale === lang.value"
+            @click="setLanguage(lang.value)"
           >
             <q-item-section avatar>
               <q-icon :name="lang.icon" size="xs" />
@@ -27,14 +24,11 @@
   </div>
 
   <div v-else class="row q-gutter-sm">
-    <q-btn
+    <q-btn dense flat round
       v-for="lang in languages"
       :key="lang.value"
-      flat
-      round
-      dense
-      @click="setLanguage(lang.value)"
       :color="locale === lang.value ? 'primary' : 'grey-7'"
+      @click="setLanguage(lang.value)"
     >
       <q-icon :name="lang.icon" />
       <q-tooltip>{{ lang.label }}</q-tooltip>
