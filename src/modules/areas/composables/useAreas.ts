@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
+
 import { areasService } from 'src/modules/areas/services/areas.service';
 import type { Area, Sucursal } from 'src/modules/areas/types/areas.types';
 
@@ -113,9 +114,9 @@ export function useAreas() {
   };
 
   return {
-    listaAreas, listaSucursales, areaActual, esModoEdicion, filtroBusqueda,
-    esVisibleDialogo, cargando,
-    cargarAreas, prepararNuevaArea, guardarArea,
-    prepararEdicionArea, confirmarEliminarArea
+    listaAreas, listaSucursales, areaActual,
+    cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+    cargarAreas, guardarArea,
+    prepararNuevaArea, prepararEdicionArea, confirmarEliminarArea
   };
 }

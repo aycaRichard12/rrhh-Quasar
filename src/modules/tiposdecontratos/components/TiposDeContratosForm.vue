@@ -1,6 +1,5 @@
 <template>
   <q-card style="width: 100vh">
-
     <q-card-section class="global-form-header row justify-between">
       <div class="text-h6">{{ esModoEdicion ? $t('tiposdecontratos.edit') : $t('tiposdecontratos.new') }}</div>
       <q-btn icon="close" flat round dense v-close-popup />
@@ -10,16 +9,17 @@
       <q-card-section>
         <div class="row q-col-gutter-md">
           
-          <div class="col-6">
+          <div class="col-12">
             <q-input autofocus dense outlined
               v-model="datosLocales.nombre"
               :label="$t('tiposdecontratos.name') + ' *'"
               :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
             />
           </div>
-          <div class="col-6">
+          <div class="col-12">
             <q-input dense outlined
               v-model="datosLocales.naturaleza"
+              type="textarea"
               :label="$t('tiposdecontratos.nature') + ' *'"
               :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
             />

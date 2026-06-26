@@ -38,13 +38,12 @@
       </q-inner-loading>
     </div>
   </template> -->
-
     <template #loading>
       <div  style="height: 250px;">
         <q-inner-loading showing color="primary" style="z-index: 1000;">
           <div class="column items-center">
             <img :src="faviconSrc" alt="Buscando..." class="magnifier-searching" style="height: 70px; width: 70px"/>
-            <span class="text-h5 text-weight-medium q-mt-md">{{ $t('common.messages.loading') }}</span>
+            <span class="text-h5 text-weight-medium q-mt-md">{{ $t('common.messages.loading') + '...' }}</span>
           </div>
         </q-inner-loading>
       </div>

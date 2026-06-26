@@ -30,7 +30,7 @@
           </div>
 
           <div class="col-12">
-            <q-input autogrow dense outlined lazy-rules
+            <q-input dense outlined lazy-rules
               v-model="datosLocales.descripcion"
               type="textarea"
               :label="$t('tables.description') + ' *'"

@@ -51,10 +51,10 @@ import CargosForm from '../components/CargosForm.vue';
 import CargosTable from '../components/CargosTable.vue';
 
 const {
-  listaCargos, listaAreas, cargando, filtroBusqueda,
-  esVisibleDialogo, esModoEdicion, cargoActual,
-  cargarCargos, prepararNuevoCargo,
-  prepararEdicionCargo, guardarCargo, confirmarEliminarCargo
+  listaCargos, listaAreas, cargoActual,
+  cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+  cargarCargos, guardarCargo,
+  prepararEdicionCargo, prepararNuevoCargo, confirmarEliminarCargo
 } = useCargos();
 
 onMounted(() => {

@@ -1,45 +1,41 @@
 import type { QTableColumn } from 'quasar';
 import type { FuncionYObligacion } from '../types/funcionesYObligaciones.types';
 
-export const obtenerColumnasFuncionesYObligaciones = (
-  t: (key: string) => string
-): QTableColumn<FuncionYObligacion>[] => {
+export const obtenerColumnasFuncionesYObligaciones = (t: (key: string) => string): QTableColumn<FuncionYObligacion>[] => {
   return [
     {
       name: 'numero',
-      label: t('N°'),
-      align: 'center',
+      label: 'N°',
+      align: 'right',
       field: () => '',
-      sortable: false
+      style: 'width: 50px'
     },
     {
       name: 'nombre',
-      label: t('Función u Obligación'),
+      label: t('funcionesyobligaciones.name'),
       align: 'left',
-      field: row => row.nombre,
-      sortable: true,
-      style: 'white-space: normal; width: 175px;'
+      field: 'nombre',
+      style: 'width: 175px;'
     },
     {
       name: 'descripcion',
-      label: t('Descripción'),
+      label: t('tables.description'),
       align: 'left',
-      field: row => row.descripcion,
-      sortable: true
+      field: 'descripcion',
+      style: 'white-space: normal; min-width:210px'
     },
     {
       name: 'cargo',
-      label: t('Cargo'),
+      label: t('cargos.name'),
       align: 'left',
-      field: row => row.cargo ?? '',
-      sortable: true
+      field: 'cargo',
     },
     {
       name: 'opciones',
-      label: t('Opciones'),
+      label: t('tables.options'),
       align: 'center',
       field: () => '',
-      sortable: false
+      style: 'width: 110px'
     }
   ];
 };

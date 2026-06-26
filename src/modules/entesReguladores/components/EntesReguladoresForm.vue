@@ -1,7 +1,7 @@
 <template>
   <q-card style="width: 100vh; max-width: 90vw;">
     <q-card-section class="global-form-header row justify-between items-center">
-      <div class="text-h6">{{ esModoEdicion ? $t('entity.edit') : $t('entity.new') }}</div>
+      <div class="text-h6">{{ esModoEdicion ? $t('entesreguladores.edit') : $t('entesreguladores.new') }}</div>
       <q-btn icon="close" flat round dense v-close-popup />  
     </q-card-section>
 
@@ -11,7 +11,7 @@
           <div class="col-12">
             <q-input autofocus dense outlined
               v-model="datosLocales.nombre" 
-              :label="$t('entity.name') + ' *'"
+              :label="$t('entesreguladores.name') + ' *'"
               :rules="[val => !!val || $t('common.rules.required')]"
             />
           </div>
@@ -19,7 +19,7 @@
           <div class="col-6">
             <q-input dense outlined
               v-model="datosLocales.porcentaje" 
-              :label="$t('entity.percentage') + ' *'" 
+              :label="$t('entesreguladores.percentage') + ' *'" 
               type="number"
               step="0.01"
               :rules="[val => !!val || $t('common.rules.required')]" 

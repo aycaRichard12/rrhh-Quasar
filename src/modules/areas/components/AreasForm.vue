@@ -1,6 +1,5 @@
 <template>
   <q-card style="width: 100vh">
-
     <q-card-section class="global-form-header row justify-between">
       <div class="text-h6">{{ esModoEdicion ? $t('areas.edit') : $t('areas.new') }}</div>
       <q-btn icon="close" flat round dense v-close-popup/>  
@@ -30,7 +29,7 @@
           </div>
 
           <div class="col-12">
-            <q-input autogrow dense lazy-rules outlined
+            <q-input dense lazy-rules outlined
               v-model="datosLocales.descripcion"
               type="textarea"
               :label="$t('tables.description') + ' *'"

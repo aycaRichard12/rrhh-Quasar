@@ -2,6 +2,7 @@ import { ref } from 'vue';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
+
 import { cargosService } from '../services/cargos.service';
 import type { Cargo } from '../types/cargos.types';
 import type { Area } from 'src/modules/areas/types/areas.types';
@@ -39,7 +40,12 @@ export function useCargos() {
   };
 
   const prepararNuevoCargo = () => {
-    cargoActual.value = { cargo: '', salario: '', descripcion: '', idarea: ''};
+    cargoActual.value = {
+      cargo: '',
+      salario: '',
+      descripcion: '',
+      idarea: ''
+    };
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
   };
@@ -106,7 +112,7 @@ export function useCargos() {
   return {
     listaCargos, listaAreas, cargoActual,
     cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
-    cargarCargos, prepararNuevoCargo,
-    prepararEdicionCargo, guardarCargo, confirmarEliminarCargo
+    cargarCargos, guardarCargo,
+    prepararNuevoCargo, prepararEdicionCargo, confirmarEliminarCargo
   };
 }

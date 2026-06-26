@@ -5,38 +5,35 @@ import { useNotificaciones } from 'src/composables/useNotificaciones';
 import { tiposDeContratosService } from '../services/tiposDeContratos.service';
 import type { TipoDeContrato } from '../types/tiposDeContratos.types';
 
-const idEmpresa                     = String(idempresa_md5());
-const listaTiposDeContratos         = ref<TipoDeContrato[]>([]);
-const esModoEdicion                 = ref<boolean>(false);
-const esVisibleDialogo              = ref<boolean>(false);
-const filtroBusqueda                = ref<string>('');
-
-const listaTiposDeContratosEstandar = ref<TipoDeContrato[]>([]);
-const esVistaEstandar               = ref<boolean>(false);
-
-const tipoDeContratoActual = ref<TipoDeContrato>({
-  nombre: '',
-  observacion: '',
-  naturaleza: ''
-});
-
 export function useTiposDeContratos() {
+  const idEmpresa = String(idempresa_md5());
+  const listaTiposDeContratos = ref<TipoDeContrato[]>([]);
 
+  const cargando = ref(false);
+  const filtroBusqueda = ref<string>('');
+  const esModoEdicion = ref<boolean>(false);
+  const esVisibleDialogo = ref<boolean>(false);
+
+  const esVistaEstandar = ref<boolean>(false);
+  const listaTiposDeContratosEstandar = ref<TipoDeContrato[]>([]);
   
+  const tipoDeContratoActual = ref<TipoDeContrato>({
+    nombre: '',
+    observacion: '',
+    naturaleza: ''
+  });
 
-
-  const { 
-    notificarAdvertencia, notificarErrorAccion, notificarExitoAccion, confirmarEliminacionPredefinida, confirmarImportacionPredefinida
-  } = useNotificaciones();
-
-  
+  const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida, confirmarImportacionPredefinida } = useNotificaciones();
 
   const cargarTiposDeContratos = async () => {
+    cargando.value = true;
     try {
       listaTiposDeContratos.value = await tiposDeContratosService.listarTiposDeContratos();
     } catch (error) {
       console.error(error);
       notificarErrorAccion('cargar');
+    } finally {
+      cargando.value = false;
     }
   };
 
@@ -57,6 +54,8 @@ export function useTiposDeContratos() {
         tipoDeContratoActual.value = { ...respuesta.datos };
         esModoEdicion.value = true;
         esVisibleDialogo.value = true;
+      } else {
+        notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
       console.error(error);
@@ -73,7 +72,6 @@ export function useTiposDeContratos() {
       };
       const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await tiposDeContratosService.guardarTipoDeContrato(datosFormulario);
-      
       if (respuesta.estado === 'exito') {
         notificarExitoAccion('guardar');
         esVisibleDialogo.value = false;
@@ -150,10 +148,11 @@ export function useTiposDeContratos() {
   };
 
   return {
-    listaTiposDeContratos, tipoDeContratoActual, esModoEdicion, filtroBusqueda,
-    esVisibleDialogo, listaTiposDeContratosEstandar, esVistaEstandar,
-    cargarTiposDeContratos, prepararNuevoTipoDeContrato, guardarTipoDeContrato,
-    prepararEdicionTipoDeContrato, confirmarEliminarTipoDeContrato,
+    listaTiposDeContratos, tipoDeContratoActual,
+    cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+    esVistaEstandar, listaTiposDeContratosEstandar,
+    cargarTiposDeContratos, prepararNuevoTipoDeContrato,
+    guardarTipoDeContrato, prepararEdicionTipoDeContrato, confirmarEliminarTipoDeContrato,
     cargarTiposDeContratosEstandar, confirmarImportacion, alternarVistaEstandar
   };
 }

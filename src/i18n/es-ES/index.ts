@@ -158,7 +158,14 @@ export default {
     nature:'Naturaleza',
     observation:'Obervación'
   },
-  //BENEFICIOS SOCIALES:
+  funcionesyobligaciones:{
+    title:'Funciones y Obligaciones',
+    subtitle: 'Gestión de deberes del Personal',
+    name: 'Funcion - Obligación',
+    new:'Nueva Funcion u Obligación',
+    edit: 'Editar Funcion u Obligación',
+  },
+  //BENEFICIOS SOCIALES:________________________________________________________________
   beneficios:{
     title: 'Beneficios',
     subtitle: 'Gestión de beneficios e indemnizaciones del personal.',
@@ -166,7 +173,7 @@ export default {
     new: 'Nuevo Beneficio',
     edit: 'Editar Beneficio',
   },
-  entity:{
+  entesreguladores:{
     title: 'Entes Reguladores',
     subtitle: 'Gestión de aportes y regulaciones.',
     name: 'Ente Regulador',
@@ -175,7 +182,7 @@ export default {
     percentage: 'Porcentaje',
   },
   //METODOS DE EVALUACION:
-  evaluationMethods:{
+  metodosdeevaluacion:{
     title: 'Métodos de Evaluación',
     subtitle: 'Gestiona los métodos para calificar el desempeño.',
     name: 'Método',
@@ -194,14 +201,14 @@ export default {
     }
     
   },
-  evaluationActivities: {
+  actividadesdeevaluacion: {
     title: 'Actividades de Evaluación',
     subtitle: 'Gestión de actividades para evaluar el desempeño.',
     name: 'Actividad',
     new: 'Nueva Actividad',
     edit: 'Editar Actividad',
   },
-  levels: {
+  niveles: {
     title: 'Niveles de Gravedad',
     subtitle: 'Gestión de niveles de gravedad para sanciones.',
     name: 'Nivel',
@@ -215,7 +222,7 @@ export default {
     new: 'Nuevo Tipo de Sanción',
     edit: 'Editar Tipo de Sanción',
   },
-  reasonLeave: {
+  motivosdebaja: {
     title: 'Motivos de Baja',
     subtitle: 'Gestión de motivos de baja de personal.',
     name: 'Motivo',
@@ -223,7 +230,7 @@ export default {
     edit: 'Editar Motivo',
     type: 'Tipo'
   },
-  workers: {
+  trabajadores: {
     title: 'Trabajadores',
     subtitle: 'Gestión de personal y su historial en la empresa.',
     new: 'Nuevo Trabajador',

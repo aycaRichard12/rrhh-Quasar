@@ -2,10 +2,10 @@
   <q-page>
     <div class="lt-sm">
       <div class="row justify-left">
-        <h4 class="q-my-none text-primary">{{ $t('entity.title') }}</h4>
+        <h4 class="q-my-none text-primary">{{ $t('entesreguladores.title') }}</h4>
       </div>
       <div class="row justify-left">
-        <p class="text-grey-7">{{ $t('entity.subtitle') }}</p>
+        <p class="text-grey-7">{{ $t('entesreguladores.subtitle') }}</p>
       </div>
     </div>
     
@@ -15,7 +15,7 @@
           class="global-btn-page"
           icon="sym_o_add_notes"
           size="15px"
-          :label="$q.screen.lt.sm ? '' : $t('entity.new')"
+          :label="$q.screen.lt.sm ? '' : $t('entesreguladores.new')"
           :round="$q.screen.lt.sm"
           @click="prepararNuevoEnteRegulador"
         />

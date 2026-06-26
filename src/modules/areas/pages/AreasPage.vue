@@ -52,9 +52,10 @@ import AreasTable from '../components/AreasTable.vue';
 
 
 const {
-  listaAreas, listaSucursales, cargando, filtroBusqueda,
-  esVisibleDialogo, esModoEdicion, areaActual,
-  cargarAreas, prepararNuevaArea, prepararEdicionArea, guardarArea, confirmarEliminarArea
+  listaAreas, listaSucursales, areaActual,
+  cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+  cargarAreas, guardarArea,
+  prepararNuevaArea, prepararEdicionArea, confirmarEliminarArea
 } = useAreas();
 
 onMounted(() => { 

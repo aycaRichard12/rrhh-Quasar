@@ -177,10 +177,12 @@ export function useBeneficios() {
   };
 
   return {
-    listaBeneficios, beneficioActual, esModoEdicion, filtroBusqueda, cargando,
-    esVisibleDialogo, listaBeneficiosEstandar, esVistaEstandar,
-    cargarBeneficios, prepararNuevoBeneficio, guardarBeneficio,
-    prepararEdicionBeneficio, confirmarEliminarBeneficio,
-    cargarBeneficiosEstandar, confirmarImportacion, alternarVistaEstandar, cambiarEstadoRegistro
+    listaBeneficios, beneficioActual,
+    cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+    listaBeneficiosEstandar, esVistaEstandar,
+    cargarBeneficios, prepararNuevoBeneficio,
+    guardarBeneficio, prepararEdicionBeneficio, confirmarEliminarBeneficio,
+    cargarBeneficiosEstandar, confirmarImportacion, alternarVistaEstandar,
+    cambiarEstadoRegistro
   };
 }

@@ -19,7 +19,7 @@ export function usePrerrequisitosCargo() {
   const prerrequisitoActual = ref<PrerrequisitoCargo>({
     nombre: '',
     descripcion: '',
-    idcargo: 0
+    idcargo: 0 
   });
 
   const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida } = useNotificaciones();
