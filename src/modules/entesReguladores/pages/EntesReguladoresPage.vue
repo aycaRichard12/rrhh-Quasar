@@ -19,7 +19,6 @@
           :round="$q.screen.lt.sm"
           @click="prepararNuevoEnteRegulador"
         />
-
         <div class="row q-gutter-sm">
           <q-btn outline
             color="secondary"
@@ -30,7 +29,6 @@
             @click="cargarEntesReguladoresEstandar"
           />
         </div>
-
         <div class="row no-wrap q-gutter-x-sm items-center col-grow justify-end">
           <BuscadorGlobal v-model="filtroBusqueda" class="col-grow" style="max-width: 300px" />
         </div>

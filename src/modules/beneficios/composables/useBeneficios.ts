@@ -2,18 +2,21 @@ import { ref } from 'vue';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
+
 import { beneficiosService } from '../services/beneficios.service';
 import type { Beneficio } from '../types/beneficios.types';
 
 export function useBeneficios() {
-  const listaBeneficios = ref<Beneficio[]>([]);
-  const cargando = ref<boolean>(false);
   const idEmpresa = String(idempresa_md5());
+  const listaBeneficios = ref<Beneficio[]>([]);
+
+  const cargando = ref<boolean>(false);
+  const filtroBusqueda = ref<string>('');
   const esModoEdicion = ref<boolean>(false);
   const esVisibleDialogo = ref<boolean>(false);
-  const filtroBusqueda = ref<string>('');
-  const listaBeneficiosEstandar = ref<Beneficio[]>([]);
+
   const esVistaEstandar = ref<boolean>(false);
+  const listaBeneficiosEstandar = ref<Beneficio[]>([]);
 
   const beneficioActual = ref<Beneficio>({
     nombre: '',
@@ -25,10 +28,7 @@ export function useBeneficios() {
     estado: 1
   });
 
-  const { 
-    notificarAdvertencia, notificarErrorAccion, notificarExitoAccion,
-    confirmarEliminacionPredefinida, confirmarImportacionPredefinida
-  } = useNotificaciones();
+  const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida, confirmarImportacionPredefinida } = useNotificaciones();
 
   const cargarBeneficios = async () => {
     cargando.value = true;
@@ -42,26 +42,21 @@ export function useBeneficios() {
     }
   };
 
-  const calcularSiguienteOrden = (): number => {
-    if (listaBeneficios.value.length === 0) return 1;
-    const ordenes = listaBeneficios.value.map(b => Number(b.orden) || 0);
-    return Math.max(...ordenes) + 1;
-  };
-
   const prepararNuevoBeneficio = () => {
     beneficioActual.value = {
       nombre: '',
       descripcion: '',
-      tipo: 1,
-      cantidad: 0,
+      tipo: '',
+      cantidad:'',
       orden: calcularSiguienteOrden(),
-      destino: 1,
+      destino: '',
       estado: 1
     };
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
   };
 
+  
   const prepararEdicionBeneficio = async (id: number) => {
     try {
       const respuesta = await beneficiosService.editarBeneficio(id);
@@ -69,6 +64,8 @@ export function useBeneficios() {
         beneficioActual.value = { ...respuesta.datos };
         esModoEdicion.value = true;
         esVisibleDialogo.value = true;
+      } else {
+        notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
       console.error(error);
@@ -142,10 +139,8 @@ export function useBeneficios() {
         datos : JSON.stringify(listaBeneficiosEstandar.value),
         tipo : tipoAccion === 'reemplazar' ? '1' : '2'
       };
-
       const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await beneficiosService.guardarBeneficio(datosFormulario);
-      
       if (respuesta.estado === 'exito') {
         notificarExitoAccion('importar');
         alternarVistaEstandar();
@@ -174,6 +169,12 @@ export function useBeneficios() {
       console.error(error);
       notificarErrorAccion('guardar');
     }
+  };
+
+  const calcularSiguienteOrden = (): number => {
+    if (listaBeneficios.value.length === 0) return 1;
+    const ordenes = listaBeneficios.value.map(b => Number(b.orden) || 0);
+    return Math.max(...ordenes) + 1;
   };
 
   return {

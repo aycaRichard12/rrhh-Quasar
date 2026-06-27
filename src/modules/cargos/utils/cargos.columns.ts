@@ -28,7 +28,7 @@ export const obtenerColumnasCargos = (t: (key: string) => string): QTableColumn<
     label: t('areas.name'),
     align: 'center',
     field: 'area',
-    style: 'width: 100px; white-space: normal'
+    style: 'width: 200px; white-space: normal'
   },
   {
     name: 'salario',

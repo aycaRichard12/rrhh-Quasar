@@ -19,7 +19,7 @@
           :props="props"
           :class="col.headerClasses"
         >
-          <div class="row items-center justify-between no-wrap">
+          <div class="text-center items-center no-wrap">
             <span>{{ col.label }}</span>
             
             <slot :name="`header-filtro-${col.name}`" :columna="col"></slot>

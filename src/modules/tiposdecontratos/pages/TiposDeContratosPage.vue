@@ -38,24 +38,28 @@
 
       <template v-else>
         <q-btn outline
-          color="negative" 
-          icon="arrow_back" 
-          :label="$t('forms.back')"
+          color="negative"
+          icon="arrow_back"
+          size="15px"
+          :label="$q.screen.lt.sm ? '' : $t('forms.back')"
+          :round="$q.screen.lt.sm"
           @click="alternarVistaEstandar"
         />
-
         <div class="row q-gutter-sm">
           <q-btn
               color="warning"
               icon="autorenew"
-              :label="$t('forms.replace')"
+              size="15px"
+              :label="$q.screen.lt.sm ? '' : $t('forms.replace')"
+              :round="$q.screen.lt.sm"
               @click="confirmarImportacion('reemplazar')"
             />
-
             <q-btn
               color="positive"
               icon="add"
-              :label="$t('forms.add')"
+              size="15px"
+              :label="$q.screen.lt.sm ? '' : $t('forms.add')"
+              :round="$q.screen.lt.sm"
               @click="confirmarImportacion('agregar')"
             />
           </div>

@@ -108,21 +108,21 @@ export default {
   },
   ///////////////////////////////////////////////////////////////////////////////////
   forms:{
-    standar: 'Importar Estándar',
     add: 'Agregar',
     back: 'Volver',
     replace: 'Reemplazar',
+    standar: 'Importar Estándar',
   },
   tables:{
+    amount: 'Cantidad',
+    amount2: 'Monto',
+    date: 'Fecha',
     description: 'Descripción',
+    destination: 'Destino',
     options: 'Opciones',
     order: 'Orden',
     status: 'Estado',
-    amount: 'Cantidad',
-    destination: 'Destino',
     type: 'Tipo',
-    amount2: 'Monto',
-    date: 'Fecha',
   },
 //CONFIGURACIONES_________________________________________________________________________________
   //------------ORGANIZACIÓN---------------
@@ -133,7 +133,6 @@ export default {
     new: 'Nueva Área',
     edit: 'Editar Área',
     branch: 'Sucursal',
-    noBranch: 'Sin sucursal',
   },
   cargos: {
     title: 'Cargos',
@@ -170,7 +169,7 @@ export default {
   beneficios:{
     title: 'Beneficios',
     subtitle: 'Gestión de beneficios e indemnizaciones del personal.',
-    name: 'Beneficios',
+    name: 'Beneficio',
     new: 'Nuevo Beneficio',
     edit: 'Editar Beneficio',
   },
@@ -189,8 +188,7 @@ export default {
     name: 'Método',
     new: 'Nuevo Método de Evaluación',
     edit: 'Editar Método de Evaluación',
-    maximumRating: 'Calificación Máxima',
-    manageRanges: 'Gestionar Rangos',
+    rating: 'Calificación Máxima',
     range:{
       title: 'Rangos de ',
       subtitle:'Gestiona los niveles de calificación',
@@ -199,8 +197,8 @@ export default {
       edit: 'Editar Rango de Evaluación',
       criteria: 'Criterio/Rango',
       score: 'Puntaje',
+      manage: 'Gestionar Rangos',
     }
-    
   },
   actividadesdeevaluacion: {
     title: 'Actividades de Evaluación',
@@ -253,6 +251,7 @@ export default {
   trabajadores: {
     title: 'Trabajadores',
     subtitle: 'Gestión de personal y su historial en la empresa.',
+    name: 'Trabjador',
     new: 'Nuevo Trabajador',
     edit: 'Editar Trabajador',
     photo: 'Foto',

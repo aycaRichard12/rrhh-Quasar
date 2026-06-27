@@ -26,8 +26,9 @@ export const obtenerColumnasFuncionesYObligaciones = (t: (key: string) => string
   {
     name: 'cargo',
     label: t('cargos.name'),
-    align: 'left',
+    align: 'center',
     field: 'cargo',
+    style: 'width: 200px; white-space: normal'
   },
   {
     name: 'opciones',

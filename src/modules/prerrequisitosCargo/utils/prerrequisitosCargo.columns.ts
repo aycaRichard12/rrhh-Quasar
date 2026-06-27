@@ -28,7 +28,7 @@ export const obtenerColumnasPrerrequisitosCargo = (t: (key: string) => string): 
     label: t('cargos.name'),
     align: 'center',
     field: 'cargo',
-    style: 'width: 100px; white-space: normal'
+    style: 'width: 200px; white-space: normal'
   },
   {
     name: 'opciones',

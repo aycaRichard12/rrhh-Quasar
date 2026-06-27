@@ -45,8 +45,8 @@ export function useEntesReguladores() {
     enteReguladorActual.value = {
       nombre: '',
       descripcion: '',
-      porcentaje: 0,
-      monto: 0,
+      porcentaje: '',
+      monto: '',
       orden: calcularSiguienteOrden(),
       estado: 1
     };

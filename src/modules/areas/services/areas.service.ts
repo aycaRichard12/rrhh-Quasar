@@ -7,17 +7,11 @@ const sanearArea = (item: Area): Area => {
   return {
     ...item,
     id: Number(item.id),
-    // Blindamos la sucursal por si el backend manda null o algo inconsistente
-    sucursal: (item.sucursal && typeof item.sucursal === 'object') ? {
-      idsucursal: Number(item.sucursal.idsucursal || 0),
-      nombre: String(item.sucursal.nombre || ''),
-      region: String(item.sucursal.region || ''),
-      idregion: Number(item.sucursal.idregion || 0)
-    } : {
-      idsucursal: 0,
-      nombre: '',
-      region: '',
-      idregion: 0
+    sucursal: {
+      idsucursal: Number(item.sucursal.idsucursal),
+      nombre: String(item.sucursal.nombre),
+      region: String(item.sucursal.region),
+      idregion: Number(item.sucursal.idregion)
     }
   };
 };
@@ -44,17 +38,16 @@ export const areasService = {
 
   async editarArea(id: number): Promise<RespuestaApi<Area>> {
   const { data } = await api.get(`verificarIDarea/${id}`);
-
   if (data.estado === 'exito' && data.datos) {
     const area: Area = {
       id: Number(data.datos.id),
-      nombre: String(data.datos.nombre ?? ''),
-      descripcion: String(data.datos.descripcion ?? ''),
+      nombre: String(data.datos.nombre),
+      descripcion: String(data.datos.descripcion),
       sucursal: {
-        idsucursal: Number(data.datos.idsucursal ?? 0),
-        nombre: '',
-        region: '',
-        idregion: 0
+        idsucursal: Number(data.datos.idsucursal),
+        nombre: String(data.datos.nombre),
+        region: String(data.datos.region),
+        idregion: Number(data.datos.idregion)
       }
     };
     return {

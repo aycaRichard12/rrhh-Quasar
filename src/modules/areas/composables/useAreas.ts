@@ -18,10 +18,10 @@ export function useAreas() {
     nombre: '',
     descripcion: '',
     sucursal: {
-      idsucursal: 0,
+      idsucursal: '',
       nombre: '',
       region: '',
-      idregion: 0
+      idregion: ''
     }
   });
 
@@ -45,10 +45,10 @@ export function useAreas() {
       nombre: '',
       descripcion: '',
       sucursal: {
-        idsucursal: 0,
+        idsucursal: '',
         nombre: '',
         region: '',
-        idregion: 0
+        idregion: ''
       }
     };
     esModoEdicion.value = false;

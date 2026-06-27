@@ -20,7 +20,7 @@ export function usePrerrequisitosCargo() {
   const prerrequisitoActual = ref<PrerrequisitoCargo>({
     nombre: '',
     descripcion: '',
-    idcargo: 0 
+    idcargo: ''
   });
 
   const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida } = useNotificaciones();
@@ -40,7 +40,7 @@ export function usePrerrequisitosCargo() {
   };
 
   const prepararNuevoPrerrequisito = () => {
-    prerrequisitoActual.value = { nombre: '', descripcion: '', idcargo: 0 };
+    prerrequisitoActual.value = { nombre: '', descripcion: '', idcargo: '' };
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
   };

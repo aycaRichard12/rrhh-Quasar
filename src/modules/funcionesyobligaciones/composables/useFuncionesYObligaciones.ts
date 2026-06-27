@@ -21,7 +21,7 @@ export function useFuncionesYObligaciones() {
   const funcionYObligacionActual = ref<FuncionYObligacion>({
     nombre: '',
     descripcion: '',
-    idcargo: 0,
+    idcargo: '',
     cargo: '',
   });
 
@@ -55,7 +55,7 @@ export function useFuncionesYObligaciones() {
     funcionYObligacionActual.value = {
       nombre: '',
       descripcion: '',
-      idcargo: 0,
+      idcargo: '',
       cargo: ''
     };
     esModoEdicion.value = false;

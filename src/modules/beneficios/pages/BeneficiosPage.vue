@@ -19,8 +19,7 @@
           :round="$q.screen.lt.sm"
           @click="prepararNuevoBeneficio"
         />
-
-        <div class="row no-wrap q-gutter-x-sm items-center col-grow justify-end">
+        <div class="row q-gutter-sm">
           <q-btn outline
             color="secondary"
             icon="cloud_download"
@@ -29,10 +28,12 @@
             :round="$q.screen.lt.sm"
             @click="cargarBeneficiosEstandar"
           />
+        </div>
+        <div class="row no-wrap q-gutter-x-sm items-center col-grow justify-end">
           <BuscadorGlobal v-model="filtroBusqueda" class="col-grow" style="max-width: 300px" />
         </div>
       </template>
-    
+  
       <template v-else>
         <q-btn outline
           color="negative"
@@ -66,8 +67,8 @@
     <div v-if="!esVistaEstandar">
       <BeneficiosTable
         v-model:filtro="filtroBusqueda"
-        :lista-beneficios="listaBeneficios"
         :cargando="cargando"
+        :lista-beneficios="listaBeneficios"
         @editar="prepararEdicionBeneficio"
         @eliminar="confirmarEliminarBeneficio"
         @cambiar-estado-registro="cambiarEstadoRegistro"
@@ -80,9 +81,7 @@
       />
     </div>
     
-    <q-dialog
-      v-model="esVisibleDialogo"
-    >
+    <q-dialog v-model="esVisibleDialogo">
       <BeneficiosForm
         :beneficio="beneficioActual"
         :es-modo-edicion="esModoEdicion"
@@ -94,18 +93,19 @@
     
 <script setup lang="ts">
   import { onMounted } from 'vue';
-  import { useBeneficios } from '../composables/useBeneficios';
-  import BeneficiosTable from '../components/BeneficiosTable.vue';
-  import BeneficiosForm from '../components/BeneficiosForm.vue';
-  import BeneficiosStandar from '../components/BeneficiosStandar.vue';
   import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
+
+  import { useBeneficios } from '../composables/useBeneficios';
+  import BeneficiosForm from '../components/BeneficiosForm.vue';
+  import BeneficiosTable from '../components/BeneficiosTable.vue';
+  import BeneficiosStandar from '../components/BeneficiosStandar.vue';
       
   const {
-    listaBeneficios, beneficioActual, esModoEdicion, esVisibleDialogo,
-    filtroBusqueda, cargando,
-    listaBeneficiosEstandar, esVistaEstandar,
-    cargarBeneficios, prepararNuevoBeneficio, guardarBeneficio,
-    prepararEdicionBeneficio, confirmarEliminarBeneficio,
+    listaBeneficios, beneficioActual,
+    cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+    esVistaEstandar, listaBeneficiosEstandar,
+    cargarBeneficios, guardarBeneficio,
+    prepararNuevoBeneficio, prepararEdicionBeneficio, confirmarEliminarBeneficio,
     cargarBeneficiosEstandar, alternarVistaEstandar, confirmarImportacion,
     cambiarEstadoRegistro,
   } = useBeneficios();
