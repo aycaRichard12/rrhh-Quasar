@@ -1,3 +1,4 @@
+import { title } from 'process';
 import navigation from './navigation';
 
 export default {
@@ -123,8 +124,8 @@ export default {
     amount2: 'Monto',
     date: 'Fecha',
   },
-  //CONFIGURACIONES_________________________________________________________________________________
-    //ORGANIZACIÓN:
+//CONFIGURACIONES_________________________________________________________________________________
+  //------------ORGANIZACIÓN---------------
   areas: {
     title: 'Áreas',
     subtitle: 'Gestión de áreas y sucursales de la empresa.',
@@ -152,7 +153,7 @@ export default {
   tiposdecontratos:{
     title: 'Tipos de Contrato',
     subtitle: 'Gestión de contrataciones',
-    name: 'Tipo de Contrato',
+    name: 'Contrato',
     new: 'Nuevo Tipo de Contrato',
     edit: 'Editar Tipo de Contrato',
     nature:'Naturaleza',
@@ -161,11 +162,11 @@ export default {
   funcionesyobligaciones:{
     title:'Funciones y Obligaciones',
     subtitle: 'Gestión de deberes del Personal',
-    name: 'Funcion - Obligación',
-    new:'Nueva Funcion u Obligación',
-    edit: 'Editar Funcion u Obligación',
+    name: 'Funcion / Obligación',
+    new:'Nueva Funcion / Obligación',
+    edit: 'Editar Funcion / Obligación',
   },
-  //BENEFICIOS SOCIALES:________________________________________________________________
+  //---------BENEFICIOS SOCIALES-----------------
   beneficios:{
     title: 'Beneficios',
     subtitle: 'Gestión de beneficios e indemnizaciones del personal.',
@@ -181,7 +182,7 @@ export default {
     edit: 'Editar Ente Regulador',
     percentage: 'Porcentaje',
   },
-  //METODOS DE EVALUACION:
+  //--------VALORACION----------------
   metodosdeevaluacion:{
     title: 'Métodos de Evaluación',
     subtitle: 'Gestiona los métodos para calificar el desempeño.',
@@ -208,13 +209,6 @@ export default {
     new: 'Nueva Actividad',
     edit: 'Editar Actividad',
   },
-  niveles: {
-    title: 'Niveles de Gravedad',
-    subtitle: 'Gestión de niveles de gravedad para sanciones.',
-    name: 'Nivel',
-    new: 'Nuevo Nivel',
-    edit: 'Editar Nivel',
-  },
   tiposdesanciones: {
     title: 'Tipos de Sanciones',
     subtitle: 'Gestión de tipos de sanciones y su gravedad.',
@@ -222,6 +216,15 @@ export default {
     new: 'Nuevo Tipo de Sanción',
     edit: 'Editar Tipo de Sanción',
   },
+  //--------SANCIONES----------------
+  niveles: {
+    title: 'Niveles de Gravedad',
+    subtitle: 'Gestión de niveles de gravedad para sanciones.',
+    name: 'Nivel',
+    new: 'Nuevo Nivel',
+    edit: 'Editar Nivel',
+  },
+  
   motivosdebaja: {
     title: 'Motivos de Baja',
     subtitle: 'Gestión de motivos de baja de personal.',
@@ -230,6 +233,23 @@ export default {
     edit: 'Editar Motivo',
     type: 'Tipo'
   },
+  bajas: {
+    title
+  },
+  //--------REMUNERACION----------------
+  metodosdepago: {
+    title
+  },
+  bonosempresa: {
+    title
+  },
+  salariominimo: {
+    title
+  },
+//GESTION DE RECLUTAMIENTO_________________________________________________________________________________
+  //------------ADMISION---------------
+//TRABAJADOR_________________________________________________________________________________
+  //------------PERSONAL---------------
   trabajadores: {
     title: 'Trabajadores',
     subtitle: 'Gestión de personal y su historial en la empresa.',
@@ -263,4 +283,6 @@ export default {
     selectStatus: 'Seleccione Estado',
     uploadPhoto: 'Subir Foto',
   }
+  //------------NOVEDADES---------------
+  //------------PROCESOS LABORALES---------------
 }

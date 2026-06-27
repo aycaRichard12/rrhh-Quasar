@@ -4,6 +4,7 @@
       v-model:modelo-busqueda="filtroInterno"
       :filas="filasTipadas"
       :columnas="listaColumnas"
+      :columnas-personalizadas="['estado']"
       :esta-cargando="cargando"
       @editar="(id) => emits('editar', Number(id))"
       @eliminar="(id) => emits('eliminar', Number(id))"
@@ -29,8 +30,8 @@
         </q-btn>
       </template>
 
-      <template v-slot:body-cell-estado="propsCell">
-        <q-td :props="propsCell" class="text-center">
+      <template #body-cell-estado="propsCell">
+        <q-td :props="propsCell">
           <q-btn round dense
             :color="propsCell.row.estado === 1 ? 'primary' : 'negative'"
             :icon="propsCell.row.estado === 1 ? 'thumb_up' : 'thumb_down'"

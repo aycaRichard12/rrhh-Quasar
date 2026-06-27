@@ -28,16 +28,6 @@
       </q-tr>
     </template>
 
-    <!-- <template #loading>
-    <div v-if="estaCargando" style="height: 200px;">
-      <q-inner-loading showing style="z-index: 10;">
-        <div class="full-width column flex-center q-py-xl" style="width: 100%;">
-          <img :src="faviconSrc" alt="Buscando..." class="magnifier-searching" style="height: 70px; width: 70px" />
-          <span class="text-h5 text-weight-medium q-mt-md">{{ $t('common.messages.loading') + '..wat.' }}</span>
-        </div>
-      </q-inner-loading>
-    </div>
-  </template> -->
     <template #loading>
       <div  style="height: 250px;">
         <q-inner-loading showing color="primary" style="z-index: 1000;">
@@ -68,6 +58,14 @@
       </slot>
     </template>
 
+    <template
+      v-for="nombreCol in columnasPersonalizadas"
+      :key="nombreCol"
+      #[`body-cell-${nombreCol}`]="propsCell"
+    >
+      <slot :name="`body-cell-${nombreCol}`" v-bind="propsCell"></slot>
+    </template>
+
     <template #body-cell-numero="propsCell">
       <slot name="body-cell-numero" v-bind="propsCell">
         <q-td :props="propsCell">
@@ -80,8 +78,7 @@
       <q-td :props="propsCell">
         <div class="row justify-center q-gutter-sm">
           <slot name="botones-opciones-inicio" :fila="propsCell.row"></slot>
-<!-- icon="sym_o_edit_square" -->
-          <q-btn dense round v-if="mostrarEditar" class="global-btn-page" icon="edit" @click="emitirAccion('editar', propsCell.row)">
+          <q-btn dense round v-if="mostrarEditar" class="global-btn-page" icon="sym_o_edit_square" @click="emitirAccion('editar', propsCell.row)">
             <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.edit') }}</q-tooltip>
           </q-btn>
           <q-btn dense round v-if="mostrarEliminar" color="negative" icon="delete_forever" @click="emitirAccion('eliminar', propsCell.row)">
@@ -95,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { useQuasar } from 'quasar';
 import type { QTableColumn } from 'quasar';
 import TextoExpandible from 'src/components/core/TextoExpandible.vue';
@@ -114,19 +111,20 @@ export interface PropsTabla {
   titulo?: string;
   modeloBusqueda?: string;
   columnasTextoLargo?: string[];
+  columnasPersonalizadas?: string[];
   mostrarEditar?: boolean;
   mostrarEliminar?: boolean;
 }
 
 withDefaults(defineProps<PropsTabla>(), {
-  // const props = withDefaults(defineProps<{
   estaCargando: false,
   titulo: '',
   modeloBusqueda: '',
   mostrarEditar: true,
   mostrarEliminar: true,
-  columnasTextoLargo: () => ['descripcion']
-})
+  columnasTextoLargo: () => ['descripcion'],
+  columnasPersonalizadas: () => []
+});
 // 2. Emits Estrictos a Number
 type AccionesBase = 'editar' | 'eliminar' | 'cambiarEstado';
 
@@ -137,7 +135,7 @@ const emit = defineEmits<{
 }>();
 
 // 3. Manejo de Estado Interno
-const tablaRef = ref();
+// const tablaRef = ref();
 
 // 4. Funciones Lógicas
 const emitirAccion = (accion: AccionesBase, fila: FilaBase) => {

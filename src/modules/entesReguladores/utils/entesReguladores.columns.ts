@@ -14,14 +14,14 @@ export const obtenerColumnasEntesReguladores = (t: (key: string) => string): QTa
     label: t('entesreguladores.name'),
     align: 'left',
     field: 'nombre',
-    style: 'white-space: normal;'
+    style: 'width: 200px; white-space: normal'
   },
   {
     name: 'descripcion',
     label: t('tables.description'),
     align: 'left',
     field: 'descripcion',
-    style: 'white-space: normal; min-width: 150px;'
+    style: 'white-space: normal; min-width: 228px;'
   },
   { 
     name: 'porcentaje',
@@ -44,14 +44,14 @@ export const obtenerColumnasEntesReguladores = (t: (key: string) => string): QTa
     label: t('tables.order'),
     align: 'center',
     field: 'orden',
-    style: 'width: 80px'
+    style: 'width: 50px'
   },
   {
     name: 'estado',
     label: t('tables.status'),
     align: 'center',
     field: 'estado',
-    style: 'width: 80px'
+    style: 'width: 50px'
   },
   {
     name: 'opciones',

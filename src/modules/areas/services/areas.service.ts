@@ -57,13 +57,11 @@ export const areasService = {
         idregion: 0
       }
     };
-
     return {
       ...data,
       datos: area
     };
   }
-
   return data;
 },
 

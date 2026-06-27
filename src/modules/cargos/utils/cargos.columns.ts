@@ -14,34 +14,34 @@ export const obtenerColumnasCargos = (t: (key: string) => string): QTableColumn<
     label: t('cargos.name'),
     align: 'left',
     field: 'cargo',
-    style: 'width: 100px; white-space: normal'
+    style: 'width: 200px; white-space: normal'
   },
   {
     name: 'descripcion',
     label: t('tables.description'),
     align: 'left',
     field: 'descripcion',
-    style: 'white-space: normal; min-width:210px'
+    style: 'white-space: normal; min-width: 228px;'
   },
   {
     name: 'area',
     label: t('areas.name'),
     align: 'center',
     field: 'area',
-    style: 'width: 130px; white-space: normal'
+    style: 'width: 100px; white-space: normal'
   },
   {
     name: 'salario',
     label: t('cargos.salary'),
     align: 'right',
     field: 'salario',
-    style: 'width: 98px'
+    style: 'width: 50px'
   },
   { 
     name: 'opciones',
     label: t('tables.options'),
     align: 'center',
     field: () => '',
-    style: 'width: 110px'
+    style: 'width: 100px'
   }
 ];

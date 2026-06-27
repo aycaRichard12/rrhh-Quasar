@@ -24,21 +24,21 @@ export const obtenerColumnasAreas = (t: (key: string) => string): QTableColumn<A
     label: t('areas.name'),
     align: 'left',
     field: 'nombre',
-    style: 'width: 100px; white-space: normal'
+    style: 'width: 200px; white-space: normal'
   },
   { 
     name: 'descripcion',
     label: t('tables.description'),
     align: 'left',
     field: 'descripcion',
-    style: 'min-width:210px; white-space: normal'
+    style: 'white-space: normal; min-width: 228px;'
   },
   { 
     name: 'sucursal',
     label: t('areas.branch'),
     align: 'center',
     field: normalizarSucursal, // Llamamos a nuestra nueva función
-    style: 'width: 130px;'
+    style: 'width: 140px; white-space: normal'
   },
   { 
     name: 'opciones',
