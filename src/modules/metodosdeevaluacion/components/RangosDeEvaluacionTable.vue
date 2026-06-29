@@ -21,6 +21,7 @@ import type { RangoDeEvaluacion } from '../types/metodosDeEvaluacion.types';
 import { obtenerColumnasRangosDeEvaluacion } from '../utils/metodosDeEvaluacion.columns';
 
 const { t } = useI18n();
+const listaColumnas = computed(() => obtenerColumnasRangosDeEvaluacion(t));
 const filasTipadas = computed(() => props.rows as unknown as FilaBase[]);
 
 const props = defineProps<{
@@ -33,5 +34,4 @@ const emits = defineEmits<{
   (e: 'eliminar', id: number): void;
 }>();
 
-const listaColumnas = computed(() => obtenerColumnasRangosDeEvaluacion(t));
 </script>

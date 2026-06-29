@@ -1,4 +1,4 @@
-export interface TiposDeSanciones{
+export interface TipoDeSancion{
   id?: number;
 	nombre: string;
 	descripcion: string;

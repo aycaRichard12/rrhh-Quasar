@@ -2,21 +2,25 @@ import { ref } from 'vue';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
+
 import { tiposDeSancionesService } from '../services/tiposDeSanciones.service';
-import type { TiposDeSanciones } from '../types/tiposDeSanciones.types';
-import type { NivelesDeGravedad } from 'src/modules/niveles/types/niveles.types';
+import type { TipoDeSancion } from '../types/tiposDeSanciones.types';
+
+import { nivelesService } from 'src/modules/niveles/services/niveles.service';
+import type { NivelDeGravedad } from 'src/modules/niveles/types/niveles.types';
 
 export function useTiposDeSanciones() {
   const idEmpresa = String(idempresa_md5());
+  const listaTiposDeSanciones = ref<TipoDeSancion[]>([]);
+
+  const cargando = ref(false);
   const filtroBusqueda = ref('');
   const esModoEdicion = ref(false);
-  const cargando = ref(false);
-
-  const listaTiposDeSanciones = ref<TiposDeSanciones[]>([]);
-  const listaNiveles = ref<NivelesDeGravedad[]>([]);
   const esVisibleDialogo = ref(false);
 
-  const tipoDeSancionActual = ref<TiposDeSanciones>({
+  const listaNiveles = ref<NivelDeGravedad[]>([]);
+
+  const tipoDeSancionActual = ref<TipoDeSancion>({
     nombre: '',
     descripcion: '',
     idnivel: 0,
@@ -39,9 +43,10 @@ export function useTiposDeSanciones() {
 
   const cargarNiveles = async () => {
     try {
-      listaNiveles.value = await tiposDeSancionesService.listarNivelesDeGravedad();
+      listaNiveles.value = await nivelesService.listarNivelesDeGravedad();
     } catch (error) {
       console.error(error);
+      notificarErrorAccion('cargar');
     }
   };
 
@@ -58,11 +63,13 @@ export function useTiposDeSanciones() {
 
   const prepararEdicionTipoDeSancion = async (id: number) => {
     try {
-      const resp = await tiposDeSancionesService.editarTipoDeSancion(id);
-      if (resp.estado === 'exito' && resp.datos) {
-        tipoDeSancionActual.value = { ...resp.datos };
+      const respuesta = await tiposDeSancionesService.editarTipoDeSancion(id);
+      if (respuesta.estado === 'exito' && respuesta.datos) {
+        tipoDeSancionActual.value = { ...respuesta.datos };
         esModoEdicion.value = true;
         esVisibleDialogo.value = true;
+      } else {
+        notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
       console.error(error);
@@ -70,24 +77,24 @@ export function useTiposDeSanciones() {
     }
   };
 
-  const guardarTipoDeSancion = async (datos: TiposDeSanciones) => {
+  const guardarTipoDeSancion = async (datosGuardar: TipoDeSancion) => {
     try {
       const payload = {
         ver: esModoEdicion.value ? 'editartiposancion' : 'registrotiposancion',
         idempresa: idEmpresa,
-        id: datos.id,
-        nombre: datos.nombre,
-        descripcion: datos.descripcion,
-        nivel: datos.idnivel
+        id: datosGuardar.id,
+        nombre: datosGuardar.nombre,
+        descripcion: datosGuardar.descripcion,
+        nivel: datosGuardar.idnivel
       };
-      const formData = prepararDatosFormulario(payload);
-      const resp = await tiposDeSancionesService.guardarTipoDeSancion(formData);
-      if (resp.estado === 'exito') {
+      const datosFormulario = prepararDatosFormulario(payload);
+      const respuesta = await tiposDeSancionesService.guardarTipoDeSancion(datosFormulario);
+      if (respuesta.estado === 'exito') {
         notificarExitoAccion('guardar');
         esVisibleDialogo.value = false;
         void cargarTiposDeSanciones();
       } else {
-        notificarAdvertencia(resp.mensaje);
+        notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
       console.error(error);
@@ -113,18 +120,11 @@ export function useTiposDeSanciones() {
   };
 
   return {
-    listaTiposDeSanciones,
+    listaTiposDeSanciones, tipoDeSancionActual,
+    cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
     listaNiveles,
-    cargando,
-    filtroBusqueda,
-    esVisibleDialogo,
-    esModoEdicion,
-    tipoDeSancionActual,
-    cargarTiposDeSanciones,
-    cargarNiveles,
-    prepararNuevoTipoDeSancion,
-    prepararEdicionTipoDeSancion,
-    guardarTipoDeSancion,
-    confirmarEliminarTipoDeSancion
+    cargarTiposDeSanciones, guardarTipoDeSancion,
+    prepararNuevoTipoDeSancion, prepararEdicionTipoDeSancion, confirmarEliminarTipoDeSancion,
+    cargarNiveles 
   };
 }
