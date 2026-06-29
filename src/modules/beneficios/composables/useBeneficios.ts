@@ -180,10 +180,11 @@ export function useBeneficios() {
   return {
     listaBeneficios, beneficioActual,
     cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
-    listaBeneficiosEstandar, esVistaEstandar,
-    cargarBeneficios, prepararNuevoBeneficio,
-    guardarBeneficio, prepararEdicionBeneficio, confirmarEliminarBeneficio,
-    cargarBeneficiosEstandar, confirmarImportacion, alternarVistaEstandar,
+    esVistaEstandar, listaBeneficiosEstandar,
+    cargarBeneficios, guardarBeneficio,
+    prepararNuevoBeneficio, prepararEdicionBeneficio, confirmarEliminarBeneficio,
+    alternarVistaEstandar,
+    cargarBeneficiosEstandar, confirmarImportacion,
     cambiarEstadoRegistro
   };
 }

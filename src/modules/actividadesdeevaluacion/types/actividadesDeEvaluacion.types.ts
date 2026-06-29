@@ -1,8 +1,8 @@
-export interface ActividadesDeEvaluacion {
+export interface ActividadDeEvaluacion {
   id?: number;
   nombre: string;
   descripcion: string;
-  fecha: Date;
+  fecha: string;
   idmetodoevaluacion: number;
   metodoevaluacion: string;
   calificacionMax: number;

@@ -16,7 +16,8 @@ export const obtenerColumnasBeneficios = (t: (key: string) => string): QTableCol
     field: 'nombre',
     style: 'width: 200px; white-space: normal'
   },
-  { name: 'descripcion',
+  {
+    name: 'descripcion',
     label: t('tables.description'),
     align: 'left',
     field: 'descripcion',
@@ -30,7 +31,8 @@ export const obtenerColumnasBeneficios = (t: (key: string) => string): QTableCol
     style: 'width: 100px',
     format: (val: number) => (val === 1 ? 'Porcentaje' : 'Monto Específico')
   },
-  { name: 'cantidad',
+  {
+    name: 'cantidad',
     label: t('tables.amount'),
     align: 'right',
     field: 'cantidad',

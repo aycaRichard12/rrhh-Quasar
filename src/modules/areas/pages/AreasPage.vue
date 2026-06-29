@@ -50,7 +50,6 @@ import { useAreas } from '../composables/useAreas';
 import AreasForm from '../components/AreasForm.vue';
 import AreasTable from '../components/AreasTable.vue';
 
-
 const {
   listaAreas, listaSucursales, areaActual,
   cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,

@@ -7,7 +7,7 @@
   >
    	<template v-slot:prepend>
    		<q-icon
-				name="search"
+				name="manage_search"
 			/>
    	</template>
    	

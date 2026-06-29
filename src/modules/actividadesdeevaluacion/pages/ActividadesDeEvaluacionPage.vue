@@ -2,10 +2,10 @@
   <q-page>
     <div class="lt-sm">
       <div class="row justify-left">
-        <h4 class="q-my-none text-primary">{{ $t('evaluationActivities.title') }}</h4>
+        <h4 class="q-my-none text-primary">{{ $t('actividadesdeevaluacion.title') }}</h4>
       </div>
       <div class="row justify-left">
-        <p class="text-grey-7">{{ $t('evaluationActivities.subtitle') }}</p>
+        <p class="text-grey-7">{{ $t('actividadesdeevaluacion.subtitle') }}</p>
       </div>
     </div>
 
@@ -14,7 +14,7 @@
         class="global-btn-page"
         icon="sym_o_add_notes"
         size="15px"
-        :label="$q.screen.lt.sm ? '' : $t('evaluationActivities.new')"
+        :label="$q.screen.lt.sm ? '' : $t('actividadesdeevaluacion.new')"
         :round="$q.screen.lt.sm"
         @click="prepararNuevaActividad"
       />
@@ -26,17 +26,14 @@
     <div>
       <ActividadesDeEvaluacionTable
         v-model:filtro="filtroBusqueda"
-        :lista-actividades="listaActividades"
         :cargando="cargando"
+        :lista-actividades="listaActividades"
         @editar="prepararEdicionActividad"
         @eliminar="confirmarEliminarActividad"
       />
     </div>
-
     <!-- Diálogos -->
-    <q-dialog 
-      v-model="esVisibleDialogo"
-    >
+    <q-dialog v-model="esVisibleDialogo">
       <ActividadesDeEvaluacionForm
         :actividad="actividadActual"
         :lista-metodos="listaMetodos"
@@ -49,15 +46,17 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useActividadesDeEvaluacion } from '../composables/useActividadesDeEvaluacion';
-import ActividadesDeEvaluacionTable from '../components/ActividadesDeEvaluacionTable.vue';
-import ActividadesDeEvaluacionForm from '../components/ActividadesDeEvaluacionForm.vue';
 import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
 
+import { useActividadesDeEvaluacion } from '../composables/useActividadesDeEvaluacion';
+import ActividadesDeEvaluacionForm from '../components/ActividadesDeEvaluacionForm.vue';
+import ActividadesDeEvaluacionTable from '../components/ActividadesDeEvaluacionTable.vue';
+
 const {
-  listaActividades, listaMetodos, cargando, filtroBusqueda,
-  esVisibleDialogo, esModoEdicion, actividadActual,
-  cargarActividades, cargarMetodos, prepararNuevaActividad, prepararEdicionActividad, guardarActividad, confirmarEliminarActividad
+  listaActividades, listaMetodos, actividadActual,
+  cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+  cargarActividades, cargarMetodos, guardarActividad,
+  prepararNuevaActividad, prepararEdicionActividad, confirmarEliminarActividad
 } = useActividadesDeEvaluacion();
 
 onMounted(() => {
