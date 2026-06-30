@@ -11,17 +11,17 @@ export const obtenerColumnasFirmas = (t: (key: string) => string): QTableColumn<
   },
   {
     name: 'nombre',
-    label: t('firmas.name'),
+    label: t('person.name'),
     align: 'left',
     field: 'nombre',
-    style: 'width: 200px; white-space: normal'
+    style: 'width: 150px; white-space: normal'
   },
   {
     name: 'apellido',
-    label: t('firmas.name'),
+    label: t('person.lastname'),
     align: 'left',
     field: 'apellido',
-    style: 'width: 200px; white-space: normal'
+    style: 'width: 150px; white-space: normal'
 
   },
   {
@@ -40,7 +40,7 @@ export const obtenerColumnasFirmas = (t: (key: string) => string): QTableColumn<
   },
   {
     name: 'estado',
-    label: t('estado'),
+    label: t('tables.status'),
     align: 'left',
     field: 'estado',
     style: 'width: 50px'

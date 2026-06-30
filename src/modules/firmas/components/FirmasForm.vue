@@ -11,28 +11,28 @@
           <div class="col-12">
             <q-input autofocus dense lazy-rules outlined 
               v-model="datosLocales.nombre"
-              :label="$t('nombres') + ' *'"
+              :label="$t('person.name') + ' *'"
               :rules="[val => !!val || $t('common.rules.required')]"
             />
           </div>
 					<div class="col-12">
             <q-input autofocus dense lazy-rules outlined 
               v-model="datosLocales.apellido"
-              :label="$t('apellidos') + ' *'"
+              :label="$t('person.lastname') + ' *'"
               :rules="[val => !!val || $t('common.rules.required')]"
             />
           </div>
 					<div class="col-12">
             <q-input autofocus dense lazy-rules outlined 
               v-model="datosLocales.ci"
-              :label="$t('C.I.') + ' *'"
+              :label="$t('person.ci') + ' *'"
               :rules="[val => !!val || $t('common.rules.required')]"
             />
           </div>
 					<div class="col-12">
             <q-input autofocus dense lazy-rules outlined 
               v-model="datosLocales.cargo"
-              :label="$t('cargo') + ' *'"
+              :label="$t('firmas.role') + ' *'"
               :rules="[val => !!val || $t('common.rules.required')]"
             />
           </div>

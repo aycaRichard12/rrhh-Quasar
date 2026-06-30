@@ -38,7 +38,7 @@ export const obtenerColumnasAreas = (t: (key: string) => string): QTableColumn<A
     label: t('areas.branch'),
     align: 'center',
     field: normalizarSucursal, // Llamamos a nuestra nueva función
-    style: 'width: 140px; white-space: normal'
+    style: 'width: 200px; white-space: normal'
   },
   { 
     name: 'opciones',

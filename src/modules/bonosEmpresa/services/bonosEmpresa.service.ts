@@ -6,7 +6,6 @@ import type { BonoEmpresa } from '../types/bonosEmpresa.types';
 const ID_EMPRESA = idempresa_md5();
 
 export const bonosEmpresaService = {
-
   async listarBonosEmpresa(): Promise<BonoEmpresa[]> {
     const { data } = await api.get<BonoEmpresa[]>(`/listaBonosEmpresa/${ID_EMPRESA}`);
     return data;
@@ -14,11 +13,6 @@ export const bonosEmpresaService = {
 
   async guardarBonoEmpresa(payload: FormData): Promise<RespuestaApi> {
     const { data } = await api.post<RespuestaApi>('/', payload);
-    return data;
-  },
-
-  async cambiarEstadoBonoEmpresa(id: string, estado: string): Promise<RespuestaApi> {
-    const { data } = await api.get<RespuestaApi>(`/editarEstadoBonosEmpresa/${id}/${estado}`);
     return data;
   },
 
@@ -32,6 +26,11 @@ export const bonosEmpresaService = {
     return data;
   },
 
+  async cambiarEstadoBonoEmpresa(id: string, estado: string): Promise<RespuestaApi> {
+    const { data } = await api.get<RespuestaApi>(`/editarEstadoBonosEmpresa/${id}/${estado}`);
+    return data;
+  },
+
   async listarBonosEmpresaEstandar(): Promise<BonoEmpresa[]> {
     const urlAd = urlApiAdministracion();
     const { data } = await api.get<BonoEmpresa[]>(`${urlAd}api/listabonosempresa`);
@@ -42,5 +41,4 @@ export const bonosEmpresaService = {
     const { data } = await api.post<RespuestaApi>('/', payload);
     return data;
   }
-  
 };

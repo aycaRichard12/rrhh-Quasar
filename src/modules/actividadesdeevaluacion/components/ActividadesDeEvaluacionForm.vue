@@ -72,7 +72,7 @@ const emitirGuardar = () => {
   emits('guardar', datosLocales.value);
 };
 
-watch(() => props.actividad, (val) => {
-  datosLocales.value = { ...val };
+watch(() => props.actividad, (nuevosDatos) => {
+  datosLocales.value = { ...nuevosDatos };
 }, { deep: true });
 </script>
