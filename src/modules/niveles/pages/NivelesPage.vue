@@ -31,11 +31,8 @@
         @eliminar="confirmarEliminarNivel"
       />
     </div>
-
     <!-- Diálogos -->
-    <q-dialog 
-      v-model="esVisibleDialogo"
-    >
+    <q-dialog v-model="esVisibleDialogo">
       <NivelesForm
         :nivel="nivelActual"
         :es-modo-edicion="esModoEdicion"
@@ -48,9 +45,10 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useNiveles } from '../composables/useNiveles';
-import NivelesTable from '../components/NivelesTable.vue';
-import NivelesForm from '../components/NivelesForm.vue';
 import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
+
+import NivelesForm from '../components/NivelesForm.vue';
+import NivelesTable from '../components/NivelesTable.vue';
 
 const {
   listaNiveles, nivelActual,
