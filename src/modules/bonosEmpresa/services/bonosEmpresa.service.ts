@@ -3,42 +3,49 @@ import { idempresa_md5, urlApiAdministracion } from 'src/composables/funcionesGe
 import type { RespuestaApi } from 'src/types/api.types';
 import type { BonoEmpresa } from '../types/bonosEmpresa.types';
 
-const ID_EMPRESA = idempresa_md5();
-
+const sanearBonoEmpresa = (item: BonoEmpresa): BonoEmpresa => ({
+  ...item,
+  id: Number(item.id),
+  tipo: Number(item.tipo),
+  cantidad: Number(item.cantidad),
+  estado: Number(item.estado),
+  orden: Number(item.orden),
+  destino: Number(item.destino)
+})
 export const bonosEmpresaService = {
   async listarBonosEmpresa(): Promise<BonoEmpresa[]> {
-    const { data } = await api.get<BonoEmpresa[]>(`/listaBonosEmpresa/${ID_EMPRESA}`);
-    return data;
+    const { data } = await api.get(`/listaBonosEmpresa/${idempresa_md5()}`);
+    return data.map(sanearBonoEmpresa);
   },
 
   async guardarBonoEmpresa(payload: FormData): Promise<RespuestaApi> {
-    const { data } = await api.post<RespuestaApi>('/', payload);
+    const { data } = await api.post('/', payload);
     return data;
   },
 
-  async editarBonoEmpresa(id: string): Promise<RespuestaApi<BonoEmpresa>> {
-    const { data } = await api.get<RespuestaApi<BonoEmpresa>>(`/verificarIDBonosEmpresa/${id}`);
+  async editarBonoEmpresa(id: number): Promise<RespuestaApi<BonoEmpresa>> {
+    const { data } = await api.get(`/verificarIDBonosEmpresa/${id}`);
     return data;
   },
 
-  async eliminarBonoEmpresa(id: string): Promise<RespuestaApi> {
-    const { data } = await api.get<RespuestaApi>(`/eliminarBonosEmpresa/${id}`);
+  async eliminarBonoEmpresa(id: number): Promise<RespuestaApi> {
+    const { data } = await api.get(`/eliminarBonosEmpresa/${id}`);
     return data;
   },
 
-  async cambiarEstadoBonoEmpresa(id: string, estado: string): Promise<RespuestaApi> {
-    const { data } = await api.get<RespuestaApi>(`/editarEstadoBonosEmpresa/${id}/${estado}`);
+  async cambiarEstadoBonoEmpresa(id: number, estado: number): Promise<RespuestaApi> {
+    const { data } = await api.get(`/editarEstadoBonosEmpresa/${id}/${estado}`);
     return data;
   },
 
   async listarBonosEmpresaEstandar(): Promise<BonoEmpresa[]> {
     const urlAd = urlApiAdministracion();
-    const { data } = await api.get<BonoEmpresa[]>(`${urlAd}api/listabonosempresa`);
+    const { data } = await api.get(`${urlAd}api/listabonosempresa`);
     return data;
   },
 
-  async procesarImportacionEstandar(payload: FormData): Promise<RespuestaApi> {
-    const { data } = await api.post<RespuestaApi>('/', payload);
-    return data;
-  }
+  // async procesarImportacionEstandar(payload: FormData): Promise<RespuestaApi> {
+  //   const { data } = await api.post('/', payload);
+  //   return data;
+  // }
 };

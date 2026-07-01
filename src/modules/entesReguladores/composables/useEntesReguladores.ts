@@ -180,7 +180,7 @@ export function useEntesReguladores() {
     esVistaEstandar, listaEntesReguladoresEstandar,
     cargarEntesReguladores, guardarEnteRegulador,
     prepararNuevoEnteRegulador, prepararEdicionEnteRegulador, confirmarEliminarEnteRegulador,
-    cargarEntesReguladoresEstandar, confirmarImportacion, alternarVistaEstandar,
+    alternarVistaEstandar, cargarEntesReguladoresEstandar, confirmarImportacion,
     cambiarEstadoRegistro
   };
 }
