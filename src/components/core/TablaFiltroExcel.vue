@@ -1,9 +1,7 @@
 <template>
   <q-menu v-model="menuAbierto" anchor="bottom right" self="top left" max-width="280px" max-height="375px">
-    <!-- Opciones de Ordenamiento -->
     <q-list dense>
-      <q-item 
-        clickable 
+      <q-item clickable
         active-class="text-primary bg-blue-3"
         :active="sentidoOrden === 'asc'"
         @click="ordenar('asc')"
@@ -11,8 +9,8 @@
         <q-item-section avatar><q-icon name="arrow_upward" /></q-item-section>
         <q-item-section>{{ $t('common.filter.sortAsc') }}</q-item-section>
       </q-item>
-      <q-item 
-        clickable
+
+      <q-item clickable
         active-class="text-primary bg-blue-1"
         :active="sentidoOrden === 'desc'"
         @click="ordenar('desc')"
@@ -23,7 +21,7 @@
     </q-list>
 
     <q-separator />
-    <!-- Tabs para Valores y Condiciones -->
+    
     <q-tabs dense
       v-model="pestañaActual"
       class="text-grey-7"
@@ -40,167 +38,96 @@
       <q-tab-panels v-model="pestañaActual" animated>
         <q-tab-panel name="valores" class="q-pa-sm">
           <!-- Buscador -->
-          <q-input
-            dense outlined square
-            v-model="filtroValores"
-            class="q-mb-md"
-            :placeholder="$t('common.actions.search')"
-          >
-           <template #prepend>
-              <q-icon name="search" />
-            </template>
+          <q-input dense outlined square v-model="filtroValores" class="q-mb-md" :placeholder="$t('common.actions.search')" >
+            <template #prepend> <q-icon name="search" /> </template>
           </q-input>
           <!-- Checkbox Seleccionar Todo -->
-          <q-checkbox dense
-            v-model="todosSeleccionados"
-            class="q-mb-md"
-            :label="$t('common.filter.selectAll')"
-            @update:model-value="seleccionarTodos"
-          />
-          <!-- Lista de Valores -->
+          <q-checkbox dense v-model="todosSeleccionados" class="q-mb-md" :label="$t('common.filter.selectAll')" @update:model-value="seleccionarTodos" />
+            <!-- Lista de Valores -->
           <q-scroll-area style="height: 110px" class="bordered">
             <q-list dense separator>
-              <q-item clickable
-                v-for="valor in valoresFiltrados"
-                class="q-px-md"
-                tag="label"
-                :key="String(valor)"
-              >
-                <q-item-section avatar>
-                  <q-checkbox
-                    v-model="seleccionados"
-                    :val="String(valor)"
-                  />
-                </q-item-section>
+              <q-item clickable v-for="valor in valoresFiltrados" class="q-px-md" tag="label" :key="String(valor)" >
+                <q-item-section avatar><q-checkbox v-model="seleccionados" :val="String(valor)" /></q-item-section>
                 <q-item-section>{{ formatearValor(valor) }}</q-item-section>
               </q-item>
             </q-list>
           </q-scroll-area>
         </q-tab-panel>
         <!-- Panel de Condiciones -->
-        <q-tab-panel name="condiciones" class="q-pa-sm">
-          <div class="text-caption text-grey-7">
-            {{ $t('common.filter.conditionsInfo') }}
-          </div>
-        </q-tab-panel>
+        <q-tab-panel name="condiciones" class="q-pa-sm"> <div class="text-caption text-grey-7"> {{ $t('common.filter.conditionsInfo') }} </div> </q-tab-panel>
       </q-tab-panels>
     </q-card>
+
     <!-- Botones de Acción -->
     <q-card-actions align="right" class="q-gutter-sm q-pa-sm">
-      <q-btn
-        flat
-        color="negative"
-        :label="$t('common.actions.clear')"
-        @click="limpiarFiltro"
-      />
-      <q-btn
-        flat
-        color="grey"
-        :label="$t('common.actions.cancel')"
-        @click="menuAbierto = false"
-      />
-      <q-btn
-        unelevated
-        color="primary"
-        text-color="white"
-        :label="$t('common.actions.apply')"
-        @click="aplicar"
-      />
+      <q-btn flat color="negative" :label="$t('common.actions.clear')" @click="limpiarFiltro" />
+      <q-btn flat color="grey" :label="$t('common.actions.cancel')" @click="menuAbierto = false" />
+      <q-btn unelevated color="primary" text-color="white" :label="$t('common.actions.apply')" @click="aplicar" />
     </q-card-actions>
   </q-menu>
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, watch } from 'vue';
-  import { date } from 'quasar';
-  import type { ConfiguracionColumnaExcel } from 'src/composables/core/useFiltroExcel';
+import { ref, computed, watch } from 'vue';
+import type { ConfiguracionColumnaExcel } from 'src/composables/core/useFiltroExcel';
 
-  /**
-  * TablaFiltroExcel.vue - Menú desplegable para filtros avanzados por columna.
-  */
+const props = defineProps<{ columna: ConfiguracionColumnaExcel;
+  valoresDisponibles: (string | number | Date)[];
+  modeloFiltro: string[];
+  sentidoOrden?: 'asc' | 'desc' | null;
+}>();
 
-  const props = defineProps<{
-    columna: ConfiguracionColumnaExcel;
-    valoresDisponibles: (string | number | Date)[];
-    modeloFiltro: string[];
-    sentidoOrden?: 'asc' | 'desc' | null;
-  }>();
+const emits = defineEmits<{
+  (e: 'actualizar:filtro', valores: string[]): void;
+  (e: 'ordenar', sentido: 'asc' | 'desc' | null): void;
+  (e: 'limpiar'): void;
+}>();
 
-  const emits = defineEmits<{
-    (e: 'actualizar:filtro', valores: string[]): void;
-    (e: 'ordenar', sentido: 'asc' | 'desc' | null): void;
-    (e: 'limpiar'): void;
-  }>();
+const menuAbierto = ref(false);
+const pestañaActual = ref('valores');
+const filtroValores = ref('');
+const seleccionados = ref<string[]>([...props.modeloFiltro]);
 
-  const menuAbierto = ref(false);
-  const pestañaActual = ref('valores');
-  const filtroValores = ref('');
-  const seleccionados = ref<string[]>([...props.modeloFiltro]);
+const valoresDisponiblesStr = computed(() => props.valoresDisponibles.map(v => String(v)) );
 
-  const valoresDisponiblesStr = computed(() =>
-    props.valoresDisponibles.map(v => {
-      if (props.columna.format) return String(props.columna.format(v));
-      if (v instanceof Date) return date.formatDate(v, 'DD/MM/YYYY');
-      return String(v);
-    })
-  );
-
-  const valoresFiltrados = computed(() => {
-    const query = filtroValores.value.toLowerCase();
-    if (!query) return valoresDisponiblesStr.value;
-    
-    return valoresDisponiblesStr.value.filter(v => {
-      return v.toLowerCase().includes(query);
-    });
+const valoresFiltrados = computed(() => {
+  const query = filtroValores.value.toLowerCase();
+  if (!query) return valoresDisponiblesStr.value;
+  return valoresDisponiblesStr.value.filter(v => {
+    return v.toLowerCase().includes(query);
   });
+});
 
-  const todosSeleccionados = computed({
-    get: () => {
-      return valoresDisponiblesStr.value.length > 0 && 
-            seleccionados.value.length === valoresDisponiblesStr.value.length;
-    },
-    set: (val: boolean) => {
-      if (val) {
-        seleccionados.value = [...valoresDisponiblesStr.value];
-      } else {
-        seleccionados.value = [];
-      }
+const todosSeleccionados = computed({
+  get: () => {
+    return valoresDisponiblesStr.value.length > 0 && seleccionados.value.length === valoresDisponiblesStr.value.length;
+  },
+  set: (val: boolean) => {
+    if (val) {
+    seleccionados.value = [...valoresDisponiblesStr.value];
+    } else {
+      seleccionados.value = [];
     }
-  });
+  }
+});
 
-  const seleccionarTodos = (valor: boolean): void => {
-    todosSeleccionados.value = valor;
-  };
+const seleccionarTodos = (valor: boolean): void => { todosSeleccionados.value = valor; };
 
-  const formatearValor = (valor: string | number | Date): string => {
-    if (props.columna.opciones && (typeof valor === 'string' || typeof valor === 'number')) {
-      return props.columna.opciones[valor] || String(valor);
-    }
-    if (props.columna.format) {
-      return String(props.columna.format(valor));
-    }
-    if (valor instanceof Date) {
-      return date.formatDate(valor, 'DD/MM/YYYY');
-    }
-    return String(valor);
-  };
+const formatearValor = (valor: string | number | Date): string => {
+  // Si es una columna con mapeos estáticos (ej: { 1: 'Activo', 0: 'Inactivo' })
+  if (props.columna.opciones && (typeof valor === 'string' || typeof valor === 'number')) {
+    return props.columna.opciones[valor] || String(valor);
+  } return String(valor);
+};
 
-  const ordenar = (sentido: 'asc' | 'desc'): void => {
-    emits('ordenar', sentido);
-  };
+const ordenar = (sentido: 'asc' | 'desc'): void => { emits('ordenar', sentido); };
 
-  const aplicar = (): void => {
-    emits('actualizar:filtro', seleccionados.value);
-    menuAbierto.value = false;
-  };
+const aplicar = (): void => { emits('actualizar:filtro', seleccionados.value); menuAbierto.value = false; };
 
-  const limpiarFiltro = (): void => {
-    seleccionados.value = [];
-    emits('limpiar');
-    menuAbierto.value = false;
-  };
+const limpiarFiltro = (): void => { seleccionados.value = []; emits('limpiar'); menuAbierto.value = false; };
 
-  watch(() => props.modeloFiltro, (newVal) => {
-    seleccionados.value = [...newVal];
-  }, { deep: true });
+watch(() => props.modeloFiltro, (newVal) => {
+  seleccionados.value = [...newVal];
+  }, { deep: true
+});
 </script>

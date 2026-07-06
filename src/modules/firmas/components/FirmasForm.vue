@@ -9,6 +9,16 @@
       <q-card-section>
         <div class="row q-col-gutter-md">
           <div class="col-12">
+            <q-select dense emit-value map-options outlined
+              v-model="datosLocales.idusuario"
+              option-value="idusuario"
+              :q-options="listaUsuarios"
+              :option-label="obtenerCadenaUsuario"
+              :options="listaUsuarios"
+              :label="$t('Usuario de Registro')"
+            />
+          </div>
+          <div class="col-12">
             <q-input autofocus dense lazy-rules outlined 
               v-model="datosLocales.nombre"
               :label="$t('person.name') + ' *'"
@@ -49,10 +59,12 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import type { Firma } from '../types/firmas.types';
+import type { Firma, Usuario } from '../types/firmas.types';
+import { obtenerCadenaUsuario } from '../utils/firmas.columns';
 
 const props = defineProps<{
   firma: Firma;
+  listaUsuarios: Usuario[];
   esModoEdicion: boolean;
 }>();
 

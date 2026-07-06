@@ -1,30 +1,28 @@
 import { ref } from 'vue';
-import { idusuario_md5 } from 'src/composables/funcionesGenerales';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
-
 import { firmasService } from '../services/firmas.service';
-import type { Firma } from '../types/firmas.types';
+import type { Firma, Usuario } from '../types/firmas.types';
 
 export function useFirmas() {
-  const idUsuario = String(idusuario_md5());
+  const listaUsuarios = ref<Usuario[]>([]);
   const listaFirmas = ref<Firma[]>([]);
 
   const cargando = ref(false);
-	const filtroBusqueda = ref('');
-	const esModoEdicion = ref(false);
+  const filtroBusqueda = ref('');
+  const esModoEdicion = ref(false);
   const esVisibleDialogo = ref(false);
-  
-  const firmaActual = ref<Firma>({
-		cargo: '',
-		ci: '',
-		nombre: '',
-		idusuario: Number(idUsuario),
-		estado: 1,
-		apellido: '',
-	});
 
-  const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida } = useNotificaciones();
+  const firmaActual = ref<Firma>({
+    cargo: '',
+    ci: '',
+    nombre: '',
+    apellido: '',
+    idusuario: 0,
+    estado: 1
+  });
+
+  const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia } = useNotificaciones();
 
   const cargarFirmas = async () => {
     cargando.value = true;
@@ -38,47 +36,76 @@ export function useFirmas() {
     }
   };
 
-  const prepararNuevaFirma = () => {
+  const cargarUsuarios = async () => {
+    cargando.value = true;
+  try {
+    listaUsuarios.value = await firmasService.listarUsuarios();
+  } catch (error) {
+    console.error(error);
+    notificarErrorAccion('cargar');
+  } finally {
+    cargando.value = false;
+  }
+};
+
+  const prepararNuevaFirma = (): void => {
     firmaActual.value = {
-			cargo: '',
-			ci: '',
-			nombre: '',
-			idusuario: 0,
-			estado: 1,
-			apellido: ''
-		};
+      cargo: '',
+      ci: '',
+      nombre: '',
+      apellido: '',
+      idusuario: 0,
+      estado: 1
+    };
+
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
   };
 
-  const prepararEdicionFirma = async (id: number) => {
-    try {
-      const respuesta = await firmasService.editarfirma(id);
-      if (respuesta.estado === 'exito' && respuesta.datos) {
-        firmaActual.value = { ...respuesta.datos };
-        esModoEdicion.value = true;
-        esVisibleDialogo.value = true;
-      } else {
-        notificarAdvertencia(respuesta.mensaje);
-      }
-    } catch (error) {
-      console.error(error);
-      notificarErrorAccion('cargar');
-    }
+  const prepararEdicionFirma = (idfirma: number): void => {
+  const firma = listaFirmas.value.find(
+    item => item.idfirma === idfirma
+  );
+
+  if (!firma) {
+    return;
+  }
+
+  const usuario = firma.idusuario;
+
+  firmaActual.value = {
+    ...firma,
+    idusuario: usuario
   };
 
-  const guardarFirma = async (datos: Firma) => {
+  esModoEdicion.value = true;
+  esVisibleDialogo.value = true;
+};
+
+  const ejecutarAccionFirma = async (datos: Firma): Promise<void> => {
     try {
-      const payload = {
-        ver: esModoEdicion.value ? 'editarFirma' : 'registrarFirma',
-        ...datos
-      };
+      const payload = esModoEdicion.value
+        ? {
+            ver: 'editarFirma',
+            idfirma: datos.idfirma,
+            nombre: datos.nombre,
+            ci: datos.ci,
+            cargo: datos.cargo
+          }
+        : {
+            ver: 'registrarFirma',
+            idusuario: datos.idusuario,
+            nombre: datos.nombre,
+            ci: datos.ci,
+            cargo: datos.cargo
+          };
+
       const datosFormulario = prepararDatosFormulario(payload);
-      const respuesta = await firmasService.guardarfirma(datosFormulario);
+      const respuesta = await firmasService.accionFirma(datosFormulario);
       if (respuesta.estado === 'exito') {
         notificarExitoAccion('guardar');
         esVisibleDialogo.value = false;
-        void cargarFirmas();
+        await cargarFirmas();
       } else {
         notificarAdvertencia(respuesta.mensaje);
       }
@@ -88,28 +115,38 @@ export function useFirmas() {
     }
   };
 
-  const confirmarEliminarFirma = (id: number) => {
-    confirmarEliminacionPredefinida(async () => {
-      try {
-        const respuesta = await firmasService.eliminarfirma(id);
-        if (respuesta.estado === 'exito') {
-          notificarExitoAccion('eliminar');
-          void cargarFirmas();
-        }
-      } catch (error) {
-        console.error(error);
-        notificarErrorAccion('eliminar');
+  const eliminarFirma = async (idfirma: number): Promise<void> => {
+    try {
+      const payload = {
+        ver: 'eliminarFirma',
+        idfirma: idfirma
+      };
+      const datosFormulario = prepararDatosFormulario(payload);
+      const respuesta = await firmasService.accionFirma(datosFormulario);
+      if (respuesta.estado === 'exito') {
+        notificarExitoAccion('eliminar');
+        await cargarFirmas();
+      } else {
+        notificarAdvertencia(respuesta.mensaje);
       }
-    });
+    } catch (error) {
+      console.error(error);
+      notificarErrorAccion('eliminar');
+    }
   };
 
-	const cambiarEstadoRegistro = async (firma: Firma) => {
-    if (!firma.idfirma) return;
+  const cambiarEstadoRegistro = async (firma: Firma): Promise<void> => {
+    if (firma.idfirma === undefined) {
+      return;
+    }
     const nuevoEstado = firma.estado === 1 ? 2 : 1;
     try {
-      await firmasService.cambiarEstadoFirma(firma.idfirma, nuevoEstado);
+      await firmasService.cambiarEstadoFirma(
+        firma.idfirma,
+        nuevoEstado
+      );
       notificarExitoAccion('guardar');
-      void cargarFirmas();
+      await cargarFirmas();
     } catch (error) {
       console.error(error);
       notificarErrorAccion('guardar');
@@ -117,10 +154,11 @@ export function useFirmas() {
   };
 
   return {
-    listaFirmas, firmaActual,
-		cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo, 
-    cargarFirmas, guardarFirma,
-		prepararNuevaFirma, prepararEdicionFirma, confirmarEliminarFirma,
-		cambiarEstadoRegistro
+    listaFirmas, firmaActual, listaUsuarios,
+    cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+    cargarFirmas, prepararNuevaFirma,
+    prepararEdicionFirma, ejecutarAccionFirma, eliminarFirma,
+    cambiarEstadoRegistro,
+    cargarUsuarios
   };
 }

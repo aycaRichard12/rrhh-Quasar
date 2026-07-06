@@ -16,7 +16,7 @@ export const obtenerColumnasTiposDeContratos = (t: (key: string) => string): QTa
     style: 'width: 200px; white-space: normal'
   },
   {name: 'observacion',
-    label: t('tiposdecontratos.observation'),
+    label: t('tables.observation'),
     align: 'left',
     field: 'observacion',
     style: 'white-space: normal; min-width: 228px;'
@@ -48,7 +48,7 @@ export const obtenerColumnasTiposDeContratosEstandar = (t: (key: string) => stri
     style: 'width: 100px; white-space: normal'
   },
   {name: 'observacion',
-    label: t('tiposdecontratos.observation'),
+    label: t('tables.observation'),
     align: 'left',
     field: 'observacion',
     style: 'white-space: normal; min-width: 228px;'

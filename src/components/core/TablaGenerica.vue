@@ -21,7 +21,6 @@
         >
           <div class="text-center items-center no-wrap">
             <span>{{ col.label }}</span>
-            
             <slot :name="`header-filtro-${col.name}`" :columna="col"></slot>
           </div>
         </q-th>
@@ -30,19 +29,12 @@
 
     <template #loading>
       <div  style="height: 250px;">
-        <q-inner-loading showing color="primary" style="z-index: 1000;">
-          <div class="column items-center">
-            <img :src="faviconSrc" alt="Buscando..." class="magnifier-searching" style="height: 70px; width: 70px"/>
-            <span class="text-h5 text-weight-medium q-mt-md">{{ $t('common.messages.loading') + '...' }}</span>
-          </div>
-        </q-inner-loading>
+        <q-inner-loading showing color="primary" style="z-index: 1000;"><div class="column items-center"><img :src="faviconSrc" alt="Buscando..." class="magnifier-searching" style="height: 70px; width: 70px"/><span class="text-h5 text-weight-medium q-mt-md">{{ $t('common.messages.loading') + '...' }}</span></div></q-inner-loading>
       </div>
     </template>
-
     <template #no-data>
       <div v-if="!estaCargando" class="full-width column flex-center q-py-xl" style="height: 250px;">
-        <q-icon name="folder_off" size="64px" color="grey-5" class="q-mb-sm" />
-        <div class="text-h6 text-grey-7 text-center"> {{ modeloBusqueda ? 'No se encontraron coincidencias en la búsqueda' : 'No hay registros disponibles' }}</div>
+        <q-icon name="folder_off" size="64px" color="grey-5" class="q-mb-sm" /><div class="text-h6 text-grey-7 text-center"> {{ modeloBusqueda ? 'No se encontraron coincidencias en la búsqueda' : 'No hay registros disponibles' }}</div>
       </div>
     </template>
 
@@ -68,9 +60,7 @@
 
     <template #body-cell-numero="propsCell">
       <slot name="body-cell-numero" v-bind="propsCell">
-        <q-td :props="propsCell">
-          {{ propsCell.rowIndex + 1 }}
-        </q-td>
+        <q-td :props="propsCell">{{ propsCell.rowIndex + 1 }}</q-td>
       </slot>
     </template>
 
@@ -94,8 +84,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useQuasar } from 'quasar';
-import type { QTableColumn } from 'quasar';
+
 import TextoExpandible from 'src/components/core/TextoExpandible.vue';
+import type { QTableColumn } from 'quasar';
 
 const $q = useQuasar();
 // 1. Tipados Estrictos (Interfaces)

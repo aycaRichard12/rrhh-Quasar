@@ -20,7 +20,7 @@
               option-value="id"
               v-model="datosLocales.sucursal.idsucursal"
               :options="sucursales"
-              :option-label="(item) => item ? `${item.sucursal} - ${item.region}` : ''"
+              :option-label="formatearSucursal"
               :label="$t('areas.branch') + ' *'"
               :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
             />
@@ -47,6 +47,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import type { Area, Sucursal } from '../types/areas.types'
+import { formatearSucursal } from '../utils/areas.columns';
 
 const props = defineProps<{
   area : Area
@@ -58,25 +59,10 @@ const emits = defineEmits<{
   (e: 'guardar', datos: Area): void
 }>();
 
-const deconstruirArea = (area: Area): Area => {
-  // Buscamos el ID en la sucursal, y si no está, lo buscamos en la raíz del área
-  const idSucursalSeguro = area.sucursal?.idsucursal || 0;
-
-  return {
-    ...area,
-    sucursal: { 
-      idsucursal: Number(idSucursalSeguro), // Forzamos Number para que haga match con el QSelect
-      nombre: area.sucursal?.nombre || '', 
-      region: area.sucursal?.region || '', 
-      idregion: Number(area.sucursal?.idregion || 0) 
-    }
-  };
-};
-
-const datosLocales = ref<Area>(deconstruirArea(props.area))
+const datosLocales = ref<Area>(props.area)
 
 watch(() => props.area, (nuevosDatos) => {
-  datosLocales.value = deconstruirArea(nuevosDatos);
+  datosLocales.value = (nuevosDatos);
 }, { deep: true });
 
 const emitirGuardar = () => {

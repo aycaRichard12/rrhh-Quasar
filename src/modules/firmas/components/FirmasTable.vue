@@ -30,6 +30,12 @@
         </q-btn>
       </template>
 
+      <template #body-cell-idusuario="propsCell">
+        <q-td :props="propsCell">
+          {{ obtenerCadenaUsuario(buscarUsuario(propsCell.row.idusuario)) }}
+        </q-td>
+      </template>
+
       <template #body-cell-estado="propsCell">
         <q-td :props="propsCell">
           <q-btn round dense
@@ -53,15 +59,21 @@ import TablaGenerica from 'src/components/core/TablaGenerica.vue';
 import TablaFiltroExcel from 'src/components/core/TablaFiltroExcel.vue';
 import type { FilaBase } from 'src/components/core/TablaGenerica.vue'
 
-import type { Firma } from '../types/firmas.types';
-import { obtenerColumnasFirmas } from '../utils/firmas.columns';
+import type { Firma, Usuario } from '../types/firmas.types';
+import { obtenerColumnasFirmas, obtenerCadenaUsuario } from '../utils/firmas.columns';
 
 const { t } = useI18n();
 const listaColumnas = computed(() => obtenerColumnasFirmas(t));
-const filasTipadas = computed(() => datosFiltrados.value as unknown as FilaBase[]);
+const filasTipadas = computed(() =>
+  datosFiltrados.value.map(item => ({
+    ...item,
+    id: item.idfirma
+  })) as FilaBase[]
+);
 
 const props = defineProps<{
   listaFirmas: Firma[];
+  listaUsuarios: Usuario[];
   cargando: boolean;
   filtro: string;
 }>();
@@ -72,6 +84,22 @@ const emits = defineEmits<{
 	(e: 'cambiarEstadoRegistro', firma: Firma): void;
   (e: 'update:filtro', val: string): void;
 }>();
+
+// const buscarUsuario = (id: string): Usuario | undefined =>
+//   props.listaUsuarios.find((u: Usuario) => u.idusuario === id);
+
+// const buscarUsuario = (idusuario: number): Usuario | undefined => {
+//   return props.listaUsuarios.find(
+//     usuario => {
+//       return(usuario.id) === idusuario}
+//   );
+// };
+
+const buscarUsuario = (idusuario: number): Usuario | undefined => {
+  return props.listaUsuarios.find(
+    usuario => usuario.id === idusuario
+  );
+};
 
 const configuracionFiltros: ConfiguracionColumnaExcel[] = [
   { 

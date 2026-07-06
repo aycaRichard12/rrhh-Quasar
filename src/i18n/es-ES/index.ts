@@ -1,4 +1,3 @@
-import { title } from 'process';
 import navigation from './navigation';
 
 export default {
@@ -92,6 +91,7 @@ export default {
       days: 'Días',
       weeks: 'Semanas',
       months: 'Meses',
+      year: 'Año',
       years: 'Años',
     }
   },
@@ -118,12 +118,14 @@ export default {
     amount2: 'Monto',
     date: 'Fecha',
     description: 'Descripción',
-    observation: 'Observación',
     destination: 'Destino',
+    observation: 'Observación',
     options: 'Opciones',
     order: 'Orden',
+    percentage: 'Porcentaje',
     status: 'Estado',
     type: 'Tipo',
+    
   },
   person:{
     photo: 'Foto',
@@ -186,7 +188,6 @@ export default {
     new: 'Nuevo Tipo de Contrato',
     edit: 'Editar Tipo de Contrato',
     nature:'Naturaleza',
-    observation:'Obervación'
   },
   funcionesyobligaciones:{
     title:'Funciones y Obligaciones',
@@ -204,20 +205,19 @@ export default {
     role: 'Cargo Administrativo',
   },
   //---------BENEFICIOS SOCIALES-----------------
+  entesreguladores:{
+    title: 'Entes Reguladores',
+    subtitle: 'Gestión de aportes y regulaciones.',
+    name: 'Ente Regulador',
+    new: 'Nuevo Ente Regulador',
+    edit: 'Editar Ente Regulador'
+  },
   beneficios:{
     title: 'Beneficios',
     subtitle: 'Gestión de beneficios e indemnizaciones del personal.',
     name: 'Beneficio',
     new: 'Nuevo Beneficio',
     edit: 'Editar Beneficio',
-  },
-  entesreguladores:{
-    title: 'Entes Reguladores',
-    subtitle: 'Gestión de aportes y regulaciones.',
-    name: 'Ente Regulador',
-    new: 'Nuevo Ente Regulador',
-    edit: 'Editar Ente Regulador',
-    percentage: 'Porcentaje',
   },
   //--------VALORACION----------------
   metodosdeevaluacion:{
@@ -230,10 +230,9 @@ export default {
     range:{
       title: 'Rangos de ',
       subtitle:'Gestiona los niveles de calificación',
-      name:'Rango de Evaluacion',
+      name:'Criterio/Rango',
       new: 'Nuevo Rango de Evaluación',
       edit: 'Editar Rango de Evaluación',
-      criteria: 'Criterio/Rango',
       score: 'Puntaje',
       manage: 'Gestionar Rangos',
     }
@@ -248,7 +247,7 @@ export default {
   tiposdesanciones: {
     title: 'Tipos de Sanciones',
     subtitle: 'Gestión de tipos de sanciones y su gravedad.',
-    name: 'Tipo de Sanción',
+    name: 'Sanción',
     new: 'Nuevo Tipo de Sanción',
     edit: 'Editar Tipo de Sanción',
   },
@@ -260,13 +259,12 @@ export default {
     new: 'Nuevo Nivel',
     edit: 'Editar Nivel',
   },
-  
   motivosdebaja: {
     title: 'Motivos de Baja',
     subtitle: 'Gestión de motivos de baja de personal.',
     name: 'Motivo',
     new: 'Nuevo Motivo de Baja',
-    edit: 'Editar Motivo',
+    edit: 'Editar Motivo de Baja',
     type: 'Tipo'
   },
   bajas: {
@@ -278,13 +276,25 @@ export default {
   },
   //--------REMUNERACION----------------
   metodosdepago: {
-    title
+    title: 'Metodos De Pago',
+    subtitle: 'Modalidades de Remuneración',
+    name: 'Pago',
+    new: 'Nuevo Metodo De Pago',
+    edit: 'Editar Metodo De Pago',
   },
   bonosempresa: {
-    title
+    title: 'Bonos de Empresa',
+    subtitle: 'Bonos Otorgados por la Empresa',
+    name: 'Bono',
+    new: 'Nuevo Bono De Empresa',
+    edit: 'Editar Bono De Empresa',
   },
   salariominimo: {
-    title
+    title: 'Salario Minimo',
+    subtitle: 'Salario Minimo segun estatutos',
+    name: 'Salario',
+    new: 'Nuevo Salario Minimo',
+    edit: 'Editar Salario Minimo',
   },
 //GESTION DE RECLUTAMIENTO_________________________________________________________________________________
   //------------ADMISION---------------
@@ -296,11 +306,12 @@ export default {
     name: 'Trabajador',
     new: 'Nuevo Trabajador',
     edit: 'Editar Trabajador',
-    historyTitle: 'Historial de ',
-    historySubtitle: 'Registro de eventos y cambios del trabajador.',
-    selectCivilStatus: 'Seleccione Estado Civil',
-    selectStatus: 'Seleccione Estado',
-    uploadPhoto: 'Subir Foto',
+    history: {
+      title: 'Historial de ',
+      subtitle: 'Registro de eventos y cambios del trabajador.',
+      status: 'Seleccione Estado Civil',
+      uploadPhoto: 'Subir Foto',
+    }
   }
   //------------NOVEDADES---------------
   //------------PROCESOS LABORALES---------------

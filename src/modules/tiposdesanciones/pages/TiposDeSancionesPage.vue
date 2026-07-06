@@ -12,7 +12,7 @@
     <q-card-section class="row no-wrap justify-between items-center q-gutter-x-sm">
       <q-btn
         class="global-btn-page"
-        icon="add"
+        icon="sym_o_add_notes"
         size="15px"
         :label="$q.screen.lt.sm ? '' : $t('tiposdesanciones.new')"
         :round="$q.screen.lt.sm"

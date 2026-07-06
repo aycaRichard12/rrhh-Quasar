@@ -1,9 +1,6 @@
 <template>
   <div class="texto-expandible-contenedor">
-    <div
-      ref="cajaTexto"
-      :class="{ 'texto-limitado': !expandido }"
-    >
+    <div ref="cajaTexto" :class="{ 'texto-limitado': !expandido }">
       {{ props.texto }}
     </div>
 
@@ -28,32 +25,22 @@ const cajaTexto = ref<HTMLElement | null>(null);
 const expandido = ref(false);
 const estaDesbordado = ref(false);
 
-// Variable para guardar el observador nativo del navegador
 let observador: ResizeObserver | null = null;
 
-// La magia de la medición del DOM
 const verificarDesborde = (): void => {
   if (!cajaTexto.value) return;
-
-  // Si ya está expandido, no necesitamos calcular porque no hay límite
   if (expandido.value) return;
-
-  // scrollHeight = Altura total del texto (incluso lo oculto)
-  // clientHeight = Altura visible de la caja (limitada a 3 líneas)
   estaDesbordado.value = cajaTexto.value.scrollHeight > cajaTexto.value.clientHeight;
 };
 
 onMounted(() => {
-  // El ResizeObserver vigila si la caja cambia de tamaño (ej. si el usuario voltea el celular o maximiza la ventana)
   observador = new ResizeObserver(verificarDesborde);
-  
   if (cajaTexto.value) {
     observador.observe(cajaTexto.value);
   }
 });
 
 onBeforeUnmount(() => {
-  // Limpieza vital para evitar fugas de memoria
   if (observador) {
     observador.disconnect();
   }

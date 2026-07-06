@@ -57,7 +57,7 @@ export const obtenerColumnasRangosDeEvaluacion = (t: (key: string) => string): Q
   },
   {
     name: 'nombre',
-    label: t('metodosdeevaluacion.range.criteria'),
+    label: t('metodosdeevaluacion.range.name'),
     align: 'left',
     field: 'nombre',
     style: 'white-space: normal'

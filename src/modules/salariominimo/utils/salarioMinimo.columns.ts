@@ -11,7 +11,7 @@ export const obtenerColumnasSalariosMinimos = (t: (key: string) => string): QTab
   },
   { 
     name: 'anio',
-    label: t('entesreguladores.percentage'),
+    label: t('common.timeUnits.year'),
     align: 'center',
     field: 'anio',
     style: 'width: 100px',
@@ -25,7 +25,7 @@ export const obtenerColumnasSalariosMinimos = (t: (key: string) => string): QTab
   },
   { 
     name: 'porcentaje',
-    label: t('entesreguladores.percentage'),
+    label: t('tables.percentage'),
     align: 'center',
     field: 'porcentaje',
     style: 'width: 100px',
@@ -63,7 +63,7 @@ export const obtenerColumnasSalariosMinimosEstandar = (t: (key: string) => strin
   },
 	{ 
     name: 'anio',
-    label: t('entesreguladores.percentage'),
+    label: t('common.timeUnits.year'),
     align: 'center',
     field: 'anio',
     style: 'width: 100px',

@@ -5,18 +5,16 @@ import { useNotificaciones } from 'src/composables/useNotificaciones';
 
 import { cargosService } from '../services/cargos.service';
 import type { Cargo } from '../types/cargos.types';
-import type { Area } from 'src/modules/areas/types/areas.types';
 
 export function useCargos() {
   const idEmpresa = String(idempresa_md5());
   const listaCargos = ref<Cargo[]>([]);
-  const listaAreas = ref<Area[]>([]);
 
   const cargando = ref(false);
   const filtroBusqueda = ref<string>('');
   const esModoEdicion = ref<boolean>(false);
   const esVisibleDialogo = ref<boolean>(false);
-  
+
   const cargoActual = ref<Cargo>({
     cargo: '',
     salario: '',
@@ -30,7 +28,6 @@ export function useCargos() {
     cargando.value = true;
     try {
       listaCargos.value = await cargosService.listarCargos();
-      listaAreas.value = await cargosService.listarAreas();
     } catch (error) {
       console.error(error);
       notificarErrorAccion('cargar');
@@ -39,16 +36,17 @@ export function useCargos() {
     }
   };
 
-  const prepararNuevoCargo = () => {
-    cargoActual.value = {
-      cargo: '',
-      salario: '',
-      descripcion: '',
-      idarea: ''
-    };
-    esModoEdicion.value = false;
-    esVisibleDialogo.value = true;
+  const nuevoCargo = (idArea: number) => {
+  cargoActual.value = {
+    cargo: '',
+    salario: '',
+    descripcion: '',
+    idarea: idArea
   };
+
+  esModoEdicion.value = false;
+  esVisibleDialogo.value = true;
+};
 
   const prepararEdicionCargo = async (id: number) => {
     try {
@@ -110,9 +108,9 @@ export function useCargos() {
   };
 
   return {
-    listaCargos, listaAreas, cargoActual,
+    listaCargos, cargoActual,
     cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
     cargarCargos, guardarCargo,
-    prepararNuevoCargo, prepararEdicionCargo, confirmarEliminarCargo
+    nuevoCargo, prepararEdicionCargo, confirmarEliminarCargo
   };
 }

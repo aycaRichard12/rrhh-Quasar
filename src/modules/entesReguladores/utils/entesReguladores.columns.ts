@@ -25,7 +25,7 @@ export const obtenerColumnasEntesReguladores = (t: (key: string) => string): QTa
   },
   { 
     name: 'porcentaje',
-    label: t('entesreguladores.percentage'),
+    label: t('tables.percentage'),
     align: 'center',
     field: 'porcentaje',
     style: 'width: 100px',
@@ -86,7 +86,7 @@ export const obtenerColumnasEntesReguladoresEstandar = (t: (key: string) => stri
   },
   {
     name: 'porcentaje',
-    label: t('entesreguladores.percentage'),
+    label: t('tables.percentage'),
     align: 'center',
     field: 'porcentaje',
     style: 'width: 100px',

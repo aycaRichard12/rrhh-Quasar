@@ -1,5 +1,12 @@
 import type { QTableColumn } from 'quasar';
-import type { Firma } from '../types/firmas.types';
+import type { Firma, Usuario } from '../types/firmas.types';
+
+export const obtenerCadenaUsuario = (usuario: Usuario | null | undefined): string => {
+  if (!usuario) {
+    return '';
+  }
+  return `${usuario.nombre}  ${usuario.apellido} - ${usuario.usuario}`;
+};
 
 export const obtenerColumnasFirmas = (t: (key: string) => string): QTableColumn<Firma>[] => [
   {
@@ -17,14 +24,6 @@ export const obtenerColumnasFirmas = (t: (key: string) => string): QTableColumn<
     style: 'width: 150px; white-space: normal'
   },
   {
-    name: 'apellido',
-    label: t('person.lastname'),
-    align: 'left',
-    field: 'apellido',
-    style: 'width: 150px; white-space: normal'
-
-  },
-  {
     name: 'ci',
     label: 'C.I',
     align: 'center',
@@ -37,6 +36,13 @@ export const obtenerColumnasFirmas = (t: (key: string) => string): QTableColumn<
     align: 'center',
     field: 'cargo',
     style: 'white-space: normal; min-width: 228px;'
+  },
+  {
+    name: 'idusuario',
+    label: t('Usuario de registro'),
+    align: 'center',
+    field: 'idusuario',
+    style: 'white-space: normal; min-width: 228px;',
   },
   {
     name: 'estado',

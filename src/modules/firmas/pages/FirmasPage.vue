@@ -28,17 +28,19 @@
 				v-model:filtro="filtroBusqueda"
         :cargando="cargando"
         :lista-firmas="listaFirmas"
+        :lista-usuarios="listaUsuarios"
 				@editar="prepararEdicionFirma"
-				@eliminar="confirmarEliminarFirma"
-				@cambiar-estado-registro="cambiarEstadoRegistro"
+				@eliminar="eliminarFirma"
+        @cambiar-estado-registro="cambiarEstadoRegistro"
 			/>
     </div>
 
     <q-dialog v-model="esVisibleDialogo">
       <FirmasForm
         :firma="firmaActual"
+        :lista-usuarios="listaUsuarios"
         :es-modo-edicion="esModoEdicion"
-        @guardar="guardarFirma"
+        @guardar="ejecutarAccionFirma"
       />
     </q-dialog>
   </q-page>
@@ -53,14 +55,15 @@ import FirmasForm from '../components/FirmasForm.vue';
 import FirmasTable from '../components/FirmasTable.vue';
 
 const {
-  listaFirmas, firmaActual,
+  listaFirmas, firmaActual, listaUsuarios,
 	cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
-  cargarFirmas, guardarFirma,
-	prepararNuevaFirma, prepararEdicionFirma, confirmarEliminarFirma,
-	cambiarEstadoRegistro
+  cargarFirmas, prepararNuevaFirma,
+	prepararEdicionFirma, ejecutarAccionFirma, eliminarFirma,
+	cambiarEstadoRegistro, cargarUsuarios
 } = useFirmas();
 
 onMounted(() => {
   void cargarFirmas();
+  void cargarUsuarios()
 });
 </script>
