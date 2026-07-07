@@ -72,8 +72,8 @@ const props = defineProps<{
   esModoEdicion: boolean;
 }>();
 
-const emits = defineEmits<{(
-  e: 'guardar', datos: Beneficio): void
+const emits = defineEmits<{
+  (e: 'guardar', datos: Beneficio): void
 }>();
 
 const datosLocales = ref<Beneficio>({...props.beneficio});

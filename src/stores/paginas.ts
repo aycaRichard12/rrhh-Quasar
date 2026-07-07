@@ -32,6 +32,7 @@ export const PAGINAS_ICONS: Readonly<IconConfig> = Object.freeze({
   prerrequisitosdecargo: 'fact_check',
   tiposdecontratos: 'description',
   funcionesyobligaciones: 'assignment',
+  firmas: 'sym_o_signature',
 //___________________________
   entesreguladores: 'gavel',
   beneficios: 'redeem',

@@ -9,6 +9,27 @@
       <q-card-section>
         <div class="row q-col-gutter-md">
           <div class="col-12">
+            <q-input autofocus dense lazy-rules outlined 
+              v-model="datosLocales.nombre"
+              :label="$t('person.name') + ' *'"
+              :rules="[val => !!val || $t('common.rules.required')]"
+            />
+          </div>
+          <div class="col-8">
+            <q-input autofocus dense lazy-rules outlined 
+              v-model="datosLocales.cargo"
+              :label="$t('firmas.role') + ' *'"
+              :rules="[val => !!val || $t('common.rules.required')]"
+            />
+          </div>
+					<div class="col-4">
+            <q-input autofocus dense lazy-rules outlined 
+              v-model="datosLocales.ci"
+              :label="$t('person.ci') + ' *'"
+              :rules="[val => !!val || $t('common.rules.required')]"
+            />
+          </div>
+          <div class="col-12">
             <q-select dense emit-value map-options outlined
               v-model="datosLocales.idusuario"
               option-value="idusuario"
@@ -16,34 +37,6 @@
               :option-label="obtenerCadenaUsuario"
               :options="listaUsuarios"
               :label="$t('Usuario de Registro')"
-            />
-          </div>
-          <div class="col-12">
-            <q-input autofocus dense lazy-rules outlined 
-              v-model="datosLocales.nombre"
-              :label="$t('person.name') + ' *'"
-              :rules="[val => !!val || $t('common.rules.required')]"
-            />
-          </div>
-					<div class="col-12">
-            <q-input autofocus dense lazy-rules outlined 
-              v-model="datosLocales.apellido"
-              :label="$t('person.lastname') + ' *'"
-              :rules="[val => !!val || $t('common.rules.required')]"
-            />
-          </div>
-					<div class="col-12">
-            <q-input autofocus dense lazy-rules outlined 
-              v-model="datosLocales.ci"
-              :label="$t('person.ci') + ' *'"
-              :rules="[val => !!val || $t('common.rules.required')]"
-            />
-          </div>
-					<div class="col-12">
-            <q-input autofocus dense lazy-rules outlined 
-              v-model="datosLocales.cargo"
-              :label="$t('firmas.role') + ' *'"
-              :rules="[val => !!val || $t('common.rules.required')]"
             />
           </div>
         </div>
@@ -69,7 +62,7 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e: 'guardar', data: Firma): void;
+  (e: 'guardar', datos: Firma): void;
 }>();
 
 const datosLocales = ref<Firma>({ ...props.firma });

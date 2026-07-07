@@ -52,12 +52,23 @@ import { useActividadesDeEvaluacion } from '../composables/useActividadesDeEvalu
 import ActividadesDeEvaluacionForm from '../components/ActividadesDeEvaluacionForm.vue';
 import ActividadesDeEvaluacionTable from '../components/ActividadesDeEvaluacionTable.vue';
 
+import { useMetodosDeEvaluacion } from 'src/modules/metodosdeevaluacion/composables/useMetodosDeEvaluacion';
+
+const prepararNuevaActividad = () => {
+  nuevaActividad(Number(listaMetodos.value[0]?.id ?? 0))
+}
+
 const {
-  listaActividades, listaMetodos, actividadActual,
+  listaActividades, actividadActual,
   cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
-  cargarActividades, cargarMetodos, guardarActividad,
-  prepararNuevaActividad, prepararEdicionActividad, confirmarEliminarActividad
+  cargarActividades, guardarActividad,
+  nuevaActividad, prepararEdicionActividad, confirmarEliminarActividad
 } = useActividadesDeEvaluacion();
+
+const {
+  listaMetodos,
+  cargarMetodos
+} = useMetodosDeEvaluacion();
 
 onMounted(() => {
   void cargarActividades();

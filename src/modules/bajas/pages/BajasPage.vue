@@ -55,12 +55,16 @@ import { useMotivosDeBaja } from 'src/modules/motivosdebaja/composables/useMotiv
 import BajasForm from '../components/BajasForm.vue';
 import BajasTable from '../components/BajasTable.vue';
 
+const prepararNuevaBaja = () => {
+  nuevaBaja(Number(listaMotivos.value[0]?.id ?? 0));
+};
+
 const {
   listaBajas, bajaActual,
   cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
 	inputDias, esMotivoDefinitivo,
-  cargarBajas, guardarBaja,
-  prepararNuevaBaja, prepararEdicionBaja, confirmarEliminarBaja,
+  cargarBajas, guardarBaja, nuevaBaja,
+  prepararEdicionBaja, confirmarEliminarBaja,
 } = useBajas();
 
 const {

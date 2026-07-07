@@ -22,6 +22,12 @@ export function useNiveles() {
 
   const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida } = useNotificaciones();
 
+  const calcularSiguienteOrden = (): number => {
+    if (listaNiveles.value.length === 0) return 1;
+    const ordenes = listaNiveles.value.map(b => Number(b.pos) || 0);
+    return Math.max(...ordenes) + 1;
+  };
+
   const cargarNiveles = async () => {
     cargando.value = true;
     try {
@@ -37,7 +43,7 @@ export function useNiveles() {
   const prepararNuevoNivel = () => {
     nivelActual.value = {
       nombre: '',
-      pos: (listaNiveles.value.length + 1)
+      pos: calcularSiguienteOrden()
     };
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;

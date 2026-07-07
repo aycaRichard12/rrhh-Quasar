@@ -5,12 +5,11 @@ export interface Firma {
   nombre: string;
   idusuario: number;
   estado: number;
-  apellido: string;
 }
 
 export interface Usuario {
+  id?: number;
   idusuario?: string,
-  id?: number; //id numerico del usuario para poder comprarlo con idusuario de Firma
   usuario: string,
   nombre: string,
   apellido: string,

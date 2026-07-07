@@ -25,12 +25,17 @@ export function useBonosEmpresa() {
     orden: 0,
     destino: 1,
     descripcion: '',
-
     estado: 1,
     fecha: '',
   });
 
   const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida, confirmarImportacionPredefinida } = useNotificaciones();
+
+  const calcularSiguienteOrden = (): number => {
+    if (listaBonosEmpresa.value.length === 0) return 1;
+    const ordenes = listaBonosEmpresa.value.map(b => Number(b.orden) || 0);
+    return Math.max(...ordenes) + 1;
+  };
 
   const cargarBonosEmpresa = async () => {
     cargando.value = true;
@@ -49,10 +54,9 @@ export function useBonosEmpresa() {
       nombre: '',
       tipo: 1,
       cantidad: 0,
-      orden: 0,
+      orden: calcularSiguienteOrden(),
       destino: 1,
       descripcion: '',
-
       estado: 1,
       fecha: ''
     };

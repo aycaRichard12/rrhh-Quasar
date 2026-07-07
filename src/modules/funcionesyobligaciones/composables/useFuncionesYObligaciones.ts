@@ -21,7 +21,7 @@ export function useFuncionesYObligaciones() {
   const funcionYObligacionActual = ref<FuncionYObligacion>({
     nombre: '',
     descripcion: '',
-    idcargo: '',
+    idcargo: 0,
     cargo: '',
   });
 
@@ -51,11 +51,11 @@ export function useFuncionesYObligaciones() {
     }
   };
 
-  const prepararNuevaFuncionYObligacion = () => {
+  const nuevaFuncionYObligacion = (idCargo: number) => {
     funcionYObligacionActual.value = {
       nombre: '',
       descripcion: '',
-      idcargo: '',
+      idcargo: idCargo,
       cargo: ''
     };
     esModoEdicion.value = false;
@@ -123,6 +123,6 @@ export function useFuncionesYObligaciones() {
     listaCargos, listaFuncionesYObligaciones, funcionYObligacionActual,
     cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
     cargarFuncionesYObligaciones, cargarCargos, guardarFuncionYObligacion,
-    prepararNuevaFuncionYObligacion, prepararEdicionFuncionYObligacion, confirmarEliminarFuncionYObligacion
+    nuevaFuncionYObligacion, prepararEdicionFuncionYObligacion, confirmarEliminarFuncionYObligacion
   };
 }

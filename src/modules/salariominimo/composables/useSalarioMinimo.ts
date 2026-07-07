@@ -130,7 +130,7 @@ export function useSalarioMinimo() {
   const procesarImportacion = async (tipoAccion: 'reemplazar' | 'agregar') => {
     try {
       const payload = {
-        ver : 'remplazarocopiardatosEntesReguladores',
+        ver : 'remplazarocopiardatossalariominimo',
         idempresa : idEmpresa,
         datos : JSON.stringify(listaSalariosMinimosEstandar.value),
         tipo : tipoAccion === 'reemplazar' ? '1' : '2'

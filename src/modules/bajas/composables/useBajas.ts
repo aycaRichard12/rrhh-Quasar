@@ -53,18 +53,18 @@ export function useBajas() {
 	const inicializarFechasPorDefecto = () => {
     const ahora = new Date();
     // Formato estándar que requiere Quasar e inputs de texto/fecha base (YYYY-MM-DD HH:mm)
-    bajaActual.value.fecha = date.formatDate(ahora, 'YYYY-MM-DD HH:mm');
+    bajaActual.value.fecha = date.formatDate(ahora, 'YYYY-MM-DD');
     bajaActual.value.fechai = date.formatDate(ahora, 'YYYY-MM-DD');
     bajaActual.value.fechaf = '';
     inputDias.value = '';
   };
 
-	const prepararNuevaBaja = () => {
+	const nuevaBaja = (idMotivo: number) => {
 		bajaActual.value = {
 			tipo: 0,
 			fecha: '',
 			observacion: '',
-			idmotivo: 0,
+			idmotivo: idMotivo,
 			idtrabajador: 0,
 			nombre: '',
 			apellido: '',
@@ -87,17 +87,7 @@ export function useBajas() {
 			const respuesta = await bajasService.editarBaja(id);
 			if (respuesta.estado === 'exito' && respuesta.datos) {
 				bajaActual.value = { ...respuesta.datos};
-				// Al editar, recalculamos los días si las dos fechas existen
-        if (bajaActual.value.fechai && bajaActual.value.fechaf) {
-          const diferencia = date.getDateDiff(bajaActual.value.fechaf, bajaActual.value.fechai, 'days');
-          inputDias.value = diferencia >= 0 ? diferencia : '';
-        } else {
-          inputDias.value = '';
-        }
-
-        // Evaluar el tipo de motivo para bloquear/desbloquear inputs
-        esMotivoDefinitivo.value = Number(bajaActual.value.tipo) === 0; // Ajusta si 0=Definitivo o 1=Definitivo
-				
+        esMotivoDefinitivo.value = Number(bajaActual.value.tipo) === 0; // Ajusta si 0=Definitivo o 1=Temporal
 				esModoEdicion.value = true;
 				esVisibleDialogo.value = true;
 			} else {
@@ -174,17 +164,9 @@ export function useBajas() {
 // ver editarbaja   (idusuario, idtrabajador, motivo, dias, fecha, fechai, fechaf, observacion, id, idcontrato, tipo)
 			const payload = {
 				ver: esModoEdicion.value ? 'editarbaja':'registrobaja',
-				idusuario: idUsuario,
-				idtrabajador: datos.idtrabajador,
-				motivo: datos.idmotivo,
-				dias: inputDias.value === '' ? 1 : inputDias.value,
-				fecha: datos.fecha,
-				fechai: datos.fechai,
-				fechaf: datos.fechaf,
-				observacion: datos.observacion,
-				id: datos.id,
-				idcontrato: datos.idcontrato,
-				tipo: datos.tipo,
+				...datos,
+        idusuario: idUsuario,
+				dias: inputDias.value,
 			};
 			const datosFormulario = prepararDatosFormulario(payload);
 			const respuesta = await bajasService.guardarBaja(datosFormulario);
@@ -222,7 +204,7 @@ export function useBajas() {
 		listaBajas, bajaActual,
 		cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
 		inputDias, esMotivoDefinitivo,
-		cargarBajas, guardarBaja,
-		prepararNuevaBaja, prepararEdicionBaja, confirmarEliminarBaja,
+		cargarBajas, guardarBaja, nuevaBaja,
+    prepararEdicionBaja, confirmarEliminarBaja,
 	}
 }

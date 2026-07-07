@@ -50,11 +50,15 @@ import { useFuncionesYObligaciones } from '../composables/useFuncionesYObligacio
 import FuncionesYObligacionesTable from '../components/FuncionesYObligacionesTable.vue';
 import FuncionesYObligacionesForm from '../components/FuncionesYObligacionesForm.vue';
 
+const prepararNuevaFuncionYObligacion = () => {
+  nuevaFuncionYObligacion(Number(listaCargos.value[0]?.id ?? 0))
+}
+
 const {
   listaFuncionesYObligaciones, listaCargos, funcionYObligacionActual,
   cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
   cargarFuncionesYObligaciones, cargarCargos, guardarFuncionYObligacion,
-  prepararEdicionFuncionYObligacion, prepararNuevaFuncionYObligacion, confirmarEliminarFuncionYObligacion
+  prepararEdicionFuncionYObligacion, nuevaFuncionYObligacion, confirmarEliminarFuncionYObligacion
 } = useFuncionesYObligaciones();
 
 onMounted(() => {

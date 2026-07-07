@@ -40,18 +40,19 @@ export function useAreas() {
   };
 
   const cargarSucursales = async () => {
+    cargando.value = true;
     try {
       listaSucursales.value = await areasService.listarSucursales();
     } catch (error) {
       console.error(error);
       notificarErrorAccion('cargar');
+    } finally {
+      cargando.value = false;
     }
   };
 
   const prepararNuevaArea = () => {
-    const idPrimeraSucursal = listaSucursales.value.length > 0
-    ? Number(listaSucursales.value[0]?.id)
-    : 0;
+    const idPrimeraSucursal = listaSucursales.value.length > 0 ? Number(listaSucursales.value[0]?.id) : 0;
     areaActual.value = {
       nombre: '',
       descripcion: '',
@@ -73,10 +74,12 @@ export function useAreas() {
         areaActual.value = { ...respuesta.datos };
         esModoEdicion.value = true;
         esVisibleDialogo.value = true;
+      } else {
+        notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
-        console.error(error);
-        notificarErrorAccion('cargar');
+      console.error(error);
+      notificarErrorAccion('cargar');
     }
   };
 

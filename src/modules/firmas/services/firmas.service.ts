@@ -6,6 +6,7 @@ import type { Firma, Usuario } from '../types/firmas.types';
 const sanearFirma = (item: Firma): Firma => ({
   ...item,
   idfirma: Number(item.idfirma),
+  idusuario: Number(item.idusuario),
   estado: Number(item.estado)
 });
 
@@ -24,10 +25,16 @@ export const firmasService = {
     return data;
   },
 
-  async cambiarEstadoFirma(idfirma: number, estado: number): Promise<RespuestaApi> {
-     const { data } = await api.get(`editarEstadofirma/${idfirma}/${estado}`);
-     return data;
-   },
+  async editarFirma(idfirma: number): Promise<RespuestaApi<Firma>> {
+    const { data } = await api.get(`/verificarFirma/${idfirma}`);
+    if (data.estado === 'exito' && data.datos) {
+      return {
+        ...data,
+        datos: sanearFirma(data.datos)
+      };
+    }
+    return data;
+  },
 
   async listarUsuarios(): Promise<Usuario[]> {
     const { data } = await api.get(`/listar_usuarios/${idempresa_md5()}`);

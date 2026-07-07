@@ -45,7 +45,7 @@ export const obtenerColumnasTiposDeContratosEstandar = (t: (key: string) => stri
     label: t('tiposdecontratos.name'),
     align: 'left',
     field: 'nombre',
-    style: 'width: 100px; white-space: normal'
+    style: 'width: 200px; white-space: normal'
   },
   {name: 'observacion',
     label: t('tables.observation'),

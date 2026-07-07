@@ -6,9 +6,6 @@ import { useNotificaciones } from 'src/composables/useNotificaciones';
 import { tiposDeSancionesService } from '../services/tiposDeSanciones.service';
 import type { TipoDeSancion } from '../types/tiposDeSanciones.types';
 
-import { nivelesService } from 'src/modules/niveles/services/niveles.service';
-import type { NivelDeGravedad } from 'src/modules/niveles/types/niveles.types';
-
 export function useTiposDeSanciones() {
   const idEmpresa = String(idempresa_md5());
   const listaTiposDeSanciones = ref<TipoDeSancion[]>([]);
@@ -17,8 +14,6 @@ export function useTiposDeSanciones() {
   const filtroBusqueda = ref('');
   const esModoEdicion = ref(false);
   const esVisibleDialogo = ref(false);
-
-  const listaNiveles = ref<NivelDeGravedad[]>([]);
 
   const tipoDeSancionActual = ref<TipoDeSancion>({
     nombre: '',
@@ -41,20 +36,11 @@ export function useTiposDeSanciones() {
     }
   };
 
-  const cargarNiveles = async () => {
-    try {
-      listaNiveles.value = await nivelesService.listarNivelesDeGravedad();
-    } catch (error) {
-      console.error(error);
-      notificarErrorAccion('cargar');
-    }
-  };
-
-  const prepararNuevoTipoDeSancion = () => {
+  const nuevoTipoDeSancion = (idNivel: number) => {
     tipoDeSancionActual.value = {
       nombre: '',
       descripcion: '',
-      idnivel: 0,
+      idnivel: idNivel,
       nivel: ''
     };
     esModoEdicion.value = false;
@@ -122,9 +108,7 @@ export function useTiposDeSanciones() {
   return {
     listaTiposDeSanciones, tipoDeSancionActual,
     cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
-    listaNiveles,
     cargarTiposDeSanciones, guardarTipoDeSancion,
-    prepararNuevoTipoDeSancion, prepararEdicionTipoDeSancion, confirmarEliminarTipoDeSancion,
-    cargarNiveles 
+    nuevoTipoDeSancion, prepararEdicionTipoDeSancion, confirmarEliminarTipoDeSancion
   };
 }

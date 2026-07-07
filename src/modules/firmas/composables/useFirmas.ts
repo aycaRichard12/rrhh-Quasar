@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
+
 import { firmasService } from '../services/firmas.service';
 import type { Firma, Usuario } from '../types/firmas.types';
 
@@ -17,12 +18,11 @@ export function useFirmas() {
     cargo: '',
     ci: '',
     nombre: '',
-    apellido: '',
     idusuario: 0,
     estado: 1
   });
 
-  const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia } = useNotificaciones();
+  const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida } = useNotificaciones();
 
   const cargarFirmas = async () => {
     cargando.value = true;
@@ -53,7 +53,6 @@ export function useFirmas() {
       cargo: '',
       ci: '',
       nombre: '',
-      apellido: '',
       idusuario: 0,
       estado: 1
     };
@@ -62,44 +61,28 @@ export function useFirmas() {
     esVisibleDialogo.value = true;
   };
 
-  const prepararEdicionFirma = (idfirma: number): void => {
-  const firma = listaFirmas.value.find(
-    item => item.idfirma === idfirma
-  );
-
-  if (!firma) {
-    return;
-  }
-
-  const usuario = firma.idusuario;
-
-  firmaActual.value = {
-    ...firma,
-    idusuario: usuario
+  const prepararEdicionFirma = async (id: number) => {
+    try {
+      const respuesta = await firmasService.editarFirma(id);
+      if (respuesta.estado === 'exito' && respuesta.datos) {
+        firmaActual.value = { ...respuesta.datos };
+        esModoEdicion.value = true;
+        esVisibleDialogo.value = true;
+      } else {
+        notificarAdvertencia(respuesta.mensaje);
+      }
+    } catch (error) {
+      console.error(error);
+      notificarErrorAccion('cargar');
+    }
   };
 
-  esModoEdicion.value = true;
-  esVisibleDialogo.value = true;
-};
-
-  const ejecutarAccionFirma = async (datos: Firma): Promise<void> => {
+  const ejecutarAccionFirma = async (datosGuardar: Firma) => {
     try {
-      const payload = esModoEdicion.value
-        ? {
-            ver: 'editarFirma',
-            idfirma: datos.idfirma,
-            nombre: datos.nombre,
-            ci: datos.ci,
-            cargo: datos.cargo
-          }
-        : {
-            ver: 'registrarFirma',
-            idusuario: datos.idusuario,
-            nombre: datos.nombre,
-            ci: datos.ci,
-            cargo: datos.cargo
-          };
-
+      const payload = {
+        ver: esModoEdicion.value ? 'editarFirma': 'registrarFirma',
+        ...datosGuardar,
+      };
       const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await firmasService.accionFirma(datosFormulario);
       if (respuesta.estado === 'exito') {
@@ -115,38 +98,39 @@ export function useFirmas() {
     }
   };
 
-  const eliminarFirma = async (idfirma: number): Promise<void> => {
+  const eliminarFirma = (idfirma: number) => {
+    confirmarEliminacionPredefinida(async () => {
+      try {
+        const payload = {
+          ver: 'eliminarFirma',
+          idfirma: idfirma
+        };
+        const datosFormulario = prepararDatosFormulario(payload);
+        const respuesta = await firmasService.accionFirma(datosFormulario);
+        if (respuesta.estado === 'exito') {
+          notificarExitoAccion('eliminar');
+          void cargarFirmas();
+        } else {
+          notificarAdvertencia(respuesta.mensaje);
+        }
+      } catch (error) {
+        console.error(error);
+        notificarErrorAccion('eliminar');
+      }
+    });
+  };
+
+  const cambiarEstadoRegistro = async (idfirma: number) => {
     try {
       const payload = {
-        ver: 'eliminarFirma',
-        idfirma: idfirma
+        ver: 'cambiarEstadoFirma',
+        idfirma
       };
       const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await firmasService.accionFirma(datosFormulario);
-      if (respuesta.estado === 'exito') {
-        notificarExitoAccion('eliminar');
-        await cargarFirmas();
-      } else {
-        notificarAdvertencia(respuesta.mensaje);
-      }
-    } catch (error) {
-      console.error(error);
-      notificarErrorAccion('eliminar');
-    }
-  };
-
-  const cambiarEstadoRegistro = async (firma: Firma): Promise<void> => {
-    if (firma.idfirma === undefined) {
-      return;
-    }
-    const nuevoEstado = firma.estado === 1 ? 2 : 1;
-    try {
-      await firmasService.cambiarEstadoFirma(
-        firma.idfirma,
-        nuevoEstado
-      );
+      if(respuesta.estado === 'exito')
       notificarExitoAccion('guardar');
-      await cargarFirmas();
+      void cargarFirmas();
     } catch (error) {
       console.error(error);
       notificarErrorAccion('guardar');

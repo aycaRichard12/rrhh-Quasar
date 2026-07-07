@@ -1,11 +1,18 @@
 import type { QTableColumn } from 'quasar';
 import type { Firma, Usuario } from '../types/firmas.types';
 
-export const obtenerCadenaUsuario = (usuario: Usuario | null | undefined): string => {
+export const obtenerCadenaUsuario = (usuario: Usuario | null | undefined) => {
   if (!usuario) {
     return '';
   }
   return `${usuario.nombre}  ${usuario.apellido} - ${usuario.usuario}`;
+};
+
+export const obtenerNombreUsuario = (usuario: Usuario | null | undefined) => {
+  if (!usuario) {
+    return '';
+  }
+  return `${usuario.usuario}`;
 };
 
 export const obtenerColumnasFirmas = (t: (key: string) => string): QTableColumn<Firma>[] => [
@@ -18,22 +25,22 @@ export const obtenerColumnasFirmas = (t: (key: string) => string): QTableColumn<
   },
   {
     name: 'nombre',
-    label: t('person.name'),
+    label: t('Nombres y Apellidos'),
     align: 'left',
     field: 'nombre',
     style: 'width: 150px; white-space: normal'
   },
   {
     name: 'ci',
-    label: 'C.I',
-    align: 'center',
+    label: t('person.ci'),
+    align: 'left',
     field: 'ci',
-    style: 'width: 80px'
+    style: 'width: 100px'
   },
   {
     name: 'cargo',
     label: t('firmas.role'),
-    align: 'center',
+    align: 'left',
     field: 'cargo',
     style: 'white-space: normal; min-width: 228px;'
   },
@@ -47,7 +54,7 @@ export const obtenerColumnasFirmas = (t: (key: string) => string): QTableColumn<
   {
     name: 'estado',
     label: t('tables.status'),
-    align: 'left',
+    align: 'center',
     field: 'estado',
     style: 'width: 50px'
   },

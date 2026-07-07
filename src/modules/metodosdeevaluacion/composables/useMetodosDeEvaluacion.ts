@@ -9,21 +9,21 @@ import type { MetodoDeEvaluacion, RangoDeEvaluacion } from '../types/metodosDeEv
 export function useMetodosDeEvaluacion() {
   const idEmpresa = String(idempresa_md5());
   const listaMetodos = ref<MetodoDeEvaluacion[]>([]);
-  const listaRangos = ref<RangoDeEvaluacion[]>([]);
-
+  
   const cargando = ref(false);
   const filtroBusqueda = ref('');
   const esModoEdicion = ref(false);
   const esVisibleDialogoMetodo = ref(false);
-  const esVisibleDialogoRango = ref(false);
 
   const esVistaRangos = ref(false); 
+  const listaRangos = ref<RangoDeEvaluacion[]>([]);
+  const esVisibleDialogoRango = ref(false);
   const listaMetodoSeleccionado = ref<MetodoDeEvaluacion | null>(null);
   
   const metodoActual = ref<MetodoDeEvaluacion>({
     nombre: '',
     descripcion: '',
-    calificacionMax: 0,
+    calificacionMax: '',
     fecha: ''
   });
 
@@ -52,7 +52,7 @@ export function useMetodosDeEvaluacion() {
     metodoActual.value = { 
       nombre: '', 
       descripcion: '', 
-      calificacionMax: 0, 
+      calificacionMax: '', 
       fecha: ''
     };
     esModoEdicion.value = false;
@@ -117,7 +117,13 @@ export function useMetodosDeEvaluacion() {
       }
     });
   };
-  //______________________ Rangos de Evaluación______________________________
+//______________________ RANGOS DE EVALUACIÓN______________________________
+  const alternarVista = () => {
+    esVistaRangos.value = !esVistaRangos.value;
+    if (!esVistaRangos.value) {
+      listaMetodoSeleccionado.value = null;
+    }
+  };
   const gestionarRangos = (metodo: MetodoDeEvaluacion) => {
     if (!metodo.id) return;
     listaMetodoSeleccionado.value = metodo;
@@ -141,7 +147,7 @@ export function useMetodosDeEvaluacion() {
     if (!listaMetodoSeleccionado.value?.id) return;
     rangoActual.value = {
       nombre: '', 
-      cantidad: 0, 
+      cantidad: '', 
       fecha: '',
       idMetodoDeEvaluacion: listaMetodoSeleccionado.value.id
     };
@@ -204,13 +210,6 @@ export function useMetodosDeEvaluacion() {
         notificarErrorAccion('eliminar');
       }
     });
-  };
-
-  const alternarVista = () => {
-    esVistaRangos.value = !esVistaRangos.value;
-    if (!esVistaRangos.value) {
-      listaMetodoSeleccionado.value = null;
-    }
   };
 
   return {

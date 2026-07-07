@@ -48,18 +48,18 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useFirmas } from '../composables/useFirmas';
 import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
 
+import { useFirmas } from '../composables/useFirmas';
 import FirmasForm from '../components/FirmasForm.vue';
 import FirmasTable from '../components/FirmasTable.vue';
 
 const {
   listaFirmas, firmaActual, listaUsuarios,
 	cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
-  cargarFirmas, prepararNuevaFirma,
+  cargarFirmas, prepararNuevaFirma, cargarUsuarios,
 	prepararEdicionFirma, ejecutarAccionFirma, eliminarFirma,
-	cambiarEstadoRegistro, cargarUsuarios
+	cambiarEstadoRegistro
 } = useFirmas();
 
 onMounted(() => {

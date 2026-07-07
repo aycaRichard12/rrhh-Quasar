@@ -5,8 +5,6 @@ import { useNotificaciones } from 'src/composables/useNotificaciones';
 
 import { actividadesDeEvaluacionService } from '../services/actividadesDeEvaluacion.service';
 import type { ActividadDeEvaluacion } from '../types/actividadesDeEvaluacion.types';
-import { metodosDeEvaluacionService } from 'src/modules/metodosdeevaluacion/services/metodosDeEvaluacion.service';
-import type { MetodoDeEvaluacion } from 'src/modules/metodosdeevaluacion/types/metodosDeEvaluacion.types';
 
 export function useActividadesDeEvaluacion() {
   const idEmpresa = String(idempresa_md5());
@@ -16,8 +14,6 @@ export function useActividadesDeEvaluacion() {
   const filtroBusqueda = ref('');
   const esModoEdicion = ref(false);
   const esVisibleDialogo = ref(false);
-
-  const listaMetodos = ref<MetodoDeEvaluacion[]>([]);
 
   const actividadActual = ref<ActividadDeEvaluacion>({
     nombre: '',
@@ -42,21 +38,12 @@ export function useActividadesDeEvaluacion() {
     }
   };
 
-  const cargarMetodos = async () => {
-    try {
-      listaMetodos.value = await metodosDeEvaluacionService.listarMetodosDeEvaluacion();
-    } catch (error) {
-      console.error(error);
-      notificarErrorAccion('cargar');
-    }
-  };
-
-  const prepararNuevaActividad = () => {
+  const nuevaActividad = (idMetodo: number) => {
     actividadActual.value = {
       nombre: '',
       descripcion: '',
       fecha: '',
-      idmetodoevaluacion: 0,
+      idmetodoevaluacion: idMetodo,
       metodoevaluacion: '',
       calificacionMax: 0
     };
@@ -127,9 +114,7 @@ export function useActividadesDeEvaluacion() {
   return {
     listaActividades, actividadActual,
     cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
-    listaMetodos,
     cargarActividades, guardarActividad,
-    prepararNuevaActividad, prepararEdicionActividad, confirmarEliminarActividad,
-    cargarMetodos,
+    nuevaActividad, prepararEdicionActividad, confirmarEliminarActividad,
   };
 }

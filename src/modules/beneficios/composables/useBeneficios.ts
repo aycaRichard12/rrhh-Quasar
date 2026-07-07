@@ -30,6 +30,12 @@ export function useBeneficios() {
 
   const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida, confirmarImportacionPredefinida } = useNotificaciones();
 
+  const calcularSiguienteOrden = (): number => {
+    if (listaBeneficios.value.length === 0) return 1;
+    const ordenes = listaBeneficios.value.map(b => Number(b.orden) || 0);
+    return Math.max(...ordenes) + 1;
+  };
+
   const cargarBeneficios = async () => {
     cargando.value = true;
     try {
@@ -46,10 +52,10 @@ export function useBeneficios() {
     beneficioActual.value = {
       nombre: '',
       descripcion: '',
-      tipo: '',
+      tipo: 1,
       cantidad:'',
       orden: calcularSiguienteOrden(),
-      destino: '',
+      destino: 1,
       estado: 1
     };
     esModoEdicion.value = false;
@@ -169,12 +175,6 @@ export function useBeneficios() {
       console.error(error);
       notificarErrorAccion('guardar');
     }
-  };
-
-  const calcularSiguienteOrden = (): number => {
-    if (listaBeneficios.value.length === 0) return 1;
-    const ordenes = listaBeneficios.value.map(b => Number(b.orden) || 0);
-    return Math.max(...ordenes) + 1;
   };
 
   return {

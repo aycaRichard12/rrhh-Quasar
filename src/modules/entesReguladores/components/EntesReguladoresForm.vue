@@ -15,7 +15,7 @@
               :rules="[val => !!val || $t('common.rules.required')]"
             />
           </div>
-          <div class="col-4">
+          <div class="col-6">
             <q-input dense outlined
               v-model="datosLocales.monto" 
               step="0.01"
@@ -29,11 +29,11 @@
               v-model="datosLocales.porcentaje"
               step="0.01"
               type="number"
-              :label="$t('entesreguladores.percentage') + ' *'" 
+              :label="$t('tables.percentage') + ' *'" 
               :rules="[val => !!val || $t('common.rules.required')]" 
             /> 
           </div>
-          <div class="col-4">
+          <div class="col-2">
             <q-input dense outlined
               v-model="datosLocales.orden" 
               type="number"

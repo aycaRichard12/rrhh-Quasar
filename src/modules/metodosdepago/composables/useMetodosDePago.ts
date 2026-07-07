@@ -125,7 +125,7 @@ export function useMetodosDePago() {
   const procesarImportacion = async (tipoAccion: 'reemplazar' | 'agregar') => {
     try {
       const payload = {
-        ver : 'remplazarocopiardatosEntesReguladores',
+        ver : 'remplazarocopiardatosmetodopago',
         idempresa : idEmpresa,
         datos : JSON.stringify(listaMetodosDePagoEstandar.value),
         tipo : tipoAccion === 'reemplazar' ? '1' : '2'

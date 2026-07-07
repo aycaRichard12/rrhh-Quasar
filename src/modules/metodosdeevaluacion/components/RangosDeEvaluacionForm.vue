@@ -14,7 +14,7 @@
           <div class="col-12">
             <q-input dense outlined 
               v-model="datosLocales.nombre"
-              :label="$t('metodosdeevaluacion.range.criteria') + '*'"
+              :label="$t('metodosdeevaluacion.range.name') + '*'"
               :rules="[val => !!val || $t('common.rules.required')]"
             />
           </div>

@@ -48,6 +48,17 @@ export function usePrerrequisitosCargo() {
     esVisibleDialogo.value = true;
   };
 
+  //   const nuevoPrerrequisito = () => {
+  //   prerrequisitoActual.value = {
+  //     nombre: '',
+  //     descripcion: '',
+  //     cargo: '',
+  //     idcargo: 7
+  //   };
+  //   esModoEdicion.value = false;
+  //   esVisibleDialogo.value = true;
+  // };
+
   const prepararEdicionPrerrequisito = async (id: number) => {
     try {
       const respuesta = await prerrequisitosCargoService.editarPrerrequisito(id);

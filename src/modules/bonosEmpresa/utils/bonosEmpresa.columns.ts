@@ -25,14 +25,14 @@ export const obtenerColumnasBonosEmpresa = (t: (key: string) => string): QTableC
   },
   {
     name: 'tipo',
-    label: 'tables.type',
+    label: t('tables.type'),
     align: 'center',
     field: 'tipo',
     style: 'width: 100px',
   },
   {
     name: 'cantidad',
-    label: 'tables.amount',
+    label: t('tables.amount'),
     align: 'right',
     field: 'cantidad',
     style: 'width: 80px',

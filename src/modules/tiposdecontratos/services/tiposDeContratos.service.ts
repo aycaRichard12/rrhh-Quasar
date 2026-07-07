@@ -35,8 +35,8 @@ export const tiposDeContratosService = {
     return data;
   },
 
-  async procesarImportacionEstandar(formData: FormData): Promise<RespuestaApi> {
-    const { data } = await api.post('/', formData);
-    return data;
-  }
+  // async procesarImportacionEstandar(formData: FormData): Promise<RespuestaApi> {
+  //   const { data } = await api.post('/', formData);
+  //   return data;
+  // }
 };

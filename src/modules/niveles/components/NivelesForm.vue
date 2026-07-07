@@ -8,14 +8,14 @@
     <q-form @submit="emitirGuardar">
       <q-card-section>
         <div class="row q-col-gutter-md">
-          <div class="col-12">
+          <div class="col-10">
             <q-input autofocus dense lazy-rules outlined 
               v-model="datosLocales.nombre"
               :label="$t('niveles.name') + ' *'"
               :rules="[val => !!val || $t('common.rules.required')]"
             />
           </div>
-          <div class="col-12">
+          <div class="col-2">
             <q-input dense outlined
               v-model="datosLocales.pos"
               :label="$t('tables.order') + ' *'"

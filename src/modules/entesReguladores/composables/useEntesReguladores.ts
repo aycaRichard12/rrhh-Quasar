@@ -131,7 +131,7 @@ export function useEntesReguladores() {
   const procesarImportacion = async (tipoAccion: 'reemplazar' | 'agregar') => {
     try {
       const payload = {
-        ver : 'remplazarocopiardatosEntesReguladores',
+        ver : 'remplazarocopiardatosentesreguladores',
         idempresa : idEmpresa,
         datos : JSON.stringify(listaEntesReguladoresEstandar.value),
         tipo : tipoAccion === 'reemplazar' ? '1' : '2'
