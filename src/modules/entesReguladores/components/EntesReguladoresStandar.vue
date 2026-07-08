@@ -1,16 +1,18 @@
 <template>
-  <q-table bordered flat
-    row-key="id"
-    class="global-table-header"
-    :rows="props.rows"
-    :columns="listaColumnas"
-    :rows-per-page-label="t('common.report.recordsPerPage')"
-    :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${t('common.report.of')} ${totalRows}`"
-  >
-    <template v-slot:body-cell-numero="propsCell">
-      <q-td :props="propsCell">{{ propsCell.rowIndex + 1 }}</q-td>
-    </template>
-  </q-table>
+  <q-card>
+    <q-table bordered flat
+      row-key="id"
+      class="global-table-header"
+      :rows="props.rows"
+      :columns="listaColumnas"
+      :rows-per-page-label="t('common.report.recordsPerPage')"
+      :pagination-label="(firstRow, endRow, totalRows) => `${firstRow}-${endRow} ${t('common.report.of')} ${totalRows}`"
+    >
+      <template v-slot:body-cell-numero="propsCell">
+        <q-td :props="propsCell">{{ propsCell.rowIndex + 1 }}</q-td>
+      </template>
+    </q-table>
+  </q-card>
 </template>
 
 <script setup lang="ts">

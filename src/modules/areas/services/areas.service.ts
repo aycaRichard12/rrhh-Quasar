@@ -7,17 +7,11 @@ const sanearArea = (item: Area): Area => {
   return {
     ...item,
     id: Number(item.id),
-    // Blindamos la sucursal por si el backend manda null o algo inconsistente
-    sucursal: (item.sucursal && typeof item.sucursal === 'object') ? {
-      idsucursal: Number(item.sucursal.idsucursal || 0),
-      nombre: String(item.sucursal.nombre || ''),
-      region: String(item.sucursal.region || ''),
-      idregion: Number(item.sucursal.idregion || 0)
-    } : {
-      idsucursal: 0,
-      nombre: '',
-      region: '',
-      idregion: 0
+    sucursal:{
+      idsucursal: Number(item.sucursal.idsucursal),
+      nombre: String(item.sucursal.nombre),
+      region: String(item.sucursal.region),
+      idregion: Number(item.sucursal.idregion)
     }
   };
 };
@@ -25,10 +19,10 @@ const sanearArea = (item: Area): Area => {
 const sanearSucursal = (item: Sucursal): Sucursal => {
   return {
     ...item,
-    id: Number(item.id),
+    id:Number(item.id),
     idregion: Number(item.idregion),
-    idempresa: Number(item.idempresa)
-  };
+    idempresa: Number(item.idregion)
+  }
 };
 
 export const areasService = {
@@ -37,35 +31,38 @@ export const areasService = {
     return Array.isArray(data) ? data.map(sanearArea) : [];
   },
 
-  async listarSucursales(): Promise<Sucursal[]> {
-    const { data } = await api.get(`listaSucursales/${idempresa_md5()}`);
-    return Array.isArray(data) ? data.map(sanearSucursal) : [];
+  async editarArea(id: number): Promise<RespuestaApi<Area>> {
+    const { data } = await api.get(`verificarIDarea/${id}`);
+    if (data.estado === 'exito' && data.datos) {
+      const area: Area = {
+        id: Number(data.datos.id),
+        nombre: String(data.datos.nombre),
+        descripcion: String(data.datos.descripcion),
+        sucursal: {
+          idsucursal: Number(data.datos.idsucursal),
+          nombre: String(data.datos.nombre),
+          region: String(data.datos.region),
+          idregion: Number(data.datos.idregion),
+        }
+      };
+      return {
+        ...data,
+        datos: area
+      };
+    }
+    return data;
   },
 
-  async editarArea(id: number): Promise<RespuestaApi<Area>> {
-  const { data } = await api.get(`verificarIDarea/${id}`);
-
-  if (data.estado === 'exito' && data.datos) {
-    const area: Area = {
-      id: Number(data.datos.id),
-      nombre: String(data.datos.nombre ?? ''),
-      descripcion: String(data.datos.descripcion ?? ''),
-      sucursal: {
-        idsucursal: Number(data.datos.idsucursal ?? 0),
-        nombre: '',
-        region: '',
-        idregion: 0
-      }
-    };
-
-    return {
-      ...data,
-      datos: area
-    };
-  }
-
-  return data;
-},
+  // async editarArea(id: number): Promise<RespuestaApi<Area>> {
+  //   const { data } = await api.get(`verificarIDarea/${id}`);
+  //   if (data.estado === 'exito' && data.datos) {
+  //     return {
+  //       ...data,
+  //       datos: sanearArea(data.datos)
+  //     };
+  //   }
+  //   return data;
+  // },
 
   async guardarArea(payload: FormData): Promise<RespuestaApi> {
     const { data } = await api.post('/', payload);
@@ -75,5 +72,10 @@ export const areasService = {
   async eliminarArea(id: number): Promise<RespuestaApi> {
     const { data } = await api.get(`eliminarAreas/${id}`);
     return data;
-  }
+  },
+
+  async listarSucursales(): Promise<Sucursal[]> {
+    const { data } = await api.get(`listaSucursales/${idempresa_md5()}`);
+    return Array.isArray(data) ? data.map(sanearSucursal) : [];
+  },
 };

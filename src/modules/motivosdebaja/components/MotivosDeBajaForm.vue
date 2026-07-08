@@ -11,21 +11,19 @@
           <div class="col-12">
             <q-input autofocus dense lazy-rules outlined
               v-model="datosLocales.nombre"
-              :label="$t('reasonLeave.name') + ' *'"
+              :label="$t('motivosdebaja.name') + ' *'"
               :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
             />
           </div>
-
           <div class="col-12">
             <q-select dense emit-value map-options outlined
               v-model="datosLocales.tipo"
               :options="opcionesTipo"
-              :label="$t('reasonLeave.type') + ' *'"
+              :label="$t('motivosdebaja.type') + ' *'"
             />
           </div>
-
           <div class="col-12">
-            <q-input autogrow dense lazy-rules outlined
+            <q-input dense lazy-rules outlined
               v-model="datosLocales.descripcion"
               type="textarea"
               :label="$t('tables.description') + ' *'"
@@ -45,22 +43,18 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
-import type { MotivosDeBaja } from '../types/motivosDeBaja.types';
+import type { MotivoDeBaja } from '../types/motivosDeBaja.types';
 
 const props = defineProps<{
-  motivo: MotivosDeBaja;
+  motivo: MotivoDeBaja;
   esModoEdicion: boolean;
 }>();
 
 const emits = defineEmits<{
-  (e: 'guardar', datos: MotivosDeBaja): void;
+  (e: 'guardar', datos: MotivoDeBaja): void;
 }>();
 
-const datosLocales = ref<MotivosDeBaja>({ ...props.motivo });
-
-watch(() => props.motivo, (nuevosDatos) => {
-  datosLocales.value = { ...nuevosDatos };
-}, { deep: true });
+const datosLocales = ref<MotivoDeBaja>({ ...props.motivo });
 
 const emitirGuardar = () => {
   emits('guardar', datosLocales.value);
@@ -70,4 +64,8 @@ const opcionesTipo = computed(() => [
   { label: 'Temporal', value: 1 },
   { label: 'Definitva', value: 2 }
 ]);
+
+watch(() => props.motivo, (nuevosDatos) => {
+  datosLocales.value = { ...nuevosDatos };
+}, { deep: true });
 </script>

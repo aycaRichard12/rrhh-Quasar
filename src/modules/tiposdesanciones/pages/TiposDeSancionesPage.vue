@@ -12,7 +12,7 @@
     <q-card-section class="row no-wrap justify-between items-center q-gutter-x-sm">
       <q-btn
         class="global-btn-page"
-        icon="add"
+        icon="sym_o_add_notes"
         size="15px"
         :label="$q.screen.lt.sm ? '' : $t('tiposdesanciones.new')"
         :round="$q.screen.lt.sm"
@@ -49,16 +49,29 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
+import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
+
 import { useTiposDeSanciones } from '../composables/useTiposDeSanciones';
 import TiposDeSancionesTable from '../components/TiposDeSancionesTable.vue';
 import TiposDeSancionesForm from '../components/TiposDeSancionesForm.vue';
-import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
+
+import { useNiveles } from 'src/modules/niveles/composables/useNiveles';
+
+const prepararNuevoTipoDeSancion = () => {
+  nuevoTipoDeSancion(Number(listaNiveles.value[0]?.id ?? 0))
+}
 
 const {
-  listaTiposDeSanciones, listaNiveles, cargando, filtroBusqueda,
+  listaTiposDeSanciones, cargando, filtroBusqueda,
   esVisibleDialogo, esModoEdicion, tipoDeSancionActual,
-  cargarTiposDeSanciones, cargarNiveles, prepararNuevoTipoDeSancion, prepararEdicionTipoDeSancion, guardarTipoDeSancion, confirmarEliminarTipoDeSancion
+  cargarTiposDeSanciones, guardarTipoDeSancion, nuevoTipoDeSancion,
+  prepararEdicionTipoDeSancion, confirmarEliminarTipoDeSancion
 } = useTiposDeSanciones();
+
+const {
+  listaNiveles,
+  cargarNiveles
+} = useNiveles();
 
 onMounted(() => {
   void cargarTiposDeSanciones();

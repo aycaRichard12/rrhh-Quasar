@@ -1,52 +1,40 @@
 import { ref } from 'vue';
-import { date } from 'quasar';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
-import { metodosDeEvaluacionService } from '../services/metodosDeEvaluacion.service';
-import type { MetodosDeEvaluacion, RangosDeEvaluacion } from '../types/metodosDeEvaluacion.types';
 
-/**
- * Retorna una nueva fecha con la hora reseteada a 00:00:00:000
- */
-const obtenerFechaLimpia = (fecha: Date = new Date()) => {
-  const d = new Date(fecha);
-  d.setHours(0, 0, 0, 0);
-  return d;
-};
+import { metodosDeEvaluacionService } from '../services/metodosDeEvaluacion.service';
+import type { MetodoDeEvaluacion, RangoDeEvaluacion } from '../types/metodosDeEvaluacion.types';
 
 export function useMetodosDeEvaluacion() {
-  //Generales
   const idEmpresa = String(idempresa_md5());
+  const listaMetodos = ref<MetodoDeEvaluacion[]>([]);
+  
+  const cargando = ref(false);
   const filtroBusqueda = ref('');
   const esModoEdicion = ref(false);
-  //Metodos
-  const listaMetodos = ref<MetodosDeEvaluacion[]>([]);
   const esVisibleDialogoMetodo = ref(false);
-  //Rangos
-  const listaRangos = ref<RangosDeEvaluacion[]>([]);
-  const esVisibleDialogoRango = ref(false);
-  //
-  const cargando = ref(false);
-  const metodoSeleccionado = ref<MetodosDeEvaluacion | null>(null);
+
   const esVistaRangos = ref(false); 
+  const listaRangos = ref<RangoDeEvaluacion[]>([]);
+  const esVisibleDialogoRango = ref(false);
+  const listaMetodoSeleccionado = ref<MetodoDeEvaluacion | null>(null);
   
-  const metodoActual = ref<MetodosDeEvaluacion>({
+  const metodoActual = ref<MetodoDeEvaluacion>({
     nombre: '',
     descripcion: '',
-    calificacionMax: 0,
-    fecha: obtenerFechaLimpia()
+    calificacionMax: '',
+    fecha: ''
   });
 
-  const rangoActual = ref<RangosDeEvaluacion>({
+  const rangoActual = ref<RangoDeEvaluacion>({
     nombre: '',
     cantidad: 0,
-    fecha: obtenerFechaLimpia(),
+    fecha: '',
     idMetodoDeEvaluacion: 0
   });
 
   const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida } = useNotificaciones();
-
   //______________________ Métodos de Evaluación______________________________
   const cargarMetodos = async () => {
     cargando.value = true;
@@ -64,8 +52,8 @@ export function useMetodosDeEvaluacion() {
     metodoActual.value = { 
       nombre: '', 
       descripcion: '', 
-      calificacionMax: 0, 
-      fecha: obtenerFechaLimpia() 
+      calificacionMax: '', 
+      fecha: ''
     };
     esModoEdicion.value = false;
     esVisibleDialogoMetodo.value = true;
@@ -73,11 +61,13 @@ export function useMetodosDeEvaluacion() {
 
   const prepararEdicionMetodo = async (id: number) => {
     try {
-      const resp = await metodosDeEvaluacionService.editarMetodoDeEvaluacion(id);
-      if (resp.estado === 'exito' && resp.datos) {
-        metodoActual.value = { ...resp.datos };
+      const respuesta = await metodosDeEvaluacionService.editarMetodoDeEvaluacion(id);
+      if (respuesta.estado === 'exito' && respuesta.datos) {
+        metodoActual.value = { ...respuesta.datos };
         esModoEdicion.value = true;
         esVisibleDialogoMetodo.value = true;
+      } else {
+        notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
       console.error(error);
@@ -85,25 +75,25 @@ export function useMetodosDeEvaluacion() {
     }
   };
 
-  const guardarMetodo = async (datos: MetodosDeEvaluacion) => {
+  const guardarMetodo = async (datos: MetodoDeEvaluacion) => {
     try {
       const payload = {
         ver: esModoEdicion.value ? 'editarMetodoevaluacion' : 'registroMetodoevaluacion',
         idempresa: idEmpresa,
         id: datos.id,
         nombre: datos.nombre,
-        fecha: date.formatDate(datos.fecha, 'YYYY-MM-DD'),
+        fecha: datos.fecha,
         calmax: datos.calificacionMax,
         descripcion: datos.descripcion
       };
-      const formData = prepararDatosFormulario(payload);
-      const resp = await metodosDeEvaluacionService.guardarMetodoDeEvaluacion(formData);
-      if (resp.estado === 'exito') {
+      const datosFormulario = prepararDatosFormulario(payload);
+      const respuesta = await metodosDeEvaluacionService.guardarMetodoDeEvaluacion(datosFormulario);
+      if (respuesta.estado === 'exito') {
         notificarExitoAccion('guardar');
         esVisibleDialogoMetodo.value = false;
         void cargarMetodos();
       } else {
-        notificarAdvertencia(resp.mensaje);
+        notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
       console.error(error);
@@ -114,12 +104,12 @@ export function useMetodosDeEvaluacion() {
   const confirmarEliminarMetodo = (id: number) => {
     confirmarEliminacionPredefinida(async () => {
       try {
-        const resp = await metodosDeEvaluacionService.eliminarMetodoDeEvaluacion(id);
-        if (resp.estado === 'exito') {
+        const respuesta = await metodosDeEvaluacionService.eliminarMetodoDeEvaluacion(id);
+        if (respuesta.estado === 'exito') {
           notificarExitoAccion('eliminar');
           void cargarMetodos();
         } else {
-          notificarAdvertencia(resp.mensaje);
+          notificarAdvertencia(respuesta.mensaje);
         }
       } catch (error) {
         console.error(error);
@@ -127,10 +117,16 @@ export function useMetodosDeEvaluacion() {
       }
     });
   };
-  //______________________ Rangos de Evaluación______________________________
-  const gestionarRangos = (metodo: MetodosDeEvaluacion) => {
+//______________________ RANGOS DE EVALUACIÓN______________________________
+  const alternarVista = () => {
+    esVistaRangos.value = !esVistaRangos.value;
+    if (!esVistaRangos.value) {
+      listaMetodoSeleccionado.value = null;
+    }
+  };
+  const gestionarRangos = (metodo: MetodoDeEvaluacion) => {
     if (!metodo.id) return;
-    metodoSeleccionado.value = metodo;
+    listaMetodoSeleccionado.value = metodo;
     esVistaRangos.value = true;
     void cargarRangos(metodo.id);
   };
@@ -148,12 +144,12 @@ export function useMetodosDeEvaluacion() {
   };
 
   const prepararNuevoRango = () => {
-    if (!metodoSeleccionado.value?.id) return;
+    if (!listaMetodoSeleccionado.value?.id) return;
     rangoActual.value = {
       nombre: '', 
-      cantidad: 0, 
-      fecha: obtenerFechaLimpia(),
-      idMetodoDeEvaluacion: metodoSeleccionado.value.id
+      cantidad: '', 
+      fecha: '',
+      idMetodoDeEvaluacion: listaMetodoSeleccionado.value.id
     };
     esModoEdicion.value = false;
     esVisibleDialogoRango.value = true;
@@ -161,11 +157,13 @@ export function useMetodosDeEvaluacion() {
 
   const prepararEdicionRango = async (id: number) => {
     try {
-      const resp = await metodosDeEvaluacionService.editarRangoDeEvaluacion(id);
-      if (resp.estado === 'exito' && resp.datos) {
-        rangoActual.value = { ...resp.datos };
+      const respuesta = await metodosDeEvaluacionService.editarRangoDeEvaluacion(id);
+      if (respuesta.estado === 'exito' && respuesta.datos) {
+        rangoActual.value = { ...respuesta.datos };
         esModoEdicion.value = true;
         esVisibleDialogoRango.value = true;
+      } else {
+        notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
       console.error(error);
@@ -173,7 +171,7 @@ export function useMetodosDeEvaluacion() {
     }
   };
 
-  const guardarRango = async (datos: RangosDeEvaluacion) => {
+  const guardarRango = async (datos: RangoDeEvaluacion) => {
     try {
       const payload = {
         ver: esModoEdicion.value ? 'editarRangoevaluacion' : 'registroRangoevaluacion',
@@ -182,14 +180,14 @@ export function useMetodosDeEvaluacion() {
         nombre: datos.nombre,
         cantidad: datos.cantidad
       };
-      const formData = prepararDatosFormulario(payload);
-      const resp = await metodosDeEvaluacionService.guardarRangoDeEvaluacion(formData);
-      if (resp.estado === 'exito') {
+      const datosFormulario = prepararDatosFormulario(payload);
+      const respuesta = await metodosDeEvaluacionService.guardarRangoDeEvaluacion(datosFormulario);
+      if (respuesta.estado === 'exito') {
         notificarExitoAccion('guardar');
         esVisibleDialogoRango.value = false;
-        if (metodoSeleccionado.value?.id) void cargarRangos(metodoSeleccionado.value.id);
+        if (listaMetodoSeleccionado.value?.id) void cargarRangos(listaMetodoSeleccionado.value.id);
       } else {
-        notificarAdvertencia(resp.mensaje);
+        notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
       console.error(error);
@@ -200,12 +198,12 @@ export function useMetodosDeEvaluacion() {
   const confirmarEliminarRango = (id: number) => {
     confirmarEliminacionPredefinida(async () => {
       try {
-        const resp = await metodosDeEvaluacionService.eliminarRangoDeEvaluacion(id);
-        if (resp.estado === 'exito') {
+        const respuesta = await metodosDeEvaluacionService.eliminarRangoDeEvaluacion(id);
+        if (respuesta.estado === 'exito') {
           notificarExitoAccion('eliminar');
-          if (metodoSeleccionado.value?.id) void cargarRangos(metodoSeleccionado.value.id);
+          if (listaMetodoSeleccionado.value?.id) void cargarRangos(listaMetodoSeleccionado.value.id);
         } else {
-          notificarAdvertencia(resp.mensaje);
+          notificarAdvertencia(respuesta.mensaje);
         }
       } catch (error) {
         console.error(error);
@@ -214,19 +212,15 @@ export function useMetodosDeEvaluacion() {
     });
   };
 
-  const alternarVista = () => {
-    esVistaRangos.value = !esVistaRangos.value;
-    if (!esVistaRangos.value) {
-      metodoSeleccionado.value = null;
-    }
-  };
-
   return {
-    listaMetodos, listaRangos, cargando, esVistaRangos, filtroBusqueda,
-    esVisibleDialogoMetodo, esVisibleDialogoRango, esModoEdicion,
-    metodoActual, rangoActual, metodoSeleccionado,
-    cargarMetodos, prepararNuevoMetodo, prepararEdicionMetodo, guardarMetodo, confirmarEliminarMetodo,
-    gestionarRangos, prepararNuevoRango, prepararEdicionRango, guardarRango, confirmarEliminarRango,
-    alternarVista
+    listaMetodos, metodoActual, 
+    cargando, filtroBusqueda, esModoEdicion, esVisibleDialogoMetodo,
+    listaRangos, rangoActual,
+    esVistaRangos, esVisibleDialogoRango, listaMetodoSeleccionado,
+    cargarMetodos, guardarMetodo,
+    prepararNuevoMetodo, prepararEdicionMetodo, confirmarEliminarMetodo,
+    alternarVista,
+    gestionarRangos, guardarRango,
+    prepararNuevoRango, prepararEdicionRango, confirmarEliminarRango,
   };
 }

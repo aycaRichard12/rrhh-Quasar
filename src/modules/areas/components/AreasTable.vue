@@ -40,8 +40,8 @@ import TablaGenerica from 'src/components/core/TablaGenerica.vue';
 import TablaFiltroExcel from 'src/components/core/TablaFiltroExcel.vue';
 import type { FilaBase } from 'src/components/core/TablaGenerica.vue';
 
-import type { Area } from '../types/areas.types';
-import { obtenerColumnasAreas } from '../utils/areas.columns';
+import type { Area, Sucursal } from '../types/areas.types';
+import { obtenerColumnasAreas, formatearSucursal } from '../utils/areas.columns';
 
 const { t } = useI18n();
 const listaColumnas = computed(() => obtenerColumnasAreas(t));
@@ -49,6 +49,7 @@ const filasTipadas = computed(() => datosFiltrados.value as unknown as FilaBase[
 
 const props = defineProps<{
   listaAreas: Area[];
+  listaSucursales: Sucursal[];
   cargando: boolean;
   filtro: string;
 }>();
@@ -64,17 +65,7 @@ const configuracionFiltros: ConfiguracionColumnaExcel[] = [
     campo: 'sucursal',
     titulo: t('areas.branch'),
     tipoDato: 'texto',
-    format: (val: unknown) => {
-      if (val && typeof val === 'object') {
-        const suc = val as { nombre?: string; region?: string; sucursal?: string };
-        const nombre = suc.nombre ?? suc.sucursal ?? '';
-        const region = suc.region ?? '';
-        return region ? `${nombre} - ${region}` : nombre;
-      }
-      return typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean'
-        ? String(val)
-        : '';
-    }
+    format: formatearSucursal
   }
 ];
 

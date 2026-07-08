@@ -15,16 +15,6 @@
               :rules="[val => !!val || $t('common.rules.required')]"
             />
           </div>
-
-          <div class="col-6">
-            <q-input dense outlined
-              v-model="datosLocales.porcentaje"
-              step="0.01"
-              type="number"
-              :label="$t('entesreguladores.percentage') + ' *'" 
-              :rules="[val => !!val || $t('common.rules.required')]" 
-            /> 
-          </div>
           <div class="col-6">
             <q-input dense outlined
               v-model="datosLocales.monto" 
@@ -34,15 +24,16 @@
               :rules="[val => !!val || $t('common.rules.required')]"
             />
           </div>
-          <div class="col-12">
-            <q-input autogrow dense outlined
-              v-model="datosLocales.descripcion"
-              type="textarea"
-              :label="$t('tables.description') + ' *'"
-              :rules="[val => !!val || $t('common.rules.required')]"
-            />
-          </div>      
-          <div class="col-12">
+          <div class="col-4">
+            <q-input dense outlined
+              v-model="datosLocales.porcentaje"
+              step="0.01"
+              type="number"
+              :label="$t('tables.percentage') + ' *'" 
+              :rules="[val => !!val || $t('common.rules.required')]" 
+            /> 
+          </div>
+          <div class="col-2">
             <q-input dense outlined
               v-model="datosLocales.orden" 
               type="number"
@@ -50,6 +41,14 @@
               :rules="[val => !!val || $t('common.rules.required')]"
             />
           </div>
+          <div class="col-12">
+            <q-input dense outlined
+              v-model="datosLocales.descripcion"
+              type="textarea"
+              :label="$t('tables.description') + ' *'"
+              :rules="[val => !!val || $t('common.rules.required')]"
+            />
+          </div>      
         </div>
       </q-card-section>
 

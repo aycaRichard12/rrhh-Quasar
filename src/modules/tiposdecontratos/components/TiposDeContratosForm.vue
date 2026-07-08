@@ -27,7 +27,7 @@
             <q-input dense lazy-rules outlined
               v-model="datosLocales.observacion"
               type="textarea"
-              :label="$t('tiposdecontratos.observation') + ' *'"
+              :label="$t('tables.observation') + ' *'"
               :rules="[val => (val !== null && val !== '') || $t('common.rules.required')]"
             />
           </div>

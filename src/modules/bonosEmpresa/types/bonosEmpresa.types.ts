@@ -1,11 +1,11 @@
 export interface BonoEmpresa {
-  id?        : string;
-  nombre     : string;
+  id?: number;
+  nombre: string;
   descripcion: string;
-  tipo       : string;
-  cantidad   : string;
-  estado?    : string;
-  orden      : string;
-  destino    : string;
-  fecha?     : string;
+  tipo: number;
+  cantidad: number;
+  estado: number;
+  orden: number;
+  destino: number;
+  fecha: string;
 }

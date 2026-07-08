@@ -2,19 +2,20 @@ import { ref } from 'vue';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
+
 import { motivosDeBajaService } from '../services/motivosDeBaja.service';
-import type { MotivosDeBaja } from '../types/motivosDeBaja.types';
+import type { MotivoDeBaja } from '../types/motivosDeBaja.types';
 
 export function useMotivosDeBaja() {
   const idEmpresa = String(idempresa_md5());
-  const listaMotivos = ref<MotivosDeBaja[]>([]);
+  const listaMotivos = ref<MotivoDeBaja[]>([]);
 
   const cargando = ref(false);
   const filtroBusqueda = ref('');
   const esModoEdicion = ref(false);
   const esVisibleDialogo = ref(false);
 
-  const motivoActual = ref<MotivosDeBaja>({
+  const motivoActual = ref<MotivoDeBaja>({
     nombre: '',
     tipo: 1,
     descripcion: ''
@@ -35,7 +36,11 @@ export function useMotivosDeBaja() {
   };
 
   const prepararNuevoMotivo = () => {
-    motivoActual.value = { nombre: '', tipo: 1, descripcion: '' };
+    motivoActual.value = {
+      nombre: '',
+      tipo: 1,
+      descripcion: ''
+    };
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
   };
@@ -56,20 +61,18 @@ export function useMotivosDeBaja() {
     }
   };
 
-  const guardarMotivo = async (datosGuardar: MotivosDeBaja) => {
+  const guardarMotivo = async (datosGuardar: MotivoDeBaja) => {
     try {
       const payload = {
         ver: esModoEdicion.value ? 'editarmotivobaja' : 'registromotivobaja',
         idempresa: idEmpresa,
-        id: esModoEdicion.value ? datosGuardar.id : undefined,
+        id: datosGuardar.id,
         nombre: datosGuardar.nombre,
         tipo: datosGuardar.tipo,
         descripcion: datosGuardar.descripcion
       };
-
       const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await motivosDeBajaService.guardarMotivoDeBaja(datosFormulario);
-
       if (respuesta.estado === 'exito') {
         notificarExitoAccion('guardar');
         esVisibleDialogo.value = false;
@@ -103,7 +106,7 @@ export function useMotivosDeBaja() {
   return {
     listaMotivos, motivoActual,
     cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
-    cargarMotivosDeBaja, prepararNuevoMotivo,
-    prepararEdicionMotivo, guardarMotivo, confirmarEliminarMotivo
+    cargarMotivosDeBaja, guardarMotivo,
+    prepararNuevoMotivo, prepararEdicionMotivo, confirmarEliminarMotivo
   };
 }

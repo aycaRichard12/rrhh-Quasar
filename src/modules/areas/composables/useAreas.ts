@@ -21,16 +21,27 @@ export function useAreas() {
       idsucursal: 0,
       nombre: '',
       region: '',
-      idregion: 0
+      idregion: 0,
     }
   });
 
   const { notificarAdvertencia, notificarErrorAccion, notificarExitoAccion, confirmarEliminacionPredefinida } = useNotificaciones();
 
-  const cargarAreas = async (): Promise<void> => {
+  const cargarAreas = async () => {
     cargando.value = true;
     try {
       listaAreas.value = await areasService.listarAreas();
+    } catch (error) {
+      console.error(error);
+      notificarErrorAccion('cargar');
+    } finally {
+      cargando.value = false;
+    }
+  };
+
+  const cargarSucursales = async () => {
+    cargando.value = true;
+    try {
       listaSucursales.value = await areasService.listarSucursales();
     } catch (error) {
       console.error(error);
@@ -41,48 +52,46 @@ export function useAreas() {
   };
 
   const prepararNuevaArea = () => {
+    const idPrimeraSucursal = listaSucursales.value.length > 0 ? Number(listaSucursales.value[0]?.id) : 0;
     areaActual.value = {
       nombre: '',
       descripcion: '',
       sucursal: {
-        idsucursal: 0,
+        idsucursal: idPrimeraSucursal,
         nombre: '',
         region: '',
-        idregion: 0
+        idregion: 0,
       }
     };
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
   };
 
-  const prepararEdicionArea = async (id: number): Promise<void> => {
+  const prepararEdicionArea = async (id: number) => {
     try{
       const respuesta = await areasService.editarArea(id);
       if (respuesta.estado === 'exito' && respuesta.datos){
         areaActual.value = { ...respuesta.datos };
         esModoEdicion.value = true;
         esVisibleDialogo.value = true;
+      } else {
+        notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
-        console.error(error);
-        notificarErrorAccion('cargar');
+      console.error(error);
+      notificarErrorAccion('cargar');
     }
   };
 
-  const guardarArea = async (datosGuardar: Area): Promise<void> =>{
+  const guardarArea = async (datosGuardar: Area) => {
     try {
-      const payload: Record<string, string | number> = {
+      const payload = {
         ver : esModoEdicion.value ? 'editarArea' : 'registroAreas',
-        nombre: datosGuardar.nombre,
-        descripcion: datosGuardar.descripcion,
+        ...datosGuardar,
         sucursal: datosGuardar.sucursal.idsucursal
       };
-      if (esModoEdicion.value && datosGuardar.id !== undefined) {
-        payload.id = datosGuardar.id;
-      }
       const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await areasService.guardarArea(datosFormulario);
-
       if (respuesta.estado === 'exito') {
         notificarExitoAccion('guardar');
         esVisibleDialogo.value = false;
@@ -96,7 +105,7 @@ export function useAreas() {
     }
   };
 
-  const confirmarEliminarArea = (id: number): void =>{
+  const confirmarEliminarArea = (id: number) => {
     confirmarEliminacionPredefinida(async () => {
       try {
         const respuesta = await areasService.eliminarArea(id);
@@ -116,7 +125,7 @@ export function useAreas() {
   return {
     listaAreas, listaSucursales, areaActual,
     cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
-    cargarAreas, guardarArea,
+    cargarAreas, guardarArea, cargarSucursales,
     prepararNuevaArea, prepararEdicionArea, confirmarEliminarArea
   };
 }

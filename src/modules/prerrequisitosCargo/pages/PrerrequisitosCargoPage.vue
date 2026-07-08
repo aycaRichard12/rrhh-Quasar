@@ -49,15 +49,26 @@ import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
 import { usePrerrequisitosCargo } from '../composables/usePrerrequisitosCargo';
 import PrerrequisitosCargoForm from '../components/PrerrequisitosCargoForm.vue';
 import PrerrequisitosCargoTable from '../components/PrerrequisitosCargoTable.vue';
+import { useCargos } from 'src/modules/cargos/composables/useCargos';
+
+const prepararNuevoPrerrequisito = () => {
+  nuevoPrerrequisito(Number(listaCargos.value[0]?.id ?? 0));
+};
 
 const {
-  listaPrerrequisitos, listaCargos, cargando, filtroBusqueda,
+  listaPrerrequisitos, cargando, filtroBusqueda,
   esVisibleDialogo, esModoEdicion, prerrequisitoActual, 
-  cargarPrerrequisitos, prepararNuevoPrerrequisito,
+  cargarPrerrequisitos, nuevoPrerrequisito,
   prepararEdicionPrerrequisito, guardarPrerrequisito, confirmarEliminarPrerrequisito
 } = usePrerrequisitosCargo();
 
+const {
+  listaCargos,
+  cargarCargos
+} = useCargos();
+
 onMounted(() => {
   void cargarPrerrequisitos();
+  void cargarCargos();
 });
 </script>

@@ -122,7 +122,7 @@ export function useTiposDeContratos() {
   const procesarImportacion = async (tipoAccion: 'reemplazar' | 'agregar') => {
     try {
       const payload = {
-        ver : 'remplazarocopiardatostiposdecontratos',
+        ver : 'remplazarocopiardatostipodecontrato',
         idempresa : idEmpresa,
         datos : JSON.stringify(listaTiposDeContratosEstandar.value),
         tipo : tipoAccion === 'reemplazar' ? '1' : '2'

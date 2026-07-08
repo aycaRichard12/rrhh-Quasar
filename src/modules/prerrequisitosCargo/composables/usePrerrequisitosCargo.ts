@@ -5,12 +5,10 @@ import { useNotificaciones } from 'src/composables/useNotificaciones';
 
 import { prerrequisitosCargoService } from '../services/prerrequisitosCargo.service';
 import type { PrerrequisitoCargo } from '../types/prerrequisitosCargo.types';
-import type { Cargo } from 'src/modules/cargos/types/cargos.types';
 
 export function usePrerrequisitosCargo() {
   const idEmpresa = String(idempresa_md5());
   const listaPrerrequisitos = ref<PrerrequisitoCargo[]>([]);
-  const listaCargos = ref<Cargo[]>([]);
 
   const cargando = ref(false);
   const filtroBusqueda = ref<string>('');
@@ -20,7 +18,8 @@ export function usePrerrequisitosCargo() {
   const prerrequisitoActual = ref<PrerrequisitoCargo>({
     nombre: '',
     descripcion: '',
-    idcargo: 0 
+    cargo: '',
+    idcargo: 0
   });
 
   const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida } = useNotificaciones();
@@ -30,7 +29,6 @@ export function usePrerrequisitosCargo() {
     cargando.value = true;
     try {
       listaPrerrequisitos.value = await prerrequisitosCargoService.listarPrerrequisitos();
-      listaCargos.value = await prerrequisitosCargoService.listarCargos();
     } catch (error) {
       console.error(error);
       notificarErrorAccion('cargar');
@@ -39,11 +37,27 @@ export function usePrerrequisitosCargo() {
     }
   };
 
-  const prepararNuevoPrerrequisito = () => {
-    prerrequisitoActual.value = { nombre: '', descripcion: '', idcargo: 0 };
+  const nuevoPrerrequisito = (idCargo: number) => {
+    prerrequisitoActual.value = {
+      nombre: '',
+      descripcion: '',
+      cargo: '',
+      idcargo: idCargo
+    };
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
   };
+
+  //   const nuevoPrerrequisito = () => {
+  //   prerrequisitoActual.value = {
+  //     nombre: '',
+  //     descripcion: '',
+  //     cargo: '',
+  //     idcargo: 7
+  //   };
+  //   esModoEdicion.value = false;
+  //   esVisibleDialogo.value = true;
+  // };
 
   const prepararEdicionPrerrequisito = async (id: number) => {
     try {
@@ -104,9 +118,9 @@ export function usePrerrequisitosCargo() {
   };
 
   return {
-    listaPrerrequisitos, listaCargos, prerrequisitoActual,
+    listaPrerrequisitos, prerrequisitoActual,
     cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
-    cargarPrerrequisitos, prepararNuevoPrerrequisito,
+    cargarPrerrequisitos, nuevoPrerrequisito,
     prepararEdicionPrerrequisito, guardarPrerrequisito, confirmarEliminarPrerrequisito
   };
 }

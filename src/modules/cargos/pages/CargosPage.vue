@@ -49,15 +49,26 @@ import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
 import { useCargos } from '../composables/useCargos';
 import CargosForm from '../components/CargosForm.vue';
 import CargosTable from '../components/CargosTable.vue';
+import { useAreas } from 'src/modules/areas/composables/useAreas';
+
+const prepararNuevoCargo = () => {
+  nuevoCargo(Number(listaAreas.value[0]?.id ?? 0));
+};
 
 const {
-  listaCargos, listaAreas, cargoActual,
+  listaCargos, cargoActual,
   cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
   cargarCargos, guardarCargo,
-  prepararEdicionCargo, prepararNuevoCargo, confirmarEliminarCargo
+  prepararEdicionCargo, nuevoCargo, confirmarEliminarCargo
 } = useCargos();
 
+const {
+  listaAreas,
+  cargarAreas
+} = useAreas();
+
 onMounted(() => {
+  void cargarAreas();
   void cargarCargos();
 });
 </script>

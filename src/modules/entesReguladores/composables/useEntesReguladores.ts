@@ -45,8 +45,8 @@ export function useEntesReguladores() {
     enteReguladorActual.value = {
       nombre: '',
       descripcion: '',
-      porcentaje: 0,
-      monto: 0,
+      porcentaje: '',
+      monto: '',
       orden: calcularSiguienteOrden(),
       estado: 1
     };
@@ -131,7 +131,7 @@ export function useEntesReguladores() {
   const procesarImportacion = async (tipoAccion: 'reemplazar' | 'agregar') => {
     try {
       const payload = {
-        ver : 'remplazarocopiardatosEntesReguladores',
+        ver : 'remplazarocopiardatosentesreguladores',
         idempresa : idEmpresa,
         datos : JSON.stringify(listaEntesReguladoresEstandar.value),
         tipo : tipoAccion === 'reemplazar' ? '1' : '2'
@@ -180,7 +180,7 @@ export function useEntesReguladores() {
     esVistaEstandar, listaEntesReguladoresEstandar,
     cargarEntesReguladores, guardarEnteRegulador,
     prepararNuevoEnteRegulador, prepararEdicionEnteRegulador, confirmarEliminarEnteRegulador,
-    cargarEntesReguladoresEstandar, confirmarImportacion, alternarVistaEstandar,
+    alternarVistaEstandar, cargarEntesReguladoresEstandar, confirmarImportacion,
     cambiarEstadoRegistro
   };
 }

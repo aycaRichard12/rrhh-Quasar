@@ -91,6 +91,7 @@ export default {
       days: 'Días',
       weeks: 'Semanas',
       months: 'Meses',
+      year: 'Año',
       years: 'Años',
     }
   },
@@ -107,137 +108,29 @@ export default {
   },
   ///////////////////////////////////////////////////////////////////////////////////
   forms:{
-    standar: 'Importar Estándar',
     add: 'Agregar',
     back: 'Volver',
     replace: 'Reemplazar',
+    standar: 'Importar Estándar',
   },
   tables:{
-    description: 'Descripción',
-    options: 'Opciones',
-    order: 'Orden',
-    status: 'Estado',
     amount: 'Cantidad',
-    destination: 'Destino',
-    type: 'Tipo',
     amount2: 'Monto',
     date: 'Fecha',
-  },
-  //CONFIGURACIONES_________________________________________________________________________________
-    //ORGANIZACIÓN:
-  areas: {
-    title: 'Áreas',
-    subtitle: 'Gestión de áreas y sucursales de la empresa.',
-    name: 'Área',
-    new: 'Nueva Área',
-    edit: 'Editar Área',
-    branch: 'Sucursal',
-    noBranch: 'Sin sucursal',
-  },
-  cargos: {
-    title: 'Cargos',
-    subtitle: 'Gestión de cargos, salarios y vinculación con áreas de la empresa.',
-    name: 'Cargo',
-    new: 'Nuevo Cargo',
-    edit: 'Editar Cargo',
-    salary: 'Salario',
-  },
-  prerrequisitos: {
-    title: 'Prerrequisitos de Cargo',
-    subtitle: 'Gestión de condiciones o requisitos indispensables por cargo.',
-    name: 'Prerrequisito',
-    new: 'Nuevo Prerrequisito',
-    edit: 'Editar Prerrequisito',
-  },
-  tiposdecontratos:{
-    title: 'Tipos de Contrato',
-    subtitle: 'Gestión de contrataciones',
-    name: 'Tipo de Contrato',
-    new: 'Nuevo Tipo de Contrato',
-    edit: 'Editar Tipo de Contrato',
-    nature:'Naturaleza',
-    observation:'Obervación'
-  },
-  funcionesyobligaciones:{
-    title:'Funciones y Obligaciones',
-    subtitle: 'Gestión de deberes del Personal',
-    name: 'Funcion - Obligación',
-    new:'Nueva Funcion u Obligación',
-    edit: 'Editar Funcion u Obligación',
-  },
-  //BENEFICIOS SOCIALES:________________________________________________________________
-  beneficios:{
-    title: 'Beneficios',
-    subtitle: 'Gestión de beneficios e indemnizaciones del personal.',
-    name: 'Beneficios',
-    new: 'Nuevo Beneficio',
-    edit: 'Editar Beneficio',
-  },
-  entesreguladores:{
-    title: 'Entes Reguladores',
-    subtitle: 'Gestión de aportes y regulaciones.',
-    name: 'Ente Regulador',
-    new: 'Nuevo Ente Regulador',
-    edit: 'Editar Ente Regulador',
+    description: 'Descripción',
+    destination: 'Destino',
+    observation: 'Observación',
+    options: 'Opciones',
+    order: 'Orden',
     percentage: 'Porcentaje',
-  },
-  //METODOS DE EVALUACION:
-  metodosdeevaluacion:{
-    title: 'Métodos de Evaluación',
-    subtitle: 'Gestiona los métodos para calificar el desempeño.',
-    name: 'Método',
-    new: 'Nuevo Método de Evaluación',
-    edit: 'Editar Método de Evaluación',
-    maximumRating: 'Calificación Máxima',
-    manageRanges: 'Gestionar Rangos',
-    range:{
-      title: 'Rangos de ',
-      subtitle:'Gestiona los niveles de calificación',
-      name:'Rango de Evaluacion',
-      new: 'Nuevo Rango de Evaluación',
-      edit: 'Editar Rango de Evaluación',
-      criteria: 'Criterio/Rango',
-      score: 'Puntaje',
-    }
+    status: 'Estado',
+    type: 'Tipo',
     
   },
-  actividadesdeevaluacion: {
-    title: 'Actividades de Evaluación',
-    subtitle: 'Gestión de actividades para evaluar el desempeño.',
-    name: 'Actividad',
-    new: 'Nueva Actividad',
-    edit: 'Editar Actividad',
-  },
-  niveles: {
-    title: 'Niveles de Gravedad',
-    subtitle: 'Gestión de niveles de gravedad para sanciones.',
-    name: 'Nivel',
-    new: 'Nuevo Nivel',
-    edit: 'Editar Nivel',
-  },
-  tiposdesanciones: {
-    title: 'Tipos de Sanciones',
-    subtitle: 'Gestión de tipos de sanciones y su gravedad.',
-    name: 'Tipo de Sanción',
-    new: 'Nuevo Tipo de Sanción',
-    edit: 'Editar Tipo de Sanción',
-  },
-  motivosdebaja: {
-    title: 'Motivos de Baja',
-    subtitle: 'Gestión de motivos de baja de personal.',
-    name: 'Motivo',
-    new: 'Nuevo Motivo de Baja',
-    edit: 'Editar Motivo',
-    type: 'Tipo'
-  },
-  trabajadores: {
-    title: 'Trabajadores',
-    subtitle: 'Gestión de personal y su historial en la empresa.',
-    new: 'Nuevo Trabajador',
-    edit: 'Editar Trabajador',
+  person:{
     photo: 'Foto',
-    names: 'Nombres',
-    lastNames: 'Apellidos',
+    name: 'Nombres',
+    lastname: 'Apellidos',
     ci: 'C.I.',
     phone: 'Teléfono',
     email: 'Correo',
@@ -257,10 +150,169 @@ export default {
     divorced: 'Divorciado(a)',
     widowed: 'Viudo(a)',
     freeUnion: 'Unión Libre',
-    historyTitle: 'Historial de ',
-    historySubtitle: 'Registro de eventos y cambios del trabajador.',
-    selectCivilStatus: 'Seleccione Estado Civil',
-    selectStatus: 'Seleccione Estado',
-    uploadPhoto: 'Subir Foto',
+  },
+  date:{
+    start: 'Inicio',
+    end: 'Final',
+    registration: "Fecha de Registro"
+  },
+//CONFIGURACIONES_________________________________________________________________________________
+  //------------ORGANIZACIÓN---------------
+  areas: {
+    title: 'Áreas',
+    subtitle: 'Gestión de áreas y sucursales de la empresa.',
+    name: 'Área',
+    new: 'Nueva Área',
+    edit: 'Editar Área',
+    branch: 'Sucursal',
+  },
+  cargos: {
+    title: 'Cargos',
+    subtitle: 'Gestión de cargos, salarios y vinculación con áreas de la empresa.',
+    name: 'Cargo',
+    new: 'Nuevo Cargo',
+    edit: 'Editar Cargo',
+    salary: 'Salario',
+  },
+  prerrequisitos: {
+    title: 'Prerrequisitos de Cargo',
+    subtitle: 'Gestión de condiciones o requisitos indispensables por cargo.',
+    name: 'Prerrequisito',
+    new: 'Nuevo Prerrequisito',
+    edit: 'Editar Prerrequisito',
+  },
+  tiposdecontratos:{
+    title: 'Tipos de Contrato',
+    subtitle: 'Gestión de contrataciones',
+    name: 'Contrato',
+    new: 'Nuevo Tipo de Contrato',
+    edit: 'Editar Tipo de Contrato',
+    nature:'Naturaleza',
+  },
+  funcionesyobligaciones:{
+    title:'Funciones y Obligaciones',
+    subtitle: 'Gestión de deberes del Personal',
+    name: 'Funcion / Obligación',
+    new:'Nueva Funcion / Obligación',
+    edit: 'Editar Funcion / Obligación',
+  },
+  firmas:{
+    title: 'Firmas',
+    subtitle: 'Gestion de firmas de representantes',
+    name: 'Firma',
+    new: 'Nueva Firma',
+    edit: 'Editar Firma',
+    role: 'Cargo Administrativo',
+  },
+  //---------BENEFICIOS SOCIALES-----------------
+  entesreguladores:{
+    title: 'Entes Reguladores',
+    subtitle: 'Gestión de aportes y regulaciones.',
+    name: 'Ente Regulador',
+    new: 'Nuevo Ente Regulador',
+    edit: 'Editar Ente Regulador'
+  },
+  beneficios:{
+    title: 'Beneficios',
+    subtitle: 'Gestión de beneficios e indemnizaciones del personal.',
+    name: 'Beneficio',
+    new: 'Nuevo Beneficio',
+    edit: 'Editar Beneficio',
+  },
+  //--------VALORACION----------------
+  metodosdeevaluacion:{
+    title: 'Métodos de Evaluación',
+    subtitle: 'Gestiona los métodos para calificar el desempeño.',
+    name: 'Método',
+    new: 'Nuevo Método de Evaluación',
+    edit: 'Editar Método de Evaluación',
+    rating: 'Calificación Máxima',
+    range:{
+      title: 'Rangos de ',
+      subtitle:'Gestiona los niveles de calificación',
+      name:'Criterio/Rango',
+      new: 'Nuevo Rango de Evaluación',
+      edit: 'Editar Rango de Evaluación',
+      score: 'Puntaje',
+      manage: 'Gestionar Rangos',
+    }
+  },
+  actividadesdeevaluacion: {
+    title: 'Actividades de Evaluación',
+    subtitle: 'Gestión de actividades para evaluar el desempeño.',
+    name: 'Actividad',
+    new: 'Nueva Actividad',
+    edit: 'Editar Actividad',
+  },
+  tiposdesanciones: {
+    title: 'Tipos de Sanciones',
+    subtitle: 'Gestión de tipos de sanciones y su gravedad.',
+    name: 'Sanción',
+    new: 'Nuevo Tipo de Sanción',
+    edit: 'Editar Tipo de Sanción',
+  },
+  //--------SANCIONES----------------
+  niveles: {
+    title: 'Niveles de Gravedad',
+    subtitle: 'Gestión de niveles de gravedad para sanciones.',
+    name: 'Nivel',
+    new: 'Nuevo Nivel',
+    edit: 'Editar Nivel',
+  },
+  motivosdebaja: {
+    title: 'Motivos de Baja',
+    subtitle: 'Gestión de motivos de baja de personal.',
+    name: 'Motivo',
+    new: 'Nuevo Motivo de Baja',
+    edit: 'Editar Motivo de Baja',
+    type: 'Tipo'
+  },
+  bajas: {
+    title: 'Bajas',
+    subtitle: 'Gestion de bajas',
+    name: 'Baja',
+    new: 'Nueva Baja',
+    edit: 'Editar Baja',
+  },
+  //--------REMUNERACION----------------
+  metodosdepago: {
+    title: 'Metodos De Pago',
+    subtitle: 'Modalidades de Remuneración',
+    name: 'Pago',
+    new: 'Nuevo Metodo De Pago',
+    edit: 'Editar Metodo De Pago',
+  },
+  bonosempresa: {
+    title: 'Bonos de Empresa',
+    subtitle: 'Bonos Otorgados por la Empresa',
+    name: 'Bono',
+    new: 'Nuevo Bono De Empresa',
+    edit: 'Editar Bono De Empresa',
+  },
+  salariominimo: {
+    title: 'Salario Minimo',
+    subtitle: 'Salario Minimo segun estatutos',
+    name: 'Salario',
+    new: 'Nuevo Salario Minimo',
+    edit: 'Editar Salario Minimo',
+  },
+//GESTION DE RECLUTAMIENTO_________________________________________________________________________________
+  //------------ADMISION---------------
+//TRABAJADOR_________________________________________________________________________________
+  //------------PERSONAL---------------
+  trabajadores: {
+    title: 'Trabajadores',
+    subtitle: 'Gestión de personal y su historial en la empresa.',
+    name: 'Trabajador',
+    new: 'Nuevo Trabajador',
+    edit: 'Editar Trabajador',
+    history: {
+      title: 'Historial de ',
+      subtitle: 'Registro de eventos y cambios del trabajador.',
+      status: 'Seleccione Estado Civil',
+      uploadPhoto: 'Subir Foto',
+    }
   }
+  //------------NOVEDADES---------------
+  //------------PROCESOS LABORALES---------------
 }

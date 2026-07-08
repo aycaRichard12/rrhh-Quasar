@@ -2,19 +2,19 @@
   <q-page>
     <div class="lt-sm">
       <div class="row justify-left">
-        <h4 class="q-my-none text-primary">{{ $t('levels.title') }}</h4>
+        <h4 class="q-my-none text-primary">{{ $t('niveles.title') }}</h4>
       </div>
       <div class="row justify-left">
-        <p class="text-grey-7">{{ $t('levels.subtitle') }}</p>
+        <p class="text-grey-7">{{ $t('niveles.subtitle') }}</p>
       </div>
     </div>
 
     <q-card-section class="row no-wrap justify-between items-center q-gutter-x-sm">
       <q-btn
         class="global-btn-page"
-        icon="add"
+        icon="sym_o_add_notes"
         size="15px"
-        :label="$q.screen.lt.sm ? '' : $t('levels.new')"
+        :label="$q.screen.lt.sm ? '' : $t('niveles.new')"
         :round="$q.screen.lt.sm"
         @click="prepararNuevoNivel"
       />
@@ -25,18 +25,14 @@
 
     <div>
       <NivelesTable
-        v-model:filtro="filtroBusqueda"
-        :lista-niveles="listaNiveles"
-        :cargando="cargando"
+        :rows="listaNiveles"
+        :loading="cargando"
         @editar="prepararEdicionNivel"
         @eliminar="confirmarEliminarNivel"
       />
     </div>
-
     <!-- Diálogos -->
-    <q-dialog 
-      v-model="esVisibleDialogo"
-    >
+    <q-dialog v-model="esVisibleDialogo">
       <NivelesForm
         :nivel="nivelActual"
         :es-modo-edicion="esModoEdicion"
@@ -49,14 +45,16 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useNiveles } from '../composables/useNiveles';
-import NivelesTable from '../components/NivelesTable.vue';
-import NivelesForm from '../components/NivelesForm.vue';
 import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
 
+import NivelesForm from '../components/NivelesForm.vue';
+import NivelesTable from '../components/NivelesTable.vue';
+
 const {
-  listaNiveles, cargando, filtroBusqueda,
-  esVisibleDialogo, esModoEdicion, nivelActual,
-  cargarNiveles, prepararNuevoNivel, prepararEdicionNivel, guardarNivel, confirmarEliminarNivel
+  listaNiveles, nivelActual,
+  cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+  cargarNiveles, guardarNivel,
+  prepararNuevoNivel, prepararEdicionNivel, confirmarEliminarNivel
 } = useNiveles();
 
 onMounted(() => {

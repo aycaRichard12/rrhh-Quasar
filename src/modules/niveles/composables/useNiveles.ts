@@ -2,24 +2,31 @@ import { ref } from 'vue';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
+
 import { nivelesService } from '../services/niveles.service';
-import type { NivelesDeGravedad } from '../types/niveles.types';
+import type { NivelDeGravedad } from '../types/niveles.types';
 
 export function useNiveles() {
   const idEmpresa = String(idempresa_md5());
+  const listaNiveles = ref<NivelDeGravedad[]>([]);
+
+  const cargando = ref(false);
   const filtroBusqueda = ref('');
   const esModoEdicion = ref(false);
-  const cargando = ref(false);
-
-  const listaNiveles = ref<NivelesDeGravedad[]>([]);
   const esVisibleDialogo = ref(false);
 
-  const nivelActual = ref<NivelesDeGravedad>({
+  const nivelActual = ref<NivelDeGravedad>({
     nombre: '',
     pos: 0
   });
 
   const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida } = useNotificaciones();
+
+  const calcularSiguienteOrden = (): number => {
+    if (listaNiveles.value.length === 0) return 1;
+    const ordenes = listaNiveles.value.map(b => Number(b.pos) || 0);
+    return Math.max(...ordenes) + 1;
+  };
 
   const cargarNiveles = async () => {
     cargando.value = true;
@@ -36,7 +43,7 @@ export function useNiveles() {
   const prepararNuevoNivel = () => {
     nivelActual.value = {
       nombre: '',
-      pos: (listaNiveles.value.length + 1)
+      pos: calcularSiguienteOrden()
     };
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
@@ -44,11 +51,13 @@ export function useNiveles() {
 
   const prepararEdicionNivel = async (id: number) => {
     try {
-      const resp = await nivelesService.editarNivelDeGravedad(id);
-      if (resp.estado === 'exito' && resp.datos) {
-        nivelActual.value = { ...resp.datos };
+      const respuesta = await nivelesService.editarNivelDeGravedad(id);
+      if (respuesta.estado === 'exito' && respuesta.datos) {
+        nivelActual.value = { ...respuesta.datos };
         esModoEdicion.value = true;
         esVisibleDialogo.value = true;
+      } else {
+        notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
       console.error(error);
@@ -56,7 +65,7 @@ export function useNiveles() {
     }
   };
 
-  const guardarNivel = async (datos: NivelesDeGravedad) => {
+  const guardarNivel = async (datos: NivelDeGravedad) => {
     try {
       const payload = {
         ver: esModoEdicion.value ? 'editarNiveles' : 'registroNiveles',
@@ -65,14 +74,14 @@ export function useNiveles() {
         nombre: datos.nombre,
         pos: datos.pos
       };
-      const formData = prepararDatosFormulario(payload);
-      const resp = await nivelesService.guardarNivelDeGravedad(formData);
-      if (resp.estado === 'exito') {
+      const datosFormulario = prepararDatosFormulario(payload);
+      const respuesta = await nivelesService.guardarNivelDeGravedad(datosFormulario);
+      if (respuesta.estado === 'exito') {
         notificarExitoAccion('guardar');
         esVisibleDialogo.value = false;
         void cargarNiveles();
       } else {
-        notificarAdvertencia(resp.mensaje);
+        notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
       console.error(error);
@@ -83,12 +92,12 @@ export function useNiveles() {
   const confirmarEliminarNivel = (id: number) => {
     confirmarEliminacionPredefinida(async () => {
       try {
-        const resp = await nivelesService.eliminarNivelDeGravedad(id);
-        if (resp.estado === 'exito') {
+        const respuesta = await nivelesService.eliminarNivelDeGravedad(id);
+        if (respuesta.estado === 'exito') {
           notificarExitoAccion('eliminar');
           void cargarNiveles();
         } else {
-          notificarAdvertencia(resp.mensaje);
+          notificarAdvertencia(respuesta.mensaje);
         }
       } catch (error) {
         console.error(error);
@@ -98,16 +107,9 @@ export function useNiveles() {
   };
 
   return {
-    listaNiveles,
-    cargando,
-    filtroBusqueda,
-    esVisibleDialogo,
-    esModoEdicion,
-    nivelActual,
-    cargarNiveles,
-    prepararNuevoNivel,
-    prepararEdicionNivel,
-    guardarNivel,
-    confirmarEliminarNivel
+    listaNiveles, nivelActual,
+    cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+    cargarNiveles, guardarNivel,
+    prepararNuevoNivel, prepararEdicionNivel, confirmarEliminarNivel
   };
 }

@@ -1,15 +1,15 @@
-export interface MetodosDeEvaluacion {
+export interface MetodoDeEvaluacion {
   id?: number;
   nombre: string;
   descripcion: string;
-  calificacionMax: number;
-  fecha: Date;
+  calificacionMax: number | '';
+  fecha: string;
 }
 
-export interface RangosDeEvaluacion {
+export interface RangoDeEvaluacion {
   id?: number;
   nombre: string;
-  cantidad: number;
-  fecha: Date;
+  cantidad: number | '';
+  fecha: string;
   idMetodoDeEvaluacion?: number;
 }

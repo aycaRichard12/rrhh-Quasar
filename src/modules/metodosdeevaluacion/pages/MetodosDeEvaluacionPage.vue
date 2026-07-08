@@ -2,10 +2,10 @@
   <q-page>
     <div class="lt-sm">
       <div class="row justify-left">
-        <h4 class="q-my-none text-primary">{{ esVistaRangos ? $t('evaluationMethods.range.title') + metodoSeleccionado?.nombre : $t('evaluationMethods.title') }}</h4>
+        <h4 class="q-my-none text-primary">{{ esVistaRangos ? $t('metodosdeevaluacion.range.title') + listaMetodoSeleccionado?.nombre : $t('metodosdeevaluacion.title') }}</h4>
       </div>
       <div class="row justify-left">
-        <p class="text-grey-7">{{ esVistaRangos ? $t('evaluationMethods.range.subtitle') : $t('evaluationMethods.subtitle') }}</p>
+        <p class="text-grey-7">{{ esVistaRangos ? $t('metodosdevaluacion.range.subtitle') : $t('metodosdeevaluacion.subtitle') }}</p>
       </div>
     </div>
 
@@ -15,7 +15,7 @@
           class="global-btn-page"
           icon="sym_o_add_notes"
           size="15px"
-          :label="$q.screen.lt.sm ? '' : $t('evaluationMethods.new')"
+          :label="$q.screen.lt.sm ? '' : $t('metodosdeevaluacion.new')"
           :round="$q.screen.lt.sm"
           @click="prepararNuevoMetodo"
         />
@@ -29,7 +29,7 @@
           class="global-btn-page"
           icon="sym_o_add_notes"
           size="15px"
-          :label="$q.screen.lt.sm ? '' : $t('evaluationMethods.range.new')"
+          :label="$q.screen.lt.sm ? '' : $t('metodosdeevaluacion.range.new')"
           :round="$q.screen.lt.sm"
           @click="prepararNuevoRango"
         />
@@ -47,8 +47,8 @@
     <div v-if="!esVistaRangos">
       <MetodosDeEvaluacionTable
         v-model:filtro="filtroBusqueda"
-        :lista-metodos="listaMetodos"
         :cargando="cargando"
+        :lista-metodos="listaMetodos"
         @editar="prepararEdicionMetodo"
         @eliminar="confirmarEliminarMetodo"
         @gestionar-rangos="gestionarRangos"
@@ -63,11 +63,8 @@
         @eliminar="confirmarEliminarRango"
       />
     </div>
-
     <!-- Diálogos -->
-    <q-dialog 
-      v-model="esVisibleDialogoMetodo"
-    >
+    <q-dialog v-model="esVisibleDialogoMetodo">
       <MetodosDeEvaluacionForm
         :metodo="metodoActual"
         :es-modo-edicion="esModoEdicion"
@@ -79,8 +76,8 @@
       <RangosDeEvaluacionForm
         :rango="rangoActual"
         :es-modo-edicion="esModoEdicion"
-        :metodo-nombre="metodoSeleccionado?.nombre || ''"
-        :calificacion-max-metodo="metodoSeleccionado?.calificacionMax || 0"
+        :metodo-nombre="listaMetodoSeleccionado?.nombre || ''"
+        :calificacion-max-metodo="listaMetodoSeleccionado?.calificacionMax || 0"
         @guardar="guardarRango"
       />
     </q-dialog>
@@ -89,20 +86,25 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useMetodosDeEvaluacion } from '../composables/useMetodosDeEvaluacion';
-import MetodosDeEvaluacionTable from '../components/MetodosDeEvaluacionTable.vue';
-import RangosDeEvaluacionTable from '../components/RangosDeEvaluacionTable.vue';
-import MetodosDeEvaluacionForm from '../components/MetodosDeEvaluacionForm.vue';
-import RangosDeEvaluacionForm from '../components/RangosDeEvaluacionForm.vue';
 import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
 
+import { useMetodosDeEvaluacion } from '../composables/useMetodosDeEvaluacion';
+import MetodosDeEvaluacionForm from '../components/MetodosDeEvaluacionForm.vue';
+import MetodosDeEvaluacionTable from '../components/MetodosDeEvaluacionTable.vue';
+import RangosDeEvaluacionForm from '../components/RangosDeEvaluacionForm.vue';
+import RangosDeEvaluacionTable from '../components/RangosDeEvaluacionTable.vue';
+
 const {
-  listaMetodos, listaRangos, cargando, esVistaRangos, filtroBusqueda,
-  esVisibleDialogoMetodo, esVisibleDialogoRango, esModoEdicion,
-  metodoActual, rangoActual, metodoSeleccionado,
-  cargarMetodos, prepararNuevoMetodo, prepararEdicionMetodo, guardarMetodo, confirmarEliminarMetodo,
-  gestionarRangos, prepararNuevoRango, prepararEdicionRango, guardarRango, confirmarEliminarRango,
-  alternarVista
+  listaMetodos, metodoActual, 
+  cargando, filtroBusqueda, esModoEdicion, esVisibleDialogoMetodo,
+  esVistaRangos,
+  listaRangos, rangoActual,
+  listaMetodoSeleccionado, esVisibleDialogoRango,
+  cargarMetodos,  guardarMetodo,
+  prepararNuevoMetodo, prepararEdicionMetodo, confirmarEliminarMetodo,
+  alternarVista,
+  gestionarRangos, guardarRango,
+  prepararNuevoRango, prepararEdicionRango, confirmarEliminarRango
 } = useMetodosDeEvaluacion();
 
 onMounted(() => {

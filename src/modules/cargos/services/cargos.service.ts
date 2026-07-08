@@ -2,7 +2,6 @@ import { api } from 'src/boot/axios';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import type { RespuestaApi } from 'src/types/api.types';
 import type { Cargo } from '../types/cargos.types';
-import type { Area } from 'src/modules/areas/types/areas.types';
 
 const sanearCargo = (item: Cargo): Cargo => ({
   ...item,
@@ -11,10 +10,6 @@ const sanearCargo = (item: Cargo): Cargo => ({
   idarea: Number(item.idarea)
 })
 
-const sanearArea = (item: Area): Area => ({
-  ...item,
-  id: Number(item.id),
-})
 export const cargosService = {
   async listarCargos(): Promise<Cargo[]> {
     const { data } = await api.get(`listaCargos/${idempresa_md5()}`);
@@ -41,9 +36,4 @@ export const cargosService = {
     const { data } = await api.get(`eliminarCargo/${id}`);
     return data;
   },
-
-  async listarAreas(): Promise<Area[]> {
-    const { data } = await api.get(`listaAreas/${idempresa_md5()}`);
-    return Array.isArray(data) ? data.map(sanearArea) : [];
-  }
 };

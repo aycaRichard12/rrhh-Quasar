@@ -7,11 +7,11 @@ export interface Area {
     nombre: string;
     region: string;
     idregion: number;
-  }
+  };
 }
 
 export interface Sucursal {
-  id?: number;
+  id: number;
   sucursal: string;
   region: string;
   idregion: number;

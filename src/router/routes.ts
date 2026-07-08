@@ -16,6 +16,7 @@ const routes: RouteRecordRaw[] = [
       { path: 'prerrequisitosdecargo'  ,component: () => import('src/modules/prerrequisitoscargo/pages/PrerrequisitosCargoPage.vue') },
       { path: 'tiposdecontratos'       ,component: () => import('src/modules/tiposdecontratos/pages/TiposDeContratosPage.vue') },
       { path: 'funcionesyobligaciones' ,component: () => import('src/modules/funcionesyobligaciones/pages/FuncionesYObligacionesPage.vue') },
+      { path: 'firmas'                 ,component: () => import('src/modules/firmas/pages/FirmasPage.vue')},
 //Beneficios Sociales
       { path: 'entesreguladores'       ,component: () => import('src/modules/entesreguladores/pages/EntesReguladoresPage.vue') },
       { path: 'beneficios'             ,component: () => import('src/modules/beneficios/pages/BeneficiosPage.vue') },

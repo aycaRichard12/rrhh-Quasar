@@ -14,27 +14,27 @@ export const obtenerColumnasPrerrequisitosCargo = (t: (key: string) => string): 
     label: t('prerrequisitos.name'),
     align: 'left',
     field: 'nombre',
-    style: 'white-space: normal'
+    style: 'width: 200px; white-space: normal'
   },
   { 
     name: 'descripcion',
     label: t('tables.description'),
     align: 'left',
     field: 'descripcion',
-    style: 'white-space: normal'
+    style: 'white-space: normal; min-width: 228px;'
   },
   {
     name: 'cargo',
     label: t('cargos.name'),
     align: 'center',
     field: 'cargo',
-    style: 'width: 190px; white-space: normal'
+    style: 'width: 200px; white-space: normal'
   },
   {
     name: 'opciones',
     label: t('tables.options'),
     align: 'center',
     field: () => '',
-    style: 'width: 110px'
+    style: 'width: 100px'
   }
 ];

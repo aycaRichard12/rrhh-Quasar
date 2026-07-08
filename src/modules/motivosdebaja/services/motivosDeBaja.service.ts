@@ -1,16 +1,16 @@
 import { api } from 'src/boot/axios';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import type { RespuestaApi } from 'src/types/api.types';
-import type { MotivosDeBaja } from '../types/motivosDeBaja.types';
+import type { MotivoDeBaja } from '../types/motivosDeBaja.types';
 
-const sanearMotivo = (item: MotivosDeBaja): MotivosDeBaja => ({
+const sanearMotivo = (item: MotivoDeBaja): MotivoDeBaja => ({
   ...item,
   id: Number(item.id),
   tipo: Number(item.tipo)
 });
 
 export const motivosDeBajaService = {
-  async listarMotivosDeBaja(): Promise<MotivosDeBaja[]> {
+  async listarMotivosDeBaja(): Promise<MotivoDeBaja[]> {
       const { data } = await api.get(`listamotivobaja/${idempresa_md5()}`);
       return Array.isArray(data) ? data.map(sanearMotivo) : [];
     },
@@ -20,7 +20,7 @@ export const motivosDeBajaService = {
       return data;
     },
   
-    async editarMotivoDeBaja(id: number): Promise<RespuestaApi<MotivosDeBaja>> {
+    async editarMotivoDeBaja(id: number): Promise<RespuestaApi<MotivoDeBaja>> {
       const { data } = await api.get(`verificarIDmotivobaja/${id}`);
           if (data.estado === 'exito' && data.datos) {
             return {

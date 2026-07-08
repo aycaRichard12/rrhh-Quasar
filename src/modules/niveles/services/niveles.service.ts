@@ -1,16 +1,16 @@
 import { api } from 'src/boot/axios';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import type { RespuestaApi } from 'src/types/api.types';
-import type { NivelesDeGravedad } from '../types/niveles.types';
+import type { NivelDeGravedad } from '../types/niveles.types';
 
-const sanearNivel = (item: NivelesDeGravedad): NivelesDeGravedad => ({
+const sanearNivel = (item: NivelDeGravedad): NivelDeGravedad => ({
   ...item,
   id: Number(item.id),
   pos: Number(item.pos)
 });
 
 export const nivelesService = {
-  async listarNivelesDeGravedad(): Promise<NivelesDeGravedad[]> {
+  async listarNivelesDeGravedad(): Promise<NivelDeGravedad[]> {
       const { data } = await api.get(`listaNiveles/${idempresa_md5()}`);
       return Array.isArray(data) ? data.map(sanearNivel) : [];
     },
@@ -20,7 +20,7 @@ export const nivelesService = {
       return data;
     },
   
-    async editarNivelDeGravedad(id: number): Promise<RespuestaApi<NivelesDeGravedad>> {
+    async editarNivelDeGravedad(id: number): Promise<RespuestaApi<NivelDeGravedad>> {
       const { data } = await api.get(`verificarIDniveles/${id}`);
           if (data.estado === 'exito' && data.datos) {
             return {

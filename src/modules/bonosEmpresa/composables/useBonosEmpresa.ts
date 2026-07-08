@@ -2,66 +2,81 @@ import { ref } from 'vue';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
+
 import { bonosEmpresaService } from '../services/bonosEmpresa.service';
 import type { BonoEmpresa } from '../types/bonosEmpresa.types';
 
 export function useBonosEmpresa() {
-
+  const idEmpresa = String(idempresa_md5());
   const listaBonosEmpresa = ref<BonoEmpresa[]>([]);
-  const listaBonosEmpresaEstandar = ref<BonoEmpresa[]>([]);
+
+  const cargando = ref<boolean>(false);
+  const filtroBusqueda = ref<string>('');
   const esModoEdicion = ref(false);
-  const esVistaEstandar = ref(false);
   const esVisibleDialogo = ref(false);
+
+  const esVistaEstandar = ref(false);
+  const listaBonosEmpresaEstandar = ref<BonoEmpresa[]>([]);
 
   const bonoEmpresaActual = ref<BonoEmpresa>({
     nombre: '',
+    tipo: 1,
+    cantidad: 0,
+    orden: 0,
+    destino: 1,
     descripcion: '',
-    tipo: '1',
-    cantidad: '0',
-    orden: '',
-    destino: '1'
+    estado: 1,
+    fecha: '',
   });
-  const { notificarExito, notificarError, notificarAdvertencia, confirmarAccion } = useNotificaciones();
-  const idEmpresa = String(idempresa_md5());
+
+  const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida, confirmarImportacionPredefinida } = useNotificaciones();
+
+  const calcularSiguienteOrden = (): number => {
+    if (listaBonosEmpresa.value.length === 0) return 1;
+    const ordenes = listaBonosEmpresa.value.map(b => Number(b.orden) || 0);
+    return Math.max(...ordenes) + 1;
+  };
 
   const cargarBonosEmpresa = async () => {
+    cargando.value = true;
     try {
       listaBonosEmpresa.value = await bonosEmpresaService.listarBonosEmpresa();
     } catch (error) {
-      console.error('Error al cargar bonos beneficio:', error);
-      notificarError('Error al cargar los datos o conexión a internet desactivada');
-    }
-  };
-
-  const cargarBonosEmpresaEstandar = async () => {
-    try {
-      listaBonosEmpresaEstandar.value = await bonosEmpresaService.listarBonosEmpresaEstandar();
-      esVistaEstandar.value = true;
-    } catch (error) {
-      console.error('Error al cargar bonos empresa estándar:', error);
-      notificarError('Error al cargar los datos o conexión a internet desactivada');
+      console.error(error);
+      notificarErrorAccion('cargar');
+    } finally {
+      cargando.value = false;
     }
   };
 
   const prepararNuevoBonoEmpresa = () => {
     bonoEmpresaActual.value = {
-      nombre: '', descripcion: '', tipo: '1', cantidad: '0', orden: '', destino: '1'
+      nombre: '',
+      tipo: 1,
+      cantidad: 0,
+      orden: calcularSiguienteOrden(),
+      destino: 1,
+      descripcion: '',
+      estado: 1,
+      fecha: ''
     };
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
   };
 
-  const prepararEdicionBonoEmpresa = async (id: string) => {
+  const prepararEdicionBonoEmpresa = async (id: number) => {
     try {
       const respuesta = await bonosEmpresaService.editarBonoEmpresa(id);
       if (respuesta.estado === 'exito' && respuesta.datos) {
         bonoEmpresaActual.value = { ...respuesta.datos };
         esModoEdicion.value = true;
         esVisibleDialogo.value = true;
+      } else {
+        notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
       console.error(error);
-      notificarError('Error al obtener datos del bono empresa');
+      notificarErrorAccion('cargar');
     }
   };
 
@@ -70,18 +85,13 @@ export function useBonosEmpresa() {
       const payload = {
         ver : esModoEdicion.value ? 'editarbonosempresa' : 'registrobonosempresa',
         idempresa :idEmpresa,
-        id : esModoEdicion.value ? datosGuardar.id : undefined,
-        nombre : datosGuardar.nombre,
-        descripcion : datosGuardar.descripcion,
-        tipo : datosGuardar.tipo,
-        cantidad : datosGuardar.cantidad,
-        orden : datosGuardar.orden,
-        destino : datosGuardar.destino,
+        id : datosGuardar.id,
+        ...datosGuardar
       };
       const datosFormulario = prepararDatosFormulario(payload)
       const respuesta = await bonosEmpresaService.guardarBonoEmpresa(datosFormulario);
       if (respuesta.estado === 'exito') {
-        notificarExito(esModoEdicion.value ? 'Registro Actualizado con éxito' : 'Registro creado con éxito');
+        notificarExitoAccion('guardar');
         esVisibleDialogo.value = false;
         void cargarBonosEmpresa();
       } else {
@@ -89,43 +99,42 @@ export function useBonosEmpresa() {
       }
     } catch (error){
       console.error(error);
-      notificarError('Error al procesar la solicitud');
+      notificarErrorAccion('guardar');
     }
   };
 
-  const confirmarEliminarBonoEmpresa = (id: string) => {
-    confirmarAccion('¿Está Seguro?', 'No podrá recuperar este registro.', async () => {
+  const confirmarEliminarBonoEmpresa = (id: number) => {
+    confirmarEliminacionPredefinida(async () => {
       try {
         const respuesta = await bonosEmpresaService.eliminarBonoEmpresa(id);
         if (respuesta.estado === 'exito') {
-          notificarExito(respuesta.mensaje);
+          notificarExitoAccion('eliminar');
           void cargarBonosEmpresa();
+        } else {
+          notificarAdvertencia(respuesta.mensaje);
         }
       } catch (error) {
         console.error(error);
-        notificarError('Error al eliminar el registro');
+        notificarErrorAccion('eliminar');
       }
     });
   };
 
-  const cambiarEstadoBonoEmpresa = async (bonoEmpresa: BonoEmpresa) => {
-    if (!bonoEmpresa.id) return;
-    const nuevoEstado = bonoEmpresa.estado == '1' ? '2' : '1';
+  const cargarBonosEmpresaEstandar = async () => {
+    cargando.value = true;
     try {
-      await bonosEmpresaService.cambiarEstadoBonoEmpresa(bonoEmpresa.id, nuevoEstado);
-      notificarExito('Estado actualizado correctamente');
-      void cargarBonosEmpresa();
+      listaBonosEmpresaEstandar.value = await bonosEmpresaService.listarBonosEmpresaEstandar();
+      esVistaEstandar.value = true;
     } catch (error) {
-      console.error('Error al cambiar estado:', error);
-      notificarError('Error al cambiar el estado del registro');
+      console.error(error);
+      notificarErrorAccion('cargar');
+    } finally {
+      cargando.value = false;
     }
   };
 
   const confirmarImportacion = (tipoAccion: 'reemplazar' | 'agregar') => {
-    const mensaje = tipoAccion === 'reemplazar'
-      ? 'Esta acción reemplazará todos sus datos actuales por los del catálogo estándar. ¿Desea continuar?'
-      : 'Esta acción agregará los datos del catálogo estándar a su tabla actual. ¿Desea continuar?';
-    confirmarAccion('Confirmar Importación', mensaje, () => {
+    confirmarImportacionPredefinida(tipoAccion, () => {
       void procesarImportacion(tipoAccion);
     });
   };
@@ -141,24 +150,42 @@ export function useBonosEmpresa() {
       const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await bonosEmpresaService.guardarBonoEmpresa(datosFormulario);
       if (respuesta.estado === 'exito') {
-        notificarExito('Catálogo procesado correctamente');
+        notificarExitoAccion('importar');
         alternarVistaEstandar();
         void cargarBonosEmpresa();
       } else {
         notificarAdvertencia(respuesta.mensaje);
       }
     } catch (error) {
-      console.error('Error procesando importación:', error);
-      notificarError('Error al procesar el catálogo');
+      console.error(error);
+      notificarErrorAccion('importar');
     }
   };
-  
+
   const alternarVistaEstandar = () => {
     esVistaEstandar.value = !esVistaEstandar.value;
   };
 
+  const cambiarEstadoBonoEmpresa = async (bonoEmpresa: BonoEmpresa) => {
+    if (!bonoEmpresa.id) return;
+    const nuevoEstado = bonoEmpresa.estado == 1 ? 2 : 1;
+    try {
+      await bonosEmpresaService.cambiarEstadoBonoEmpresa(bonoEmpresa.id, nuevoEstado);
+      notificarExitoAccion('guardar');
+      void cargarBonosEmpresa();
+    } catch (error) {
+      console.error(error);
+      notificarErrorAccion('guardar');
+    }
+  };
+
   return {
-    listaBonosEmpresa, listaBonosEmpresaEstandar, esVisibleDialogo, esModoEdicion, bonoEmpresaActual, esVistaEstandar, 
-    cargarBonosEmpresa, cargarBonosEmpresaEstandar, prepararNuevoBonoEmpresa, prepararEdicionBonoEmpresa, guardarBonoEmpresa, confirmarEliminarBonoEmpresa, cambiarEstadoBonoEmpresa, confirmarImportacion, alternarVistaEstandar
+    listaBonosEmpresa, bonoEmpresaActual,
+    cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+    esVistaEstandar, listaBonosEmpresaEstandar, 
+    cargarBonosEmpresa, guardarBonoEmpresa,
+    prepararNuevoBonoEmpresa, prepararEdicionBonoEmpresa, confirmarEliminarBonoEmpresa,
+    alternarVistaEstandar, cargarBonosEmpresaEstandar, confirmarImportacion,
+    cambiarEstadoBonoEmpresa
   };
 }

@@ -15,18 +15,33 @@ const sanearCantidad = (valor: unknown): number => {
   return 0;
 };
 
+const sanearBeneficio = (item: Beneficio): Beneficio => ({
+  ...item,
+  id: Number(item.id),
+  tipo: Number(item.tipo),
+  cantidad: sanearCantidad(item.cantidad),
+  orden: Number(item.orden),
+  destino: Number(item.destino),
+  estado: Number(item.estado)
+});
+
 export const beneficiosService = {
+  // async listarBeneficios(): Promise<Beneficio[]> {
+  //   const { data } = await api.get(`listabeneficio/${idempresa_md5()}`);
+  //   return Array.isArray(data) ? data.map((item: Record<string, unknown>) => ({
+  //     ...item,
+  //     id: Number(item.id),
+  //     tipo: Number(item.tipo),
+  //     estado: Number(item.estado),
+  //     orden: Number(item.orden),
+  //     destino: Number(item.destino),
+  //     cantidad: sanearCantidad(item.cantidad)
+  //   }) as Beneficio) : [];
+  // },
+
   async listarBeneficios(): Promise<Beneficio[]> {
     const { data } = await api.get(`listabeneficio/${idempresa_md5()}`);
-    return Array.isArray(data) ? data.map((item: Record<string, unknown>) => ({
-      ...item,
-      id: Number(item.id),
-      tipo: Number(item.tipo),
-      estado: Number(item.estado),
-      orden: Number(item.orden),
-      destino: Number(item.destino),
-      cantidad: sanearCantidad(item.cantidad)
-    }) as Beneficio) : [];
+    return Array.isArray(data) ? data.map(sanearBeneficio) : [];
   },
   
   async guardarBeneficio(payload: FormData): Promise<RespuestaApi> {

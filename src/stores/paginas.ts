@@ -7,12 +7,12 @@ export const PAGINAS_ICONS: Readonly<IconConfig> = Object.freeze({
   trabajador: 'engineering',
   gestiondecapacitacion: 'sym_o_account_child_invert',
   gestionsalarial: 'sym_o_universal_currency_alt',
-
+//_____________________________________________________________________________________________
   // Nivel 2 (Sub Menús)
   organizacion: 'corporate_fare',
   beneficiossociales: 'redeem',
   valoracion: 'assessment',
-  sanciones_submenu: 'gavel',
+  sanciones: 'gavel',
   remuneracion: 'payments',
 //___________________________
   admision: 'how_to_reg',
@@ -25,13 +25,14 @@ export const PAGINAS_ICONS: Readonly<IconConfig> = Object.freeze({
 //___________________________
   planillas: 'table_view',
   boletas: 'request_quote',
-
+//_____________________________________________________________________________________________
   // Nivel 3 (Tabs / Páginas)
   areas: 'layers',
   cargos: 'badge',
   prerrequisitosdecargo: 'fact_check',
   tiposdecontratos: 'description',
   funcionesyobligaciones: 'assignment',
+  firmas: 'sym_o_signature',
 //___________________________
   entesreguladores: 'gavel',
   beneficios: 'redeem',
@@ -45,12 +46,12 @@ export const PAGINAS_ICONS: Readonly<IconConfig> = Object.freeze({
   bajas: 'logout',
 //___________________________
   metodosdepago: 'payments',
-  bonosempresa: 'moped',
+  bonosempresa: 'sym_o_featured_seasonal_and_gifts',
   salariominimo: 'monetization_on',
 //___________________________
   convocatorias: 'campaign',
   postulantes: 'person_search',
-  actividades: 'school', // Entrenamiento & Capacitación
+  //evaluacion: '',         //implementar modulo nuevo
 //___________________________
   trabajadores: 'groups',
   contrataciones: 'handshake',
@@ -59,8 +60,10 @@ export const PAGINAS_ICONS: Readonly<IconConfig> = Object.freeze({
   anticipos: 'price_check',
   vacaciones: 'beach_access',
 //___________________________
-  sanciones: 'warning',
+  //sanciones: 'warning',           //mismo nombre que el submenu sanciones
   memorandums: 'mail',
+//___________________________
+  actividades: 'school', // Entrenamiento & Capacitación  falta implementar modulo
 //___________________________
   sueldosysalarios: 'account_balance_wallet',
   aportes: 'savings',
@@ -71,7 +74,6 @@ export const PAGINAS_ICONS: Readonly<IconConfig> = Object.freeze({
   aguinaldosbp: 'receipt_long',
   retroactivos: 'history',
 //___________________________
-  reclutamiento: 'person_add'  //////falta ubicar
 });
 
 export function getIconoMenu(codigo: string): string {
@@ -84,8 +86,8 @@ export function getIconoMenu(codigo: string): string {
   return PAGINAS_ICONS[codigoBase] || 'label_important';
 }
 
-//////Antiguo Codigo
 
+//////Antiguo Codigo
 
 // export const PAGINAS = Object.freeze({
 //   organizacion: ['areas', 'cargos', 'prerrequisitosdecargo', 'tiposdecontratos', 'funcionesyobligaciones'],
@@ -158,7 +160,6 @@ export function getIconoMenu(codigo: string): string {
 //   actividades: "school",
 //   planillas: "table_view",
 //   boletasdepago: "request_quote",
-
 
 //   // Módulos
 //   areas: "layers",

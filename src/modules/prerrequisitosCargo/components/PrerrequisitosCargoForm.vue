@@ -61,11 +61,11 @@ const emits = defineEmits<{
 
 const datosLocales = ref<PrerrequisitoCargo>({ ...props.prerrequisito })
 
-watch(() => props.prerrequisito, (nuevosDatos) => { 
-  datosLocales.value = { ...nuevosDatos }
-}, { deep: true })
-
 const emitirGuardar = () => { 
   emits('guardar', datosLocales.value)
 }
+
+watch(() => props.prerrequisito, (nuevosDatos) => { 
+  datosLocales.value = { ...nuevosDatos }
+}, { deep: true })
 </script>

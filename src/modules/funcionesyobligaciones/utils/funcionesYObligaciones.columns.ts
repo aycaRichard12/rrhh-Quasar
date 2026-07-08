@@ -14,20 +14,21 @@ export const obtenerColumnasFuncionesYObligaciones = (t: (key: string) => string
     label: t('funcionesyobligaciones.name'),
     align: 'left',
     field: 'nombre',
-    style: 'white-space: normal'
+    style: 'width: 200px; white-space: normal'
   },
   {
     name: 'descripcion',
     label: t('tables.description'),
     align: 'left',
     field: 'descripcion',
-    style: 'white-space: normal; min-width:210px'
+    style: 'white-space: normal; min-width: 228px;'
   },
   {
     name: 'cargo',
     label: t('cargos.name'),
-    align: 'left',
+    align: 'center',
     field: 'cargo',
+    style: 'width: 200px; white-space: normal'
   },
   {
     name: 'opciones',
