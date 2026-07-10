@@ -1,22 +1,22 @@
 <template>
   <q-card style="width: 100vh">
     <q-card-section class="global-form-header row justify-between items-center">
-      <div class="text-h6">{{ esModoEdicion ? $t('salariosminimos.edit') : $t('salariosminimos.new') }}</div>
+      <div class="text-h6">{{ esModoEdicion ? $t('salariominimo.edit') : $t('salariominimo.new') }}</div>
       <q-btn icon="close" flat round dense v-close-popup />  
     </q-card-section>
 
     <q-form @submit="emitirGuardar">
       <q-card-section>
         <div class="row q-col-gutter-md">
-          <div class="col-12">
+          <div class="col-4">
             <q-input autofocus dense outlined
               v-model="datosLocales.anio" 
               type="number"
-              :label="$t('entesreguladores.name') + ' *'"
+              :label="$t('common.timeUnits.year') + ' *'"
               :rules="[val => !!val || $t('common.rules.required')]"
             />
           </div>
-          <div class="col-7">
+          <div class="col-5">
             <q-input dense outlined
               v-model="datosLocales.monto" 
               step="0.01"
@@ -25,7 +25,7 @@
               :rules="[val => !!val || $t('common.rules.required')]"
             />
           </div>
-          <div class="col-5">
+          <div class="col-3">
             <q-input dense outlined
               v-model="datosLocales.porcentaje"
               step="0.01"

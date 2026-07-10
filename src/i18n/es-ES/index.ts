@@ -203,6 +203,13 @@ export default {
     new: 'Nueva Firma',
     edit: 'Editar Firma',
     role: 'Cargo Administrativo',
+    planillas:{
+      title: 'Firmas de Planillas',
+      subtitle: 'Gestion de firmas de planillas',
+      name: 'Planilla',
+      new: 'Nueva Planilla',
+      manage: 'Gestionar Firmas',
+    }
   },
   //---------BENEFICIOS SOCIALES-----------------
   entesreguladores:{
