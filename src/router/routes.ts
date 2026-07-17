@@ -34,8 +34,8 @@ const routes: RouteRecordRaw[] = [
       { path: 'salariominimo'          ,component: () => import('src/modules/salariominimo/pages/SalarioMinimoPage.vue') },
 //____________| GESTIÓN RECLUTAMIENTO |_________________________________________________________________________________
 // Admisión
-      { path: 'convocatorias'          ,component: () => import('src/modules/convocatorias/pages/convocatoriasPage.vue') },
-
+      { path: 'convocatorias'          ,component: () => import('src/modules/convocatorias/pages/ConvocatoriasPage.vue') },
+      { path: 'postulantes'            ,component: () => import('src/modules/postulantes/pages/PostulantesPage.vue')},
 
 //____________| TRABAJADOR |____________________________________________________________________________________________
 // Personal

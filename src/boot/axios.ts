@@ -7,6 +7,7 @@ declare module 'vue' {
   interface ComponentCustomProperties {
     $axios: AxiosInstance;
     $api: AxiosInstance;
+    $apims: AxiosInstance; ////////api mistersoft
   }
 }
 
@@ -45,6 +46,40 @@ api.interceptors.response.use(
     return Promise.reject(new ApiError('Error inesperado'));
   },
 );
+
+///////////////////////Api MisterSoft en paralelo//////////////
+
+console.log(import.meta.env.VITE_API_URLMS)
+const apims = axios.create({ baseURL: import.meta.env.VITE_API_URLMS, timeout: 15000 });
+
+apims.interceptors.response.use(
+  (response) => response,
+
+  (error: unknown) => {
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError;
+
+      // error del servidor (FastAPI)
+      if (axiosError.response) {
+        const message = extractApiMessage(axiosError.response.data);
+
+        return Promise.reject(
+          new ApiError(message, axiosError.response.status, axiosError.response.data),
+        );
+      }
+
+      // error de red
+      if (axiosError.request) {
+        return Promise.reject(new ApiError('No se pudo conectar con el servidor'));
+      }
+    }
+
+    //error desconocido
+    return Promise.reject(new ApiError('Error inesperado'));
+  },
+);
+////////////////////////////////////////////////////////////////
+
 export default defineBoot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
@@ -55,6 +90,7 @@ export default defineBoot(({ app }) => {
   app.config.globalProperties.$api = api;
   // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
   //       so you can easily perform requests against your app's API
+  app.config.globalProperties.$apims = apims;
 });
 
-export { api };
+export { api, apims };

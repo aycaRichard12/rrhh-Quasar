@@ -74,8 +74,6 @@ const { t } = useI18n();
 const listaColumnas = computed(() => obtenerColumnasMetodosDeEvaluacion(t));
 const filasTipadas = computed(() => datosFiltrados.value as unknown as FilaBase[]);
 
-
-
 const props = defineProps<{
   listaMetodos: MetodoDeEvaluacion[];
   cargando: boolean;

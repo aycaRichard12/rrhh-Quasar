@@ -4,7 +4,7 @@
       v-model:modelo-busqueda="filtroInterno"
       :filas="filasTipadas"
       :columnas="listaColumnas"
-      :columnas-personalizadas="['estado', 'idusuario']"
+      :columnas-personalizadas="['estado', 'idusuario', 'opciones']"
       :esta-cargando="cargando"
       @editar="(id) => emits('editar', Number(id))"
       @eliminar="(id) => emits('eliminar', Number(id))"
@@ -32,7 +32,7 @@
 
       <template #body-cell-idusuario="props">
         <q-td :props="props">
-          {{obtenerNombreUsuario(buscarUsuario(props.row.idusuario))}}
+          {{obtenerCadenaUsuario(buscarUsuario(props.row.idusuario))}}
         </q-td>
       </template>
 
@@ -44,6 +44,32 @@
             @click="emitirCambioEstado(propsCell.row.idfirma)"
           >
             <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.active') }}</q-tooltip>
+          </q-btn>
+        </q-td>
+      </template>
+
+      <template #body-cell-opciones="propsCell">
+        <q-td :props="propsCell">
+          <q-btn dense round
+            class="global-btn-page"
+            icon="sym_o_edit_square"
+            @click="emits('editar', Number(propsCell.row.id))" 
+          >
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.edit') }}</q-tooltip>
+          </q-btn>
+          <q-btn dense round
+            color="negative"
+            icon="delete_forever"
+            @click="emits('eliminar', Number(propsCell.row.id))"
+          >
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.delete') }}</q-tooltip>
+          </q-btn>
+          <q-btn dense round
+            class="global-btn-page"
+            icon="sym_o_contract_edit"
+            @click="emits('gestionarFirmas', propsCell.row)"
+          >
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('firmas.planillas.manage') }}</q-tooltip>
           </q-btn>
         </q-td>
       </template>
@@ -60,7 +86,7 @@ import TablaFiltroExcel from 'src/components/core/TablaFiltroExcel.vue';
 import type { FilaBase } from 'src/components/core/TablaGenerica.vue'
 
 import type { Firma, Usuario } from '../types/firmas.types';
-import { obtenerColumnasFirmas, obtenerNombreUsuario } from '../utils/firmas.columns';
+import { obtenerCadenaUsuario, obtenerColumnasFirmas } from '../utils/firmas.columns';
 
 const { t } = useI18n();
 const listaColumnas = computed(() => obtenerColumnasFirmas(t));
@@ -89,6 +115,7 @@ const emits = defineEmits<{
   (e: 'eliminar', id: number): void;
 	(e: 'cambiarEstadoRegistro', id: number): void;
   (e: 'update:filtro', val: string): void;
+  (e: 'gestionarFirmas', firma: Firma): void;
 }>();
 
 const configuracionFiltros: ConfiguracionColumnaExcel[] = [
