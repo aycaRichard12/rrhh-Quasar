@@ -1,7 +1,7 @@
 import { api, apims} from 'src/boot/axios';
 import { idempresa_md5 } from 'src/composables/funcionesGenerales';
 import type { RespuestaApi } from 'src/types/api.types';
-import type { Firma, FirmaTipoPlanilla, TipoPlanilla, Usuario } from '../types/firmas.types';
+import type { Firma, ListaPlanillasFirma, TipoPlanilla, Usuario } from '../types/firmas.types';
 
 const sanearFirma = (item: Firma): Firma => ({
   ...item,
@@ -15,6 +15,11 @@ const sanearUsuario = (item: Usuario): Usuario => ({
   id: Number(item.id)
 })
 
+const sanearListaPlanillasFirma = (item: ListaPlanillasFirma): ListaPlanillasFirma => ({
+  ...item,
+  id: Number(item.id)
+})
+
 const sanearTipoPlanilla = (item: TipoPlanilla): TipoPlanilla => ({
   ...item,
   id_tipoPlanilla: Number(item.id_tipoPlanilla),
@@ -22,14 +27,14 @@ const sanearTipoPlanilla = (item: TipoPlanilla): TipoPlanilla => ({
   estado: Number(item.estado)
 })
 
-const sanearFirmaTipoPlanilla = (item: FirmaTipoPlanilla): FirmaTipoPlanilla => ({
-  ...item,
-  id: Number(item.id),
-  id_firma: Number(item.id_firma),
-  idplanilla: Number(item.idplanilla),
-  estado: Number(item.estado),
-  orden: Number(item.orden)
-})
+// const sanearFirmaTipoPlanilla = (item: FirmaTipoPlanilla): FirmaTipoPlanilla => ({
+//   ...item,
+//   id: Number(item.id),
+//   id_firma: Number(item.id_firma),
+//   idplanilla: Number(item.idplanilla),
+//   estado: Number(item.estado),
+//   orden: Number(item.orden)
+// })
 
 export const firmasService = {
   async listarfirmas(): Promise<Firma[]> {
@@ -82,9 +87,9 @@ export const firmasService = {
     return Array.isArray(data) ? data.map(sanearTipoPlanilla) : [];
   },
 
-  async listarFirmaTipoPlanillas(id_firma: number): Promise<FirmaTipoPlanilla[]> {
-    const { data } = await apims.get(`listaFirmaTipoPlanilla/${id_firma}`);
-    return Array.isArray(data) ? data.map(sanearFirmaTipoPlanilla) : [];
+  async listarPlanillasFirma(id_firma: number): Promise<ListaPlanillasFirma[]> {
+    const { data } = await apims.get(`listar_planillas_firma/${id_firma}`);
+    return Array.isArray(data) ? data.map(sanearListaPlanillasFirma) : [];
   },
 
   async accionFirmaTipoPlanilla(formData: FormData): Promise<RespuestaApi> {

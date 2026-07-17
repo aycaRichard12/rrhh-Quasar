@@ -31,3 +31,8 @@ export interface FirmaTipoPlanilla {
   firma_nombre: string;
   orden: number;
 }
+
+export interface ListaPlanillasFirma {
+  id?: number;
+  nombrePlanilla: string;
+}

@@ -3,13 +3,14 @@ import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
 
 import { firmasService } from '../services/firmas.service';
-import type { Firma, FirmaTipoPlanilla, TipoPlanilla, Usuario } from '../types/firmas.types';
+import type { Firma, FirmaTipoPlanilla, ListaPlanillasFirma, TipoPlanilla, Usuario } from '../types/firmas.types';
 
 export function useFirmas() {
   const listaUsuarios = ref<Usuario[]>([]);
   const listaFirmas = ref<Firma[]>([]);
   const listaTipoPlanillas = ref<TipoPlanilla[]>([]);
   const listaFirmaTipoPlanillas = ref<FirmaTipoPlanilla[]>([]);
+  const listaPlanillasFirma = ref<ListaPlanillasFirma[]>([]);
 
   const cargando = ref(false);
   const filtroBusqueda = ref('');
@@ -169,7 +170,7 @@ export function useFirmas() {
   const cargarFirmaTipoPlanillas= async (idFirma: number) => {
     cargando.value = true;
     try {
-      listaFirmaTipoPlanillas.value = await firmasService.listarFirmaTipoPlanillas(idFirma);
+      listaPlanillasFirma.value = await firmasService.listarPlanillasFirma(idFirma);
     } catch (error) {
       console.error(error);
       notificarErrorAccion('cargar');
