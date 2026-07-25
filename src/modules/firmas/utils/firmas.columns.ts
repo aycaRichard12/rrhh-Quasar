@@ -1,5 +1,6 @@
 import type { QTableColumn } from 'quasar';
-import type { Firma, ListaPlanillasFirma, Usuario } from '../types/firmas.types';
+import type { Firma } from '../types/firmas.types';
+import type { Usuario } from 'src/types/usuario.types';
 
 export const obtenerCadenaUsuario = (usuario: Usuario | null | undefined) => {
   if (!usuario) {
@@ -58,30 +59,6 @@ export const obtenerColumnasFirmas = (t: (key: string) => string): QTableColumn<
     align: 'center',
     field: 'estado',
     style: 'width: 50px'
-  },
-  {
-    name: 'opciones',
-    label: t('tables.options'),
-    align: 'center',
-    field: () => '',
-    style: 'width: 100px'
-  }
-];
-
-export const obtenerColumnasFirmasTipoPlanilla = (t: (key: string) => string): QTableColumn<ListaPlanillasFirma>[] => [
-  {
-    name: 'numero',
-    label: 'N°',
-    align: 'right',
-    field: () => '',
-    style: 'width: 50px'
-  },
-  {
-    name: 'nombrePlanilla',
-    label: t('Planilla'),
-    align: 'left',
-    field: 'nombrePlanilla',
-    style: 'white-space: normal'
   },
   {
     name: 'opciones',

@@ -1,25 +1,18 @@
 import { ref } from 'vue';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
-
 import { firmasService } from '../services/firmas.service';
-import type { Firma, FirmaTipoPlanilla, ListaPlanillasFirma, TipoPlanilla, Usuario } from '../types/firmas.types';
+import type { Firma } from '../types/firmas.types';
+import { useUsuarios } from 'src/composables/useUsuario';
 
 export function useFirmas() {
-  const listaUsuarios = ref<Usuario[]>([]);
   const listaFirmas = ref<Firma[]>([]);
-  const listaTipoPlanillas = ref<TipoPlanilla[]>([]);
-  const listaFirmaTipoPlanillas = ref<FirmaTipoPlanilla[]>([]);
-  const listaPlanillasFirma = ref<ListaPlanillasFirma[]>([]);
+  const { listaUsuarios, cargarUsuarios } = useUsuarios(); 
 
   const cargando = ref(false);
   const filtroBusqueda = ref('');
   const esModoEdicion = ref(false);
   const esVisibleDialogo = ref(false);
-
-  const esVistaFirmaTipoPlanilla = ref(false);
-  const esVisibleDialogoFirmaTipoPlanilla = ref(false);
-  const listaFirmaSeleccionada = ref<Firma | null>(null);
 
   const firmaActual = ref<Firma>({
     cargo: '',
@@ -29,18 +22,9 @@ export function useFirmas() {
     estado: 1
   });
 
-  const firmaTipoPlanillaActual = ref<FirmaTipoPlanilla>({
-    id_firma: 0,
-    idplanilla: 0,
-    estado: 1,
-    ci: '',
-    firma_nombre: '',
-    orden: 0
-  })
-
   const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida } = useNotificaciones();
-  //______________________ FIRMAS______________________________
-  const cargarFirmas = async () => {
+
+  const cargarFirmas = async (): Promise<void> => {
     cargando.value = true;
     try {
       listaFirmas.value = await firmasService.listarfirmas();
@@ -52,32 +36,19 @@ export function useFirmas() {
     }
   };
 
-  const cargarUsuarios = async () => {
-    cargando.value = true;
-  try {
-    listaUsuarios.value = await firmasService.listarUsuarios();
-  } catch (error) {
-    console.error(error);
-    notificarErrorAccion('cargar');
-  } finally {
-    cargando.value = false;
-  }
-};
-
-  const prepararNuevaFirma = (): void => {
+  const nuevaFirma = (idUsuario: number) => {
     firmaActual.value = {
       cargo: '',
       ci: '',
       nombre: '',
-      idusuario: 0,
+      idusuario: idUsuario,
       estado: 1
     };
-
     esModoEdicion.value = false;
     esVisibleDialogo.value = true;
   };
 
-  const prepararEdicionFirma = async (id: number) => {
+  const prepararEdicionFirma = async (id: number): Promise<void> => {
     try {
       const respuesta = await firmasService.editarFirma(id);
       if (respuesta.estado === 'exito' && respuesta.datos) {
@@ -93,14 +64,31 @@ export function useFirmas() {
     }
   };
 
-  const ejecutarAccionFirma = async (datosGuardar: Firma) => {
+  const ejecutarAccionFirma = async (datosGuardar: Firma): Promise<void> => {
     try {
+      console.log('Datos a guardar:', datosGuardar);
+      console.log('Lista de usuarios:', listaUsuarios.value);
+      await cargarUsuarios(); // Aseguramos que la lista de usuarios esté cargada antes de buscar el hash
+      // 1. Buscamos el usuario exacto en nuestra lista de usuarios usando el ID numérico
+      const usuarioSeleccionado = listaUsuarios.value.find(
+        (u) => u.id === datosGuardar.idusuario
+      );
+
+      // 2. Extraemos su hash (string). Si por algún motivo no se encuentra, mandamos vacío.
+      const hashUsuario = usuarioSeleccionado ? usuarioSeleccionado.idusuario : '';
+
+      console.log(usuarioSeleccionado)
+
       const payload = {
-        ver: esModoEdicion.value ? 'editarFirma': 'registrarFirma',
+        ver: esModoEdicion.value ? 'editarFirma' : 'registrarFirma',
         ...datosGuardar,
+        // 3. Sobrescribimos el idusuario numérico con el hash en formato string
+        idusuario: hashUsuario
       };
+
       const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await firmasService.accionFirma(datosFormulario);
+
       if (respuesta.estado === 'exito') {
         notificarExitoAccion('guardar');
         esVisibleDialogo.value = false;
@@ -114,15 +102,16 @@ export function useFirmas() {
     }
   };
 
-  const eliminarFirma = (idfirma: number) => {
+  const eliminarFirma = (idfirma: number): void => {
     confirmarEliminacionPredefinida(async () => {
       try {
         const payload = {
           ver: 'eliminarFirma',
-          idfirma: idfirma
+          idfirma
         };
         const datosFormulario = prepararDatosFormulario(payload);
         const respuesta = await firmasService.accionFirma(datosFormulario);
+
         if (respuesta.estado === 'exito') {
           notificarExitoAccion('eliminar');
           void cargarFirmas();
@@ -136,7 +125,7 @@ export function useFirmas() {
     });
   };
 
-  const cambiarEstadoRegistro = async (idfirma: number) => {
+  const cambiarEstadoRegistro = async (idfirma: number): Promise<void> => {
     try {
       const payload = {
         ver: 'cambiarEstadoFirma',
@@ -144,98 +133,10 @@ export function useFirmas() {
       };
       const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await firmasService.accionFirma(datosFormulario);
-      if(respuesta.estado === 'exito')
-      notificarExitoAccion('guardar');
-      void cargarFirmas();
-    } catch (error) {
-      console.error(error);
-      notificarErrorAccion('guardar');
-    }
-  };
-//______________________ FIRMA TIPO PLANILLA ______________________________
-  const alternarVista = () => {
-    esVistaFirmaTipoPlanilla.value = !esVistaFirmaTipoPlanilla.value;
-    if (!esVistaFirmaTipoPlanilla.value) {
-      listaFirmaSeleccionada.value = null;
-    }
-  };
 
-  const gestionarFirmas = (firma: Firma) => {
-    if (!firma.idfirma) return;
-    listaFirmaSeleccionada.value = firma;
-    esVistaFirmaTipoPlanilla.value = true;
-    void cargarFirmaTipoPlanillas(firma.idfirma);
-  };
-
-  const cargarFirmaTipoPlanillas= async (idFirma: number) => {
-    cargando.value = true;
-    try {
-      listaPlanillasFirma.value = await firmasService.listarPlanillasFirma(idFirma);
-    } catch (error) {
-      console.error(error);
-      notificarErrorAccion('cargar');
-    } finally {
-      cargando.value = false;
-    }
-  };
-
-  const cargarTipoPlanillas= async () => {
-    cargando.value = true;
-    try {
-      listaTipoPlanillas.value = await firmasService.listarTipoPlanillas();
-    } catch (error) {
-      console.error(error);
-      notificarErrorAccion('cargar');
-    } finally {
-      cargando.value = false;
-    }
-  };
-
-  const prepararNuevaFirmaTipoPlanilla = () => {
-    if (!listaFirmaSeleccionada.value?.idfirma) return;
-    firmaTipoPlanillaActual.value = {
-      id_firma: listaFirmaSeleccionada.value.idfirma,
-      idplanilla: 0,
-      estado: 1,
-      ci: '',
-      firma_nombre: '',
-      orden: 0
-    };
-    esModoEdicion.value = false;
-    esVisibleDialogoFirmaTipoPlanilla.value = true;
-  };
-
-  // const prepararEdicionFirmaTipoPlanilla = async (id: number) => {
-  //   try {
-  //     const respuesta = await firmasService.editarFirmaTipoPlanilla(id);
-  //     if (respuesta.estado === 'exito' && respuesta.datos) {
-  //       firmaTipoPlanillaActual.value = { ...respuesta.datos };
-  //       esModoEdicion.value = true;
-  //       esVisibleDialogoFirmaTipoPlanilla.value = true;
-  //     } else {
-  //       notificarAdvertencia(respuesta.mensaje);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //     notificarErrorAccion('cargar');
-  //   }
-  // };
-
-  const guardarFirmaTipoPlanilla = async (datos: FirmaTipoPlanilla) => {
-    try {
-      const payload = {
-        ver: esModoEdicion.value ? 'editarFirmaTipoPlanilla' : 'registrarFirmaTipoPlanilla',
-        ...datos,
-        id_firma: datos.id_firma,
-      };
-      const datosFormulario = prepararDatosFormulario(payload);
-      const respuesta = await firmasService.accionFirmaTipoPlanilla(datosFormulario);
       if (respuesta.estado === 'exito') {
         notificarExitoAccion('guardar');
-        esVisibleDialogoFirmaTipoPlanilla.value = false;
-        if (listaFirmaSeleccionada.value?.idfirma) void cargarFirmaTipoPlanillas(listaFirmaSeleccionada.value.idfirma);
-      } else {
-        notificarAdvertencia(respuesta.mensaje);
+        void cargarFirmas();
       }
     } catch (error) {
       console.error(error);
@@ -243,40 +144,11 @@ export function useFirmas() {
     }
   };
 
-  const eliminarFirmaTipoPlanilla = (idfirma: number) => {
-    confirmarEliminacionPredefinida(async () => {
-      try {
-        const payload = {
-          ver: 'eliminarFirmaTipoPlanilla',
-          idfirma: idfirma
-        };
-        const datosFormulario = prepararDatosFormulario(payload);
-        const respuesta = await firmasService.accionFirmaTipoPlanilla(datosFormulario);
-        if (respuesta.estado === 'exito') {
-          notificarExitoAccion('eliminar');
-          void cargarFirmas();
-        } else {
-          notificarAdvertencia(respuesta.mensaje);
-        }
-      } catch (error) {
-        console.error(error);
-        notificarErrorAccion('eliminar');
-      }
-    });
-  };
-
-
   return {
-    listaFirmas, firmaActual, listaUsuarios,
+    listaFirmas, firmaActual,
     cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
-    esVistaFirmaTipoPlanilla, listaFirmaSeleccionada,
-    listaFirmaTipoPlanillas, firmaTipoPlanillaActual, esVisibleDialogoFirmaTipoPlanilla,
-    listaTipoPlanillas,
-    cargarFirmas, prepararNuevaFirma, cargarUsuarios,
+    cargarFirmas, nuevaFirma,
     prepararEdicionFirma, ejecutarAccionFirma, eliminarFirma,
-    cambiarEstadoRegistro,
-    alternarVista,
-    gestionarFirmas, cargarTipoPlanillas,
-    prepararNuevaFirmaTipoPlanilla, guardarFirmaTipoPlanilla, eliminarFirmaTipoPlanilla,
+    cambiarEstadoRegistro
   };
 }

@@ -58,8 +58,8 @@
     </div>
 
     <div v-else>
-      <FirmasTipoPlanillasTable
-        :rows="listaTipoPlanillas"
+      <FirmasTipoPlanillaTable
+        :rows="listaFirmasTipoPlanilla"
         :loading="cargando"
         @eliminar="eliminarFirmaTipoPlanilla"
       />
@@ -74,12 +74,12 @@
       />
     </q-dialog>
 
-    <q-dialog v-model="esVisibleDialogoFirmaTipoPlanilla">
+    <q-dialog v-model="esVisibleDialogoPlanilla">
       <FirmasTipoPlanillaForm
         :firma="firmaTipoPlanillaActual"
         :lista-tipo-planillas="listaTipoPlanillas"
         :es-modo-edicion="esModoEdicion"
-        :firma-nombre="listaFirmaSeleccionada?.nombre || ''"
+        :firma-nombre="firmaSeleccionada?.nombre || ''"
         @guardar="guardarFirmaTipoPlanilla"
       />
     </q-dialog>
@@ -93,26 +93,46 @@ import BuscadorGlobal from 'src/components/core/BuscadorGlobal.vue';
 import { useFirmas } from '../composables/useFirmas';
 import FirmasForm from '../components/FirmasForm.vue';
 import FirmasTable from '../components/FirmasTable.vue';
-import FirmasTipoPlanillaForm from '../components/FirmasTipoPlanillasForm.vue';
-import FirmasTipoPlanillasTable from '../components/FirmasTipoPlanillasTable.vue';
+import FirmasTipoPlanillaForm from '../components/FirmasTipoPlanillaForm.vue';
+import FirmasTipoPlanillaTable from '../components/FirmasTipoPlanillaTable.vue';
+import { useTipoPlanilla } from '../composables/useTipoPlanilla';
+import { useFirmaTipoPlanilla } from '../composables/useFirmaTipoPlanilla';
+import { useUsuarios } from 'src/composables/useUsuario';
 
+const prepararNuevaFirma = () => {
+  nuevaFirma(Number(listaUsuarios.value[0]?.id ?? 0));
+};
+
+const prepararNuevaFirmaTipoPlanilla = () => {
+  nuevaFirmaTipoPlanilla(Number(listaTipoPlanillas.value[0]?.id_tipoPlanilla ?? 0));
+}
 const {
-  listaFirmas, firmaActual, listaUsuarios,
+  listaFirmas, firmaActual,
     cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
-    esVistaFirmaTipoPlanilla, listaFirmaSeleccionada,
-    firmaTipoPlanillaActual, esVisibleDialogoFirmaTipoPlanilla,
-    listaTipoPlanillas,
-    cargarFirmas, prepararNuevaFirma, cargarUsuarios,
+    cargarFirmas, nuevaFirma,
     prepararEdicionFirma, ejecutarAccionFirma, eliminarFirma,
     cambiarEstadoRegistro,
-    alternarVista,
-    gestionarFirmas, cargarTipoPlanillas,
-    prepararNuevaFirmaTipoPlanilla, guardarFirmaTipoPlanilla, eliminarFirmaTipoPlanilla,
 } = useFirmas();
+
+const {
+  listaFirmasTipoPlanilla, esVistaFirmaTipoPlanilla, firmaTipoPlanillaActual, firmaSeleccionada,
+  alternarVista, gestionarFirmas,
+  nuevaFirmaTipoPlanilla, guardarFirmaTipoPlanilla, eliminarFirmaTipoPlanilla, esVisibleDialogoPlanilla, 
+} = useFirmaTipoPlanilla();
+
+const {
+  listaTipoPlanillas,
+  cargarTipoPlanillas
+} = useTipoPlanilla();
+
+const {
+  listaUsuarios,
+  cargarUsuarios
+} = useUsuarios();
 
 onMounted(() => {
   void cargarFirmas();
-  void cargarUsuarios()
+  void cargarUsuarios();
   void cargarTipoPlanillas();
 });
 </script>

@@ -43,7 +43,6 @@ export function useCargos() {
     descripcion: '',
     idarea: idArea
   };
-
   esModoEdicion.value = false;
   esVisibleDialogo.value = true;
 };
