@@ -1,7 +1,7 @@
 <template>
   <q-card style="width: 100vh">
     <q-card-section class="global-form-header row justify-between items-center">
-      <div class="text-h6">{{ esModoEdicion ? $t('firmas.planillas.edit') : $t('firmas.planillas.new') }}</div>
+      <div class="text-h6">{{ esModoEdicion ? $t('firmas.planillas.new') : $t('firmas.planillas.new') }}</div>
       <q-btn icon="close" flat round dense v-close-popup />
     </q-card-section>
 
@@ -14,7 +14,7 @@
 
           <div class="col-12">
             <q-select dense outlined emit-value map-options
-              v-model="datosLocales.idplanilla"
+              v-model="datosLocales.id"
               option-value="id_tipoPlanilla"
               option-label="nombrePlanilla"
               :options="listaTipoPlanillas"
@@ -43,7 +43,8 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import type { FirmaTipoPlanilla, TipoPlanilla } from '../types/firmas.types';
+import type { FirmaTipoPlanilla } from '../types/firmaTipoPlanilla.types';
+import type { TipoPlanilla } from '../types/tipoPlanilla.types';
 
 const props = defineProps<{
   firma: FirmaTipoPlanilla;

@@ -85,7 +85,8 @@ import TablaGenerica from 'src/components/core/TablaGenerica.vue';
 import TablaFiltroExcel from 'src/components/core/TablaFiltroExcel.vue';
 import type { FilaBase } from 'src/components/core/TablaGenerica.vue'
 
-import type { Firma, Usuario } from '../types/firmas.types';
+import type { Firma } from '../types/firmas.types';
+import type { Usuario } from 'src/types/usuario.types';
 import { obtenerCadenaUsuario, obtenerColumnasFirmas } from '../utils/firmas.columns';
 
 const { t } = useI18n();

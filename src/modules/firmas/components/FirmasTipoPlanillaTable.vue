@@ -6,7 +6,6 @@
       :esta-cargando="props.loading"
       modelo-busqueda="" 
       :columnas-personalizadas="['opciones']"
-      @editar="(id) => emits('editar', Number(id))"
       @eliminar="(id) => emits('eliminar', Number(id))"
     >
       <template #body-cell-opciones="propsCell">
@@ -30,20 +29,19 @@ import { useI18n } from 'vue-i18n';
 import TablaGenerica from 'src/components/core/TablaGenerica.vue'; // <-- Asegúrate de importarla
 import type { FilaBase } from 'src/components/core/TablaGenerica.vue';
 
-import type { TipoPlanilla } from '../types/firmas.types';
-import { obtenerColumnasFirmasTipoPlanilla } from '../utils/firmas.columns';
+import { obtenerColumnasFirmasTipoPlanilla } from '../utils/firmasTipoPlanilla.columns';
+import type { FirmaTipoPlanilla } from '../types/firmaTipoPlanilla.types';
 
 const { t } = useI18n();
 const listaColumnas = computed(() => obtenerColumnasFirmasTipoPlanilla(t));
 const filasTipadas = computed(() => props.rows as unknown as FilaBase[]);
 
 const props = defineProps<{
-  rows: TipoPlanilla[];
+  rows: FirmaTipoPlanilla[];
   loading: boolean;
 }>();
 
 const emits = defineEmits<{
-  (e: 'editar', id: number): void;
   (e: 'eliminar', id: number): void;
 }>();
 

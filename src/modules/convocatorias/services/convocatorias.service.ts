@@ -29,5 +29,7 @@ export const convocatoriasService = {
 		return data;
 	},
 
-	// async eliminarConvocatoria(id: number, estado: number):
+	// async eliminarConvocatoria(id: number): Promise<RespuestaApi> {
+	// 	const {data} = await 
+	// }
 }
