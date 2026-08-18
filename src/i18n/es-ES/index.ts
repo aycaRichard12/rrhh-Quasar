@@ -23,7 +23,6 @@ export default {
       add: 'Añadir',
       update: 'Actualizar',
       report: 'Generar Reporte',
-      active: 'Activo'
     },
     filter: {
       sortAsc: 'Ordenar de menor a mayor',
@@ -152,8 +151,8 @@ export default {
     freeUnion: 'Unión Libre',
   },
   date:{
-    start: 'Inicio',
-    end: 'Final',
+    start: 'Fecha Inicio',
+    end: 'Fecha Final',
     registration: "Fecha de Registro"
   },
 //CONFIGURACIONES_________________________________________________________________________________
@@ -305,6 +304,14 @@ export default {
   },
 //GESTION DE RECLUTAMIENTO_________________________________________________________________________________
   //------------ADMISION---------------
+  convocatorias: {
+    title: 'Convocatorias',
+    subtitle: 'Gestión de convocatorias y procesos de selección.',
+    name: 'Convocatoria',
+    new: 'Nueva Convocatoria',
+    edit: 'Editar Convocatoria',
+    vacancies: 'Vacantes'
+  },
 //TRABAJADOR_________________________________________________________________________________
   //------------PERSONAL---------------
   trabajadores: {
