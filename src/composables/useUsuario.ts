@@ -6,6 +6,7 @@ import type { Usuario } from 'src/types/usuario.types';
 export function useUsuarios() {
   const listaUsuarios = ref<Usuario[]>([]);
   const cargandoUsuarios = ref(false);
+  
   const { notificarErrorAccion } = useNotificaciones();
 
   const cargarUsuarios = async (): Promise<void> => {

@@ -6,7 +6,7 @@ import type { Convocatoria } from '../types/convocatorias.types';
 const sanearConvocatoria = (item: Convocatoria): Convocatoria => ({
   ...item,
 	id: Number(item.id),
-	nvacantes: Number(item.nvacantes),
+	nvacantes: Number(item.nvacantes) || '',
 	estado: Number(item.estado),
 	publico: Number(item.publico),
 	idcargo: Number(item.idcargo),
@@ -15,7 +15,7 @@ const sanearConvocatoria = (item: Convocatoria): Convocatoria => ({
 
 export const convocatoriasService = {
 	async listarConvocatorias(): Promise<Convocatoria[]> {
-		const { data } = await api.get(`${idempresa_md5()}`);
+		const { data } = await api.get(`/listaconvocatoria/${idempresa_md5()}`);
 		return Array.isArray(data) ? data.map(sanearConvocatoria) : [];
 	},
 
@@ -25,11 +25,20 @@ export const convocatoriasService = {
 	},
 
 	async editarConvocatoria(id: number): Promise<RespuestaApi<Convocatoria>> {
-		const { data } = await api.get(`${id}`);
+		const { data } = await api.get(`/verificarIDconvocatoria/${id}`);
+		if (data.estado === 'exito' && data.datos) {
+			data.datos = sanearConvocatoria(data.datos);
+		}
 		return data;
 	},
 
-	// async eliminarConvocatoria(id: number): Promise<RespuestaApi> {
-	// 	const {data} = await 
-	// }
+	async eliminarConvocatoria(id: number): Promise<RespuestaApi> {
+		const {data} = await api.get(`eliminarConvocatoria/${id}`);
+		return data;
+	},
+
+	 async cambiarEstadoConvocatoria(id: number, nuevoEstado: number): Promise<RespuestaApi> {
+		const { data } = await api.get(`editarEstadoconvocatoria/${id}/${nuevoEstado}`);
+		return data;
+	}
 }

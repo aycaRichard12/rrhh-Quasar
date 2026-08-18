@@ -4,7 +4,7 @@ export interface Convocatoria {
 	descripcion: string;
 	fechai: string;
 	fechaf: string;
-	nvacantes: number;
+	nvacantes: number | '';
 	estado: number;
 	publico: number;
 	idcargo: number;
