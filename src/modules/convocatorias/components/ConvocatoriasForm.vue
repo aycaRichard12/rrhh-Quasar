@@ -8,7 +8,7 @@
     <q-form @submit="emitirGuardar">
       <q-card-section>
         <div class="row q-col-gutter-md">
-          <div class="col-12">
+          <div class="col-6">
             <q-input autofocus dense lazy-rules outlined 
               v-model="datosLocales.nombre"
               :label="$t('convocatorias.name') + ' *'"
@@ -16,7 +16,7 @@
             />
           </div>
           <div class="col-4">
-            <q-input autofocus dense lazy-rules outlined 
+            <q-input dense lazy-rules outlined 
               v-model="datosLocales.nvacantes"
               :label="$t('convocatorias.vacancies') + ' *'"
               :rules="[val => !!val || $t('common.rules.required')]"
