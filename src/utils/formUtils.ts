@@ -8,7 +8,7 @@ export type ValorFormulario = string | number | boolean | File | Blob | null | u
  * @param datos Objeto con los datos recolectados del formulario de la vista.
  * @returns FormData listo para ser enviado a los servicios de la API mediante Axios.
  */
-export function prepararDatosFormulario(datos: Record<string, ValorFormulario | ValorFormulario[]>): FormData {
+export function prepararDatosFormulario(datos: Record<string, | ValorFormulario | ValorFormulario[]>): FormData {
   const datosFormulario = new FormData();
 
   Object.entries(datos).forEach(([llave, valor]) => {
