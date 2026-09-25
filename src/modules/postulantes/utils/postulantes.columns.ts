@@ -21,7 +21,7 @@ export const obtenerColumnasPostulantes = (t: (key: string) => string): QTableCo
     label: t('apellidos'),
     align: 'left',
     field: 'apellido',
-    style: 'white-space: normal; min-width: 228px;'
+    style: 'white-space: normal; min-width: 138px;'
   },
   {
     name: 'ci',
@@ -31,6 +31,13 @@ export const obtenerColumnasPostulantes = (t: (key: string) => string): QTableCo
     style: 'width: 50px; white-space: normal'
   },
   {
+    name: 'email',
+    label: t('email'),
+    align: 'right',
+    field: 'email',
+    style: 'width: 100px'
+  },
+  {
     name: 'telefono',
     label: t('telefono'),
     align: 'center',
@@ -38,18 +45,11 @@ export const obtenerColumnasPostulantes = (t: (key: string) => string): QTableCo
     style: 'width: 50px; white-space: normal'
   },
   {
-    name: 'email',
-    label: t('email'),
-    align: 'right',
-    field: 'email',
-    style: 'width: 10px'
-  },
-  {
     name: 'fecha',
     label: t('fecha'),
     align: 'center',
     field: 'fecha',
-    style: 'width: 100px; white-space: normal'
+    style: 'width: 120px'
   },
   {
     name: 'conclucion',

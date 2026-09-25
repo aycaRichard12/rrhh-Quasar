@@ -3,6 +3,7 @@ import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
 import { postulantesService } from '../services/postulantes.service';
 import type { Postulante } from '../types/postulantes.types';
+import { idusuario_md5 } from 'src/composables/funcionesGenerales';
 
 export function usePostulantes() {
   const listaPostulantes = ref <Postulante[]>([]);
@@ -11,6 +12,18 @@ export function usePostulantes() {
 	const filtroBusqueda = ref('');
   const esModoEdicion = ref(false);
   const esVisibleDialogo = ref(false);
+
+	// 1. Añade estas variables de estado al principio de tu composable:
+  const esVisibleDialogoConclusion = ref(false);
+  const idPostulanteConclusion = ref(0);
+  const conclusionActual = ref('');
+
+// 2. Añade estas dos funciones:
+  const prepararConclusion = (fila: Postulante) => {
+    idPostulanteConclusion.value = Number(fila.id);
+    conclusionActual.value = fila.conclucion || '';
+    esVisibleDialogoConclusion.value = true;
+  };
 
 	const postulanteActual = ref<Postulante>({
 		nombre: '',
@@ -23,7 +36,7 @@ export function usePostulantes() {
 		idconvocatoria: 0,
 		convocatoria: '',
 		conclucion: '',
-		promedio: 0,
+		promedio: 0
 	})
 
 	const { notificarExitoAccion, notificarErrorAccion, notificarAdvertencia, confirmarEliminacionPredefinida } = useNotificaciones();
@@ -78,8 +91,19 @@ export function usePostulantes() {
 		try {
       const payload = {
         ver: esModoEdicion.value ? 'editarpostulante' : 'registropostulante',
-        ...datosGuardar
+        idusuario: idusuario_md5(), // Requerido por el backend para autorizar el registro
+        archivoExistente: '', // Llave legacy para edición/creación de archivos
+        nombre: datosGuardar.nombre,
+        apellido: datosGuardar.apellido,
+        ci: datosGuardar.ci,
+        cv: datosGuardar.cv,
+        email: datosGuardar.email,
+        telefono: datosGuardar.telefono,
+        fecha: datosGuardar.fecha,
+        convocatoria: datosGuardar.idconvocatoria, // Pasamos el ID, pero usando la llave que exige la BD
+        estado: 0 // Estado inicial que vimos en el payload antiguo
       };
+
       const datosFormulario = prepararDatosFormulario(payload);
       const respuesta = await postulantesService.guardarPostulante(datosFormulario);
       if (respuesta.estado === 'exito') {
@@ -112,10 +136,30 @@ export function usePostulantes() {
     });
   };
 
+	const guardarConclusion = async (conclusion: string) => {
+    if (!idPostulanteConclusion.value) return;
+    
+    try {
+      const respuesta = await postulantesService.guardarConclusionPostulante(idPostulanteConclusion.value, conclusion);
+      if (respuesta.estado === 'exito') {
+        notificarExitoAccion('guardar'); 
+        esVisibleDialogoConclusion.value = false;
+        void cargarPostulantes();
+      } else {
+        notificarAdvertencia(respuesta.mensaje);
+      }
+    } catch (error) {
+      console.error(error);
+      notificarErrorAccion('guardar');
+    }
+  };
+
 	return {
 		listaPostulantes, postulanteActual,
-		cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo, 
+		cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
+		conclusionActual, esVisibleDialogoConclusion,
 		cargarPostulantes, guardarPostulante,
-		nuevoPostulante, prepararEdicionPostulante, confirmarEliminarPostulante
+		nuevoPostulante, prepararEdicionPostulante, confirmarEliminarPostulante,
+		prepararConclusion, guardarConclusion
 	}
 }

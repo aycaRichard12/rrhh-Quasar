@@ -12,3 +12,27 @@ export interface Postulante {
 	conclucion: string;
 	promedio: number;
 }
+
+// export interface MetodoEvaluacionSelect {
+//   id: number;
+//   nombre: string;
+//   calificacionMax: number;
+// }
+
+// export interface ActividadEvaluacionSelect {
+//   id: number;
+//   nombre: string;
+//   idmetodoevaluacion: number;
+// }
+
+export interface CalificacionPostulante {
+  id?: number;
+  nota: number;
+  fecha: string;
+  idevaluacionPostulante: number;
+  idactividadevaluacion: number;
+  nombreactividad: string;
+  calificacionMax: number;
+  idmetodoevaluacion: number;
+  justificacion: string;
+}
