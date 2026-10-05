@@ -53,7 +53,7 @@ export function useConvocatorias() {
 			cargo: '',
 			idarea: idArea, // seleccione un area primero
 			area: '',
-		} as Convocatoria;	
+		};	
 		esModoEdicion.value = false;
 		esVisibleDialogo.value = true;
 	};
