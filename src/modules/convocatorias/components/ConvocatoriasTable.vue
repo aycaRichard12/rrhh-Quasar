@@ -59,24 +59,27 @@
         <q-td :props="propsCell">
           <template v-if="propsCell.row.estado === 1" >
             <q-btn dense round color="info" icon="free_cancellation"  /> <!--  @click="concluirConvocatoria(propsCell.row.id)" -->
-            <q-btn dense round class="global-btn-page" icon="sym_o_tv_options_edit_channels"  /> <!-- @click="prerrequisitos(propsCell.row.id)" -->
+            <q-btn dense round class="global-btn-page" icon="sym_o_tv_options_edit_channels" @click="emits('verPrerrequisitos', propsCell.row)">
+              <q-tooltip>Mostrar Prerrequisitos</q-tooltip>
+            </q-btn>
           </template>
 
           <template v-else-if="propsCell.row.estado === 2">
-            <q-btn dense round class="global-btn-page" icon="sym_o_edit_square" @click="emits('editar', Number(propsCell.row.id))" 
-          >
-            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.edit') }}</q-tooltip>
-          </q-btn>
-          <q-btn dense round color="negative" icon="delete_forever" @click="emits('eliminar', Number(propsCell.row.id))" >
-            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.delete') }}</q-tooltip>
-          </q-btn>
-            <q-btn dense round class="global-btn-page" icon="sym_o_tv_options_edit_channels" color="positive"  > <!--  @click="prerrequisitos(propsCell.row.id)" -->
-              <q-tooltip>Mostrar Prerrquisitos</q-tooltip>
+            <q-btn dense round class="global-btn-page" icon="sym_o_edit_square" @click="emits('editar', Number(propsCell.row.id))">
+              <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.edit') }}</q-tooltip>
+            </q-btn>
+            <q-btn dense round color="negative" icon="delete_forever" @click="emits('eliminar', Number(propsCell.row.id))">
+              <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">{{ $t('common.actions.delete') }}</q-tooltip>
+            </q-btn>
+            <q-btn dense round class="global-btn-page" icon="sym_o_tv_options_edit_channels" color="positive" @click="emits('verPrerrequisitos', propsCell.row)">
+              <q-tooltip>Mostrar Prerrequisitos</q-tooltip>
             </q-btn>
           </template>
 
           <template v-else-if="propsCell.row.estado === 3">
-            <q-btn dense round class="global-btn-page" icon="sym_o_group" color="positive" > <!-- @click="postulantes(propsCell.row.id)" -->
+            <q-btn dense round class="global-btn-page" icon="sym_o_group" color="positive"
+              @click="emits('verPostulantes', propsCell.row)"
+            >
               <q-tooltip>Postulantes (Resultados)</q-tooltip>
             </q-btn>
           </template>
@@ -112,7 +115,8 @@ const emits = defineEmits<{
   (e: 'eliminar', id: number): void;
   (e: 'cambiarEstadoRegistro', convocatoria: Convocatoria): void;
   (e: 'update:filtro', val: string): void;
-  //(e: 'gestionarFirmas', firma: Firma): void;
+  (e: 'verPostulantes', convocatoria: Convocatoria): void;
+  (e: 'verPrerrequisitos', convocatoria: Convocatoria): void;
 }>();
 
 const configuracionFiltros: ConfiguracionColumnaExcel[] = [

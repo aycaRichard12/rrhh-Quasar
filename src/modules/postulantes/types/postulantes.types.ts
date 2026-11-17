@@ -13,18 +13,6 @@ export interface Postulante {
 	promedio: number;
 }
 
-// export interface MetodoEvaluacionSelect {
-//   id: number;
-//   nombre: string;
-//   calificacionMax: number;
-// }
-
-// export interface ActividadEvaluacionSelect {
-//   id: number;
-//   nombre: string;
-//   idmetodoevaluacion: number;
-// }
-
 export interface CalificacionPostulante {
   id?: number;
   nota: number;

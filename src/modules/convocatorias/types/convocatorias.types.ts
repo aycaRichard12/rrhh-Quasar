@@ -12,3 +12,15 @@ export interface Convocatoria {
 	idarea: number;
 	area: string;
 }
+
+export interface MetodoEvaluacionResumen {
+  idevaluacionpostulante: number;
+  idmetodoevaluacion: number;
+  metodo: string;
+  descripcion: string;
+  calificacionmax: number;
+  sumtotal: number;
+  cantnotas: number;
+  promedio: number;
+  estado: string;
+}

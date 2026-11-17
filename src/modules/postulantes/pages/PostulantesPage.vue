@@ -36,12 +36,48 @@
     </div>
 
 		<div v-else>
+      <div class="text-h6 text-primary col-grow q-mb-sm">
+        Calificaciones de: {{ postulanteActualCalificacion?.nombre }} {{ postulanteActualCalificacion?.apellido }}
+        <div></div>  
+        <!-- Texto del promedio dinámico -->
+        <span class="text-subtitle1 text-grey-8 q-ml-sm text-weight-medium" v-if="maximoFiltroSeleccionado > 0">
+          (Promedio {{ nombreFiltroSeleccionado }}: {{ promedioObtenido }} / {{ maximoFiltroSeleccionado }})
+        </span>
+      </div>
+      
+      <q-card-section class="row justify-between items-center q-pb-md q-gutter-x-sm">
+        <q-btn outline
+          color="primary"
+          icon="arrow_back" 
+          :label="$q.screen.lt.sm ? '' : $t('Volver')"
+          @click="alternarVistaCalificacion" 
+        />
+
+        <!-- NUEVO: Selector de Filtro -->
+        <q-select
+          dense outlined emit-value map-options
+          v-model="idMetodoFiltroTabla"
+          :options="listaMetodos"
+          option-label="nombre"
+          option-value="id"
+          label="Filtrar por Método"
+          style="min-width: 141px"
+        />
+
+        <q-btn
+          class="global-btn-page"
+          icon="sym_o_add_notes" 
+          color="primary"
+          :label="$q.screen.lt.sm ? '' : $t('Nueva Calificación')"
+          @click="prepararNuevaCalificacion" 
+        />
+      </q-card-section>
+
       <PostulantesCalificacionTable
         :postulante="postulanteActualCalificacion"
-        :lista-calificaciones="listaCalificaciones"
+        :lista-calificaciones="calificacionesFiltradas"
         :cargando="cargandoTabla"
-        @volver="alternarVistaCalificacion"
-        @nuevo="prepararNuevaCalificacion"
+        :maximo-filtro="maximoFiltroSeleccionado"
         @eliminar="confirmarEliminarCalificacion"
       />
     </div>
@@ -106,9 +142,10 @@ const {
 // Solo extraemos una vez el composable de calificaciones
 const {
   esVistaCalificacion, // <-- MUY IMPORTANTE: Asegúrate de tener esto para el v-if del template
-  postulanteActual: postulanteActualCalificacion, listaCalificaciones, cargandoTabla,
+  postulanteActual: postulanteActualCalificacion, cargandoTabla,
   esVisibleDialogoFormCalificacion, idMetodoSeleccionado, calificacionForm,
   listaMetodos, actividadesDisponibles, calificacionMaxPermitida,
+  idMetodoFiltroTabla, calificacionesFiltradas, maximoFiltroSeleccionado, promedioObtenido, nombreFiltroSeleccionado,
   alternarVistaCalificacion, prepararNuevaCalificacion,
   guardarCalificacion, confirmarEliminarCalificacion,
   iniciarProcesoCalificacion // <-- Esta es la función que hace la magia de abrir todo

@@ -1,70 +1,72 @@
 <template>
-  <q-card style="width: 800px; max-width: 95vw;">
+  <q-card style="width: 100vh">
     <q-card-section class="global-form-header row justify-between items-center">
       <div class="text-h6">Registrar Nueva Calificación</div>
       <q-btn icon="close" flat round dense v-close-popup />
     </q-card-section>
 
-    <q-form @submit="emits('guardar')" class="q-pa-md">
-      <div class="row q-col-gutter-md items-start">
-        <div class="col-12 col-md-6">
-          <q-select dense outlined emit-value map-options
-            v-model="idMetodoLocal"
-            :options="listaMetodos"
-            option-label="nombre"
-            option-value="id"
-            label="Método de Evaluación *"
-            :rules="[val => !!val || $t('common.rules.required')]"
-          />
-        </div>
-        
-        <div class="col-12 col-md-6">
-          <q-select dense outlined emit-value map-options
-            v-model="calificacionFormLocal.idactividadevaluacion"
-            :options="actividadesDisponibles"
-            option-label="nombre"
-            option-value="id"
-            label="Actividad *"
-            :disable="!idMetodoLocal"
-            :rules="[val => !!val || $t('common.rules.required')]"
-          >
-            <template #no-option>
-              <q-item><q-item-section class="text-grey">Seleccione un método o no hay actividades pendientes</q-item-section></q-item>
-            </template>
-          </q-select>
-        </div>
-        
-        <div class="col-12 col-md-4">
-          <q-input dense readonly outlined
-            :model-value="calificacionMaxPermitida"
-            label="Calificación Max."
-          />
-        </div>
-        
-        <div class="col-12 col-md-8">
-          <q-input dense outlined
-            v-model="calificacionFormLocal.nota"
-            type="number"
-            step="0.01"
-            label="Calificación *"
-            :rules="[
-              val => !!val || $t('common.rules.required'),
-              val => Number(val) <= calificacionMaxPermitida || 'No puede superar el máximo'
-            ]"
-          />
-        </div>
-        
-        <div class="col-12">
-          <q-input dense outlined
-            v-model="calificacionFormLocal.justificacion"
-            type="textarea"
-            label="Justificación *"
-            :rules="[val => !!val || $t('common.rules.required')]"
-          />
-        </div>
-      </div>
+    <q-form @submit="emits('guardar')">
+      <q-card-section>
+        <div class="row q-col-gutter-md">
+          <div class="col-8">
+            <q-select dense outlined emit-value map-options
+              v-model="idMetodoLocal"
+              :options="listaMetodos"
+              option-label="nombre"
+              option-value="id"
+              label="Método de Evaluación *"
+              :rules="[val => !!val || $t('common.rules.required')]"
+            />
+          </div>
 
-      <q-card-actions align="right" class="q-pt-md">
+          <div class="col-4">
+            <q-input dense readonly outlined
+              :model-value="calificacionMaxPermitida"
+              label="Calificación Max."
+            />
+          </div>
+          
+          <div class="col-8">
+            <q-select dense outlined emit-value map-options
+              v-model="calificacionFormLocal.idactividadevaluacion"
+              :options="actividadesDisponibles"
+              option-label="nombre"
+              option-value="id"
+              label="Actividad *"
+              :disable="!idMetodoLocal"
+              :rules="[val => !!val || $t('common.rules.required')]"
+            >
+              <template #no-option>
+                <q-item><q-item-section class="text-grey">Seleccione un método o no hay actividades pendientes</q-item-section></q-item>
+              </template>
+            </q-select>
+          </div>
+          
+          <div class="col-4">
+            <q-input dense outlined
+              v-model="calificacionFormLocal.nota"
+              type="number"
+              step="0.01"
+              label="Calificación *"
+              :rules="[
+                val => !!val || $t('common.rules.required'),
+                val => Number(val) <= calificacionMaxPermitida || 'No puede superar el máximo'
+              ]"
+            />
+          </div>
+          
+          <div class="col-12">
+            <q-input dense outlined
+              v-model="calificacionFormLocal.justificacion"
+              type="textarea"
+              label="Justificación *"
+              :rules="[val => !!val || $t('common.rules.required')]"
+            />
+          </div>
+        </div>
+      </q-card-section>
+
+      <q-card-actions align="right" class="q-pb-md q-pr-md">
         <q-btn flat :label="$t('common.actions.cancel')" color="negative" v-close-popup />
         <q-btn type="submit" icon="save" :label="$t('common.actions.save')" class="global-btn-page" />
       </q-card-actions>
@@ -96,7 +98,7 @@ const props = defineProps<{
 const emits = defineEmits<{
   (e: 'guardar'): void;
   (e: 'update:idMetodoSeleccionado', val: number | null): void;
-  (e: 'update:calificacionForm', val: CalificacionFormulario): void; // <-- Adiós 'any'
+  (e: 'update:calificacionForm', val: CalificacionFormulario): void;
 }>();
 
 // Proxies para V-Model bidireccional

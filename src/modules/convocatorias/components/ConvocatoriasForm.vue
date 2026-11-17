@@ -93,91 +93,6 @@
     </q-form>
   </q-card>
 </template>
-
-<!-- <script setup lang="ts">
-import { ref, watch, computed } from 'vue'; // Añadido computed
-import type { Convocatoria } from '../types/convocatorias.types';
-import type { Area } from 'src/modules/areas/types/areas.types';
-import type { Cargo } from 'src/modules/cargos/types/cargos.types';
-
-const props = defineProps<{
-  convocatoria: Convocatoria;
-  listaAreas: Area[];
-  listaCargos: Cargo[];
-  esModoEdicion: boolean;
-}>();
-
-const emits = defineEmits<{
-  (e: 'guardar', datos: Convocatoria): void;
-}>();
-
-const datosLocales = ref<Convocatoria>({ ...props.convocatoria });
-
-// 1. COMPUTED PARA FILTRAR CARGOS
-const cargosFiltrados = computed(() => {
-  if (!datosLocales.value.idarea) return [];
-  return props.listaCargos.filter(
-    (cargo) => Number(cargo.idarea) === Number(datosLocales.value.idarea)
-  );
-});
-
-// 2. UX: LIMPIAR CARGO SI SE CAMBIA EL ÁREA
-watch(() => datosLocales.value.idarea, (nuevoIdArea, viejoIdArea) => {
-  // Si no es la primera carga y cambiamos a una área diferente
-  if (viejoIdArea !== undefined && viejoIdArea !== 0 && nuevoIdArea !== viejoIdArea) {
-    datosLocales.value.idcargo = 0; // Opcionamente, podrías dejarlo vacío ''
-  }
-});
-
-const emitirGuardar = () => {
-  emits('guardar', datosLocales.value);
-};
-
-watch(() => props.convocatoria, (nuevosDatos) => {
-  datosLocales.value = { ...nuevosDatos };
-}, { deep: true });
-
-const opcionesPublico = [
-  { label: 'No', value: 1 },
-  { label: 'Sí', value: 2 }
-];
-</script> -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <script setup lang="ts">
 import { ref, watch, computed} from 'vue';
 import type { Convocatoria } from '../types/convocatorias.types';
@@ -200,11 +115,6 @@ const datosLocales = ref<Convocatoria>({ ...props.convocatoria });
 const emitirGuardar = () => {
   emits('guardar', datosLocales.value);
 };
-
-// watch(() => props.convocatoria, (nuevosDatos) => {
-//   datosLocales.value = { ...nuevosDatos };
-// }, { deep: true });
-
 
 const cargosFiltrados = computed(() => {
   return props.listaCargos.filter(

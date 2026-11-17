@@ -3,7 +3,7 @@ import { useQuasar } from 'quasar';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
 import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { postulantesService } from '../services/postulantes.service';
-import type { Postulante, CalificacionPostulante, } from '../types/postulantes.types';
+import type { Postulante, CalificacionPostulante } from '../types/postulantes.types';
 import type { MetodoDeEvaluacion } from 'src/modules/metodosdeevaluacion/types/metodosDeEvaluacion.types';
 import type { ActividadDeEvaluacion } from 'src/modules/actividadesdeevaluacion/types/actividadesDeEvaluacion.types';
 import { metodosDeEvaluacionService } from 'src/modules/metodosdeevaluacion/services/metodosDeEvaluacion.service';
@@ -17,39 +17,67 @@ export function useCalificacionPostulante() {
   const esVisibleDialogoFormCalificacion = ref<boolean>(false);
   const postulanteActual = ref<Postulante | null>(null);
   
-  // Variables del proceso
+  // Variables del proceso principal
   const idEvaluacionPostulante = ref<number>(0);
   const listaMetodos = ref<MetodoDeEvaluacion[]>([]);
   const listaActividades = ref<ActividadDeEvaluacion[]>([]);
   const listaCalificaciones = ref<CalificacionPostulante[]>([]);
   const cargandoTabla = ref(false);
 
-  // Formulario de Calificación
+  // Variables para la vista dinámica y filtros
+  const idMetodoFiltroTabla = ref<number | null>(null);
   const idMetodoSeleccionado = ref<number | null>(null);
+  
   const calificacionForm = ref({
     idactividadevaluacion: null as number | null,
     nota: 0,
     justificacion: ''
   });
 
-  // COMPUTED: Lógica idéntica al JS Legacy para filtrar actividades excluyendo las ya calificadas
+  // COMPUTED: Filtramos las actividades excluyendo las ya calificadas
   const actividadesDisponibles = computed(() => {
     if (!idMetodoSeleccionado.value) return [];
-    
-    // 1. Extraemos las IDs de las actividades que ya están en la tabla
     const actividadesExcluidas = listaCalificaciones.value.map(item => item.idactividadevaluacion);
-    
-    // 2. Filtramos por el método seleccionado y que no estén en las excluidas
     return listaActividades.value.filter(item => 
       item.idmetodoevaluacion === idMetodoSeleccionado.value && 
       !actividadesExcluidas.includes(Number(item.id))
     );
   });
 
-// Solución al error de Type 'number | ""': Forzamos a que el computed devuelva estrictamente un <number>
+  // COMPUTED: Calificación máxima del select del formulario
   const calificacionMaxPermitida = computed<number>(() => {
     const metodo = listaMetodos.value.find(m => m.id === idMetodoSeleccionado.value);
     return metodo ? Number(metodo.calificacionMax) : 0;
+  });
+
+  // COMPUTED: Tabla de Calificaciones Filtrada
+  const calificacionesFiltradas = computed(() => {
+    if (!idMetodoFiltroTabla.value) return listaCalificaciones.value;
+    return listaCalificaciones.value.filter(c => Number(c.idmetodoevaluacion) === idMetodoFiltroTabla.value);
+  });
+
+  // COMPUTED: Máximo para la columna dinámica
+  const maximoFiltroSeleccionado = computed<number>(() => {
+    const metodo = listaMetodos.value.find(m => m.id === idMetodoFiltroTabla.value);
+    return metodo ? Number(metodo.calificacionMax) : 0;
+  });
+
+  // COMPUTED: Obtenemos el nombre del método actual para el título
+  const nombreFiltroSeleccionado = computed<string>(() => {
+    const metodo = listaMetodos.value.find(m => m.id === idMetodoFiltroTabla.value);
+    return metodo ? String(metodo.nombre) : '';
+  });
+
+  // COMPUTED: Promedio matemático de las notas filtradas
+  const promedioObtenido = computed<number>(() => {
+    const cantidad = calificacionesFiltradas.value.length;
+    if (cantidad === 0) return 0; // Si no hay notas, el promedio es 0
+    
+    // Sumamos todas las notas
+    const suma = calificacionesFiltradas.value.reduce((acc, actual) => acc + Number(actual.nota), 0);
+    
+    // Dividimos entre la cantidad y limitamos a 2 decimales
+    return Number((suma / cantidad).toFixed(2));
   });
 
   const abrirVistaCalificacion = (idEvaluacion: number) => {
@@ -59,7 +87,7 @@ export function useCalificacionPostulante() {
     void cargarTablaCalificaciones();
   };
 
-	const alternarVistaCalificacion = () => {
+  const alternarVistaCalificacion = () => {
     esVistaCalificacion.value = false;
     postulanteActual.value = null;
   };
@@ -70,14 +98,27 @@ export function useCalificacionPostulante() {
     esVisibleDialogoFormCalificacion.value = true;
   };
 
-// FUNCIÓN AUXILIAR: Evita el error de la promesa asíncrona dentro del .onOk()
+  // FUNCIÓN ÚNICA cargarSelects: Carga catálogos y auto-selecciona con protección `?.`
+  const cargarSelects = async () => {
+    try {
+      listaMetodos.value = await metodosDeEvaluacionService.listarMetodosDeEvaluacion();
+      listaActividades.value = await actividadesDeEvaluacionService.listarActividadesDeEvaluacion();
+      
+      // Auto-seleccionar el primer método para el filtro de la tabla si está vacío
+      if (listaMetodos.value.length > 0 && !idMetodoFiltroTabla.value) {
+        idMetodoFiltroTabla.value = Number(listaMetodos.value[0]?.id ?? 0);
+      }
+    } catch (error) {
+      console.error(error);
+      console.error('Error cargando catálogos de evaluación');
+    }
+  };
+
   const ejecutarRegistroInicial = async (idPostulante: number) => {
     try {
-      // Engañamos a TS localmente diciéndole que el backend devolverá la llave 'id'
-      const respRegistro = await postulantesService.registrarEvaluacionInicial(idPostulante) as unknown as { estado: string; id?: number; mensaje?: string };
+      const respRegistro = await postulantesService.registrarEvaluacionInicial(idPostulante) as unknown as { estado: string | number; id?: number };
       
-      if (respRegistro.estado === 'exito' && respRegistro.id) {
-        // CORRECCIÓN VITAL: Aquí llamamos a la función con su nuevo nombre
+      if ((respRegistro.estado === 'exito' || String(respRegistro.estado) === '2') && respRegistro.id) {
         abrirVistaCalificacion(Number(respRegistro.id)); 
       } else {
         notificarAdvertencia('No se pudo iniciar la calificación.');
@@ -88,7 +129,7 @@ export function useCalificacionPostulante() {
     }
   };
 
-const iniciarProcesoCalificacion = async (postulante: Postulante) => {
+  const iniciarProcesoCalificacion = async (postulante: Postulante) => {
     postulanteActual.value = postulante;
     const idPostulante = Number(postulante.id);
     
@@ -103,28 +144,16 @@ const iniciarProcesoCalificacion = async (postulante: Postulante) => {
           cancel: true,
           persistent: true
         }).onOk(() => {
-          // Usamos 'void' y llamamos a nuestra función síncrona para que ESLint esté feliz
           void ejecutarRegistroInicial(idPostulante); 
         });
       } 
       else if (resp.datos) {
         const datos = resp.datos as Record<string, unknown>;
-        // CORRECCIÓN VITAL: Aquí también usamos el nuevo nombre
         abrirVistaCalificacion(Number(datos.id));
       }
     } catch (error) {
       console.error(error);
       notificarErrorAccion('verificar');
-    }
-  };
-
-  const cargarSelects = async () => {
-    try {
-      listaMetodos.value = await metodosDeEvaluacionService.listarMetodosDeEvaluacion();
-      listaActividades.value = await actividadesDeEvaluacionService.listarActividadesDeEvaluacion();
-    } catch (error) {
-			console.error(error);
-      console.error('Error cargando catálogos de evaluación');
     }
   };
 
@@ -142,7 +171,7 @@ const iniciarProcesoCalificacion = async (postulante: Postulante) => {
   const guardarCalificacion = async () => {
     try {
       const payload = {
-        ver: 'registroCalificacionPostulante', // Ajusta al verbo que use tu backend
+        ver: 'registroCalificacionPostulante',
         idevaluacionpostulante: idEvaluacionPostulante.value,
         Metodo: idMetodoSeleccionado.value,
         idactividadevaluacion: calificacionForm.value.idactividadevaluacion,
@@ -177,27 +206,37 @@ const iniciarProcesoCalificacion = async (postulante: Postulante) => {
           notificarAdvertencia(respuesta.mensaje);
         }
       } catch (error) {
-				console.error(error);
+        console.error(error);
         notificarErrorAccion('eliminar');
       }
     });
   };
 
   return {
+    // Variables y Vistas
     esVistaCalificacion,
-		esVisibleDialogoFormCalificacion,
+    esVisibleDialogoFormCalificacion,
     postulanteActual,
     listaMetodos,
     listaCalificaciones,
     cargandoTabla,
     idMetodoSeleccionado,
     calificacionForm,
+    
+    // Variables Computadas del Filtro y Total
+    idMetodoFiltroTabla,
+    calificacionesFiltradas,
     actividadesDisponibles,
     calificacionMaxPermitida,
+    maximoFiltroSeleccionado,
+    nombreFiltroSeleccionado,
+    promedioObtenido,
+    
+    // Funciones
     iniciarProcesoCalificacion,
     guardarCalificacion,
     confirmarEliminarCalificacion,
-		alternarVistaCalificacion,
-		prepararNuevaCalificacion
+    alternarVistaCalificacion,
+    prepararNuevaCalificacion
   };
 }

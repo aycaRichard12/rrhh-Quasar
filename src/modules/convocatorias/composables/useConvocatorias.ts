@@ -3,9 +3,15 @@ import { prepararDatosFormulario } from 'src/utils/formUtils';
 import { useNotificaciones } from 'src/composables/useNotificaciones';
 import { convocatoriasService } from '../services/convocatorias.service';
 import type { Convocatoria } from '../types/convocatorias.types';
+import { postulantesService } from 'src/modules/postulantes/services/postulantes.service';
+import type { Postulante } from 'src/modules/postulantes/types/postulantes.types';
+import type { PrerrequisitoCargo } from 'src/modules/prerrequisitoscargo/types/prerrequisitosCargo.types';
+import { prerrequisitosCargoService } from 'src/modules/prerrequisitoscargo/services/prerrequisitosCargo.service';
 
 export function useConvocatorias() {
   const listaConvocatorias = ref <Convocatoria[]>([]);
+	const listaPostulantes = ref<Postulante[]>([]);
+  const listaPrerrequisitos = ref<PrerrequisitoCargo[]>([]);
 
 	const cargando = ref(false);
 	const filtroBusqueda = ref('');
@@ -125,11 +131,39 @@ export function useConvocatorias() {
     }
   };
 
+  const cargarDatosVista = async (idConvocatoria: number, idCargo: number): Promise<void> => {
+    cargando.value = true;
+    try {
+      // 1. Ejecutamos ambas peticiones en paralelo a los servicios originales sin modificarlos
+      const [todosPostulantes, todosPrerrequisitos] = await Promise.all([
+        postulantesService.listarPostulantes(),
+        prerrequisitosCargoService.listarPrerrequisitos()
+      ]);
+
+      // 2. Filtramos la data localmente en memoria
+      listaPostulantes.value = todosPostulantes.filter(
+        postulante => Number(postulante.idconvocatoria) === idConvocatoria
+      );
+      
+      listaPrerrequisitos.value = todosPrerrequisitos.filter(
+        prerrequisito => Number(prerrequisito.idcargo) === idCargo
+      );
+      
+    } catch (error) {
+      console.error(error);
+      notificarErrorAccion('cargar');
+    } finally {
+      cargando.value = false;
+    }
+  };
+
 	return {
 		listaConvocatorias, convocatoriaActual,
-		cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo, 
+		listaPostulantes, listaPrerrequisitos,
+		cargando, filtroBusqueda, esModoEdicion, esVisibleDialogo,
 		cargarConvocatorias, guardarConvocatoria,
 		nuevaConvocatoria, prepararEdicionConvocatoria, confirmarEliminarConvocatoria,
-		cambiarEstadoRegistro
+		cambiarEstadoRegistro,
+		cargarDatosVista
 	}
 }

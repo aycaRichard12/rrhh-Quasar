@@ -96,12 +96,13 @@ export function usePostulantes() {
         nombre: datosGuardar.nombre,
         apellido: datosGuardar.apellido,
         ci: datosGuardar.ci,
+        fecha: datosGuardar.fecha,
         cv: datosGuardar.cv,
         email: datosGuardar.email,
         telefono: datosGuardar.telefono,
-        fecha: datosGuardar.fecha,
-        convocatoria: datosGuardar.idconvocatoria, // Pasamos el ID, pero usando la llave que exige la BD
-        estado: 0 // Estado inicial que vimos en el payload antiguo
+        convocatoria: datosGuardar.idconvocatoria,
+        id: datosGuardar.id,
+        estado: 0 
       };
 
       const datosFormulario = prepararDatosFormulario(payload);
@@ -153,6 +154,8 @@ export function usePostulantes() {
       notificarErrorAccion('guardar');
     }
   };
+
+  
 
 	return {
 		listaPostulantes, postulanteActual,

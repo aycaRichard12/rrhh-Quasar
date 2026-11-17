@@ -6,14 +6,14 @@ import type { Postulante, CalificacionPostulante } from "../types/postulantes.ty
 // Usamos Record<string, unknown> para interceptar llaves "sucias" o faltantes del backend
 const sanearPostulante = (item: Record<string, unknown>): Postulante => ({
   ...(item as unknown as Postulante),
-  id: Number(item.id),
+  // id: Number(item.id),
   idconvocatoria: Number(item.idconvocatoria ?? item.convocatoria ?? 0),
   promedio: Number(item.promedio || 0),
 });
 
 const sanearCalificacionPostulante = (item: Record<string, unknown>): CalificacionPostulante => ({
   ...(item as unknown as CalificacionPostulante),
-  id: Number(item.id),
+  // id: Number(item.id),
   nota: Number(item.nota),
   idevaluacionPostulante: Number(item.idevaluacionPostulante),
   idactividadevaluacion: Number(item.idactividadevaluacion),
@@ -63,24 +63,6 @@ export const postulantesService = {
     const { data } = await api.get(`registroCalifiacionPostulante/${idPostulante}`);
     return data;
   },
-
-  // async listarMetodosEvaluacion(): Promise<MetodoEvaluacionSelect[]> {
-  //   const { data } = await api.get(`listaMetodoevaluacion/${idempresa_md5()}`);
-  //   return Array.isArray(data) ? data.map(item => ({
-  //     id: Number(item.id),
-  //     nombre: String(item.nombre),
-  //     calificacionMax: Number(item.calificacionMax)
-  //   })) : [];
-  // },
-
-  // async listarActividadesEvaluacion(): Promise<ActividadEvaluacionSelect[]> {
-  //   const { data } = await api.get(`listaActividadevaluacion/${idempresa_md5()}`);
-  //   return Array.isArray(data) ? data.map(item => ({
-  //     id: Number(item.id),
-  //     nombre: String(item.nombre),
-  //     idmetodoevaluacion: Number(item.idmetodoevaluacion)
-  //   })) : [];
-  // },
 
   async listarCalificaciones(idEvaluacionPostulante: number): Promise<CalificacionPostulante[]> {
     const { data } = await api.get(`listaCalifiacionPostulante/${idEvaluacionPostulante}`);
